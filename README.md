@@ -2,3 +2,6 @@
 
 chaos game mode patched to be buildable on x86_64 and compatible with yquake2 game.
 
+# build
+
+make build_release
