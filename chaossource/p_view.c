@@ -440,7 +440,7 @@ void SV_CalcBlend (edict_t *ent)
 
 		ent->client->BlindTime -= 0.1;
 
-		gi.cvar_set("gl_polyblend", "1");
+		gi.cvar_set("gl1_polyblend", "1");
 		if (ent->client->BlindTime < 0)
 			ent->client->BlindTime = 0;
 	}
@@ -482,7 +482,7 @@ void SV_CalcBlend (edict_t *ent)
 		if (random() < 0.05)
 			ThrowUpNow(ent);
 
-		gi.cvar_set("gl_polyblend", "1");
+		gi.cvar_set("gl1_polyblend", "1");
 		ent->client->PoisonTime -= 0.1;
 	}
 	else if (ent->client->PoisonTime < 1
@@ -517,7 +517,7 @@ void SV_CalcBlend (edict_t *ent)
 			updown = 1;
 		}
 
-		gi.cvar_set("gl_polyblend", "1");
+		gi.cvar_set("gl1_polyblend", "1");
 		SV_AddBlend (r, 0, 0, 0.6, ent->client->ps.blend);
 	}
 

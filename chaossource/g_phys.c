@@ -898,8 +898,8 @@ void SV_Physics_Step (edict_t *ent)
 	float		friction;
 	edict_t		*groundentity;
 	int			mask;
-    vec3_t      oldorig;
-    trace_t     tr;
+//    vec3_t      oldorig;
+//    trace_t     tr;
 
     if (!ent)
     {
