@@ -98,7 +98,6 @@ void InitGame (void)
 
 	gi.dprintf ("====          InitGame          ====\n");
     gi.dprintf ("==== Chaos Deathmatch v1.15 (+ some yq2 fix)  ====\n");
-    gi.dprintf ("==== ( Guibo )  ====\n");
 
 	gun_x = gi.cvar ("gun_x", "0", 0);
 	gun_y = gi.cvar ("gun_y", "0", 0);
