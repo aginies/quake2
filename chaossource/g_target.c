@@ -332,9 +332,9 @@ dmg		default is 15
 speed	default is 1000
 */
 
+static int effect = 0;
 void use_target_blaster (edict_t *self, edict_t *other, edict_t *activator)
 {
-	int effect = 0;
 
 	if (self->spawnflags & 2)
 		effect = 0;

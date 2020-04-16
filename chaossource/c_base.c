@@ -734,6 +734,7 @@ void FakeDeath(edict_t *self)
 			cprintf2(self, PRINT_HIGH, "You can't fake death because you are poisoned!\n");
 			return;
 		}
+		gi.cprintf(self, PRINT_HIGH, "Fake death! \n");
 
 		self->client->fakedeath = 1;
 
@@ -985,14 +986,13 @@ void bprintf2 (int printlevel, char *fmt, ...)
 void cprintf2 (edict_t *ent, int printlevel, char *fmt, ...)
 {
 	char	bigbuffer[0x10000];
-	//int		len;
 	va_list		argptr;
 
 	if (!ent)
 		return;
 
 	va_start (argptr,fmt);
-	//len = vsprintf (bigbuffer,fmt,argptr);
+	vsprintf (bigbuffer,fmt,argptr);
 	va_end (argptr);
 
 	if (ent->inuse && (Q_stricmp(ent->classname, "bot") != 0))

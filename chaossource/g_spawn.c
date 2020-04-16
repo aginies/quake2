@@ -201,7 +201,7 @@ spawn_t	spawns[] = {
 #endif
 	{"misc_gib_arm", SP_misc_gib_arm},
 	{"misc_gib_leg", SP_misc_gib_leg},
-//	{"misc_gib_head", SP_misc_gib_head},
+	{"misc_gib_head", SP_misc_gib_head},
 #if 0 // remove monster code
 	{"misc_insane", SP_misc_insane},
 #endif
