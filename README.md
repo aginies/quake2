@@ -6,6 +6,8 @@ are not really clean yet. The code is in the chaossource directory.
 
 The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/)
 
+![](chaossource/chaos.jpg)
+
 Please use it with with a recent release of quake2 projects, ie:
 
 **yquake2**:
