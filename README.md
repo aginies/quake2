@@ -6,15 +6,15 @@ are not really clean yet. The code is in the chaossource directory.
 
 The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/)
 
-Please use it with with a recent release of quake2 improvment projects.
+Please use it with with a recent release of quake2 projects, ie:
 
 **yquake2**:
 * [yamagi.org](https://www.yamagi.org/quake2/)
-* [yquake2 source code:](https://github.com/yquake2/yquake2)
+* [yquake2 source code](https://github.com/yquake2/yquake2)
 
 **Q2Pro**:
 * [q2pro](https://skuller.net/q2pro/)
-* [q2pro source code:](https://github.com/skullernet/q2pro)
+* [q2pro source code](https://github.com/skullernet/q2pro)
 
 # Usage
 
