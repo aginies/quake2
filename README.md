@@ -1,39 +1,43 @@
-# Quake2 Chaos
+# Quake2 Chaos MOD
 
-This Chaos game mode patched to be buildable on x86_64 and compatible with recent Quake2 game.
+This **Chaos mod** patched to be buildable on x86_64 and compatible with recent Quake2 game.
 The current version of Quake2 (3.21) is usable as client only, as there is still some code which 
-are not really clean yet.
+are not really clean yet. The code is in the chaossource directory.
 
-The original Chaos mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/)
+The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/)
 
-please use it with with a recent release of quake like:
-yquake2:
-* https://www.yamagi.org/quake2/
-* https://github.com/yquake2/yquake2
+Please use it with with a recent release of quake2 improvment projects.
 
-Q2Pro:
-* https://skuller.net/q2pro/
-* https://github.com/skullernet/q2pro
+**yquake2**:
+* [yamagi.org](https://www.yamagi.org/quake2/)
+* [yquake2 source code:](https://github.com/yquake2/yquake2)
+
+**Q2Pro**:
+* [q2pro](https://skuller.net/q2pro/)
+* [q2pro source code:](https://github.com/skullernet/q2pro)
 
 # Usage
 
 On server:
-'''
-./q2proded +set game chaos +dedicated 1 +set public 1 +exec autoexec.cfg
-'''
+```
+./q2proded +set dedicated 1 +set game chaos \
+    +set hostname ginies.org  +set public 1 \
+    +set allow_download 1 +exec autoexec.cfg \
+    +set sys_console 2 +set sv_status_show 2
+```
 
 On client:
-'''
+```
 ./quake2 +set game chaos +connect SERVERNAME
-'''
+```
 
 # Build and installation
 
 ## Linux
 
-'''
+```
 make build_release
-'''
+```
 
 Copy the ''gamex86_64.so'' to ''QUAKE2DIR/chaos/'' directory. 
 
@@ -43,11 +47,11 @@ Copy the ''gamex86_64.so'' to ''QUAKE2DIR/chaos/'' directory.
 * backup the current Makefile
 * rename Makefile_mingw to Makefile
 * check the .config in the directory (adjust path to mgw-sdk binairies)
-* type:
-'''
+
+```
 make
 ....
 [LD] gamex86_64.dll
-'''
+```
 
 
