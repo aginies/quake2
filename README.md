@@ -1,25 +1,53 @@
-# quake2 Chaos
+# Quake2 Chaos
 
-Chaos game mode patched to be buildable on x86_64 and compatible with yquake2 game.
+This Chaos game mode patched to be buildable on x86_64 and compatible with recent Quake2 game.
+The current version of Quake2 (3.21) is usable as client only, as there is still some code which 
+are not really clean yet.
 
-From: https://chaoticdreams.org/q2chaos/
+The original Chaos mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/)
 
-please use it with with latest release of yquake2:
-https://www.yamagi.org/quake2/
+please use it with with a recent release of quake like:
+yquake2:
+* https://www.yamagi.org/quake2/
+* https://github.com/yquake2/yquake2
 
-Source code:
-https://github.com/yquake2/yquake2
+Q2Pro:
+* https://skuller.net/q2pro/
+* https://github.com/skullernet/q2pro
 
-# usage
+# Usage
 
-IE server:
-q2ded +set game chaos +dedicated 1 +set public 1 +exec autoexec.cfg
+On server:
+'''
+./q2proded +set game chaos +dedicated 1 +set public 1 +exec autoexec.cfg
+'''
 
-on client:
+On client:
+'''
 ./quake2 +set game chaos +connect SERVERNAME
+'''
 
-# build and installation
+# Build and installation
 
+## Linux
+
+'''
 make build_release
+'''
 
-copy the "gamex86_64" to "QUAKE2DIR/chaos/game.so"
+Copy the ''gamex86_64.so'' to ''QUAKE2DIR/chaos/'' directory. 
+
+## Windows
+
+* install mgw-sdk
+* backup the current Makefile
+* rename Makefile_mingw to Makefile
+* check the .config in the directory (adjust path to mgw-sdk binairies)
+* type:
+'''
+make
+....
+[LD] gamex86_64.dll
+'''
+
+
