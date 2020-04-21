@@ -2,7 +2,6 @@
 #include "c_base.h"
 #include "c_item.h"
 #include "c_botai.h"
-#include "c_cam.h"
 #include "m_player.h"
 #include "stdlog.h"
 #include "gslog.h"

@@ -1,5 +1,4 @@
 #include "g_local.h"
-#include "c_cam.h"
 #include "stdlog.h"
 #include "gslog.h"
 

@@ -1,7 +1,6 @@
 // g_combat.c
 
 #include "g_local.h"
-#include "c_cam.h"
 
 /*
 ============

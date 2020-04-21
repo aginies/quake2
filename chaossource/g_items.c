@@ -394,7 +394,7 @@ void DoRespawn (edict_t *ent)
 
 		if (!Q_stricmp(ent->classname, "weapon_sword") && ban_sword->value)
 		{
-			if (ban_chainsaw->value) //banned,too
+			if (ban_chainsaw->value > 0) //banned,too
 			{
 				G_FreeEdict (ent);
 				return;
@@ -513,8 +513,9 @@ void DoRespawn (edict_t *ent)
 				return;
 			}
 		}
-		else if (strcmp(ent->classname, "weapon_vortex") == 0 && ban_vortex->value > 0)
+		else if (strcmp(ent->classname, "ammo_vortex") == 0 && ban_vortex->value > 0)
 		{
+
 			if (ban_bfg->value == 0)
 			{
 				item = it_bfg;
@@ -2142,7 +2143,6 @@ void droptofloor (edict_t *ent)
 	tr = gi.trace (ent->s.origin, ent->mins, ent->maxs, dest, ent, MASK_SOLID);
 	if (tr.startsolid)
 	{
-		//gi.dprintf ("droptofloor: %s startsolid at %s\n", ent->classname, vtos(ent->s.origin));
 		G_FreeEdict (ent);
 		return;
 	}
@@ -2185,7 +2185,6 @@ void droptofloor (edict_t *ent)
 	ent->think = DoRespawn;
 
 	gi.linkentity (ent);
-    //gi.dprintf ("DEBUG: droptofloor ent %s\n", ent);
 }
 
 

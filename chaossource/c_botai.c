@@ -2,7 +2,6 @@
 #include "c_base.h"
 #include "c_botai.h"
 #include "c_botnav.h"
-#include "c_cam.h"
 #include "m_player.h"
 
 qboolean Bot_CanHearClient(edict_t *ent, edict_t *other)

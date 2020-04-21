@@ -1,7 +1,6 @@
 #include "g_local.h"
 #include "c_base.h"
 #include "c_botnav.h"
-#include "c_cam.h"
 #include "m_player.h"
 
 void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0);
@@ -277,7 +276,7 @@ void GetSettings()
 	cosg = gi.cvar("cosg", "0", CVAR_SERVERINFO);
 	start_invulnerable_time = gi.cvar("start_invulnerable_time", "3", CVAR_SERVERINFO);
 	lightsoff = gi.cvar("lightsoff", "0", CVAR_SERVERINFO);
-	botchat = gi.cvar("botchat", "1", CVAR_SERVERINFO);
+	botchat = gi.cvar("botchat", "0", CVAR_SERVERINFO);
 
 	ban_sword = gi.cvar("ban_sword", "0", CVAR_LATCH);
 	ban_chainsaw = gi.cvar("ban_chainsaw", "0", CVAR_LATCH);
@@ -292,7 +291,7 @@ void GetSettings()
 	ban_buzzsaw = gi.cvar("ban_buzzsaw", "0", CVAR_LATCH);
 	ban_defenceturret = gi.cvar("ban_defenceturret", "0", CVAR_LATCH);
 	ban_rocketturret = gi.cvar("ban_rocketturret", "0", CVAR_LATCH);
-	ban_vortex = gi.cvar("ban_vortex", "0", CVAR_LATCH);
+	ban_vortex = gi.cvar("ban_vortex", "1", CVAR_LATCH);
 	ban_bfg = gi.cvar("ban_bfg", "0", CVAR_LATCH);
 
 #ifdef	CHAOS_RETAIL
@@ -962,12 +961,11 @@ void bprintf2 (int printlevel, char *fmt, ...)
 {
 	int i;
 	char	bigbuffer[0x10000];
-	//int		len;
 	va_list		argptr;
 	edict_t	*cl_ent;
 
 	va_start (argptr,fmt);
-	//len = vsprintf (bigbuffer,fmt,argptr);
+	vsprintf (bigbuffer,fmt,argptr);
 	va_end (argptr);
 
 	if (dedicated->value)
@@ -1005,7 +1003,6 @@ void nprintf (int printlevel, char *fmt, ...)
 {
 	int i;
 	char	bigbuffer[0x10000];
-	//int		len;
 	va_list		argptr;
 	edict_t	*cl_ent;
 
@@ -1013,7 +1010,7 @@ void nprintf (int printlevel, char *fmt, ...)
 		return;
 
 	va_start (argptr,fmt);
-	//len = vsprintf (bigbuffer,fmt,argptr);
+	vsprintf (bigbuffer,fmt,argptr);
 	va_end (argptr);
 
 	for (i=0 ; i<maxclients->value ; i++)
