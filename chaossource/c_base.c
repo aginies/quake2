@@ -645,10 +645,7 @@ void LoadMOTD()
 	char file[256];
 	char line[80];
 	cvar_t	*game_dir;
-
-#ifdef _WIN32
 	int i;
-#endif
 
 	game_dir = gi.cvar ("game", "", 0);
 
