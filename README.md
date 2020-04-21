@@ -51,11 +51,11 @@ Copy the ``gamex86_64.so`` to ``QUAKE2DIR/chaos/`` directory.
 
 * install mgw-sdk
 * backup the current Makefile
-* rename ``Makefile_mingw`` to ``Makefile``
+* use the ``Makefile_mingw` file
 * check the ``.config`` in the directory (adjust path to mgw-sdk binairies)
 * build the dll:
 ```
-make
+make -f Makefile_mingw
 ....
 [LD] gamex86_64.dll
 ```

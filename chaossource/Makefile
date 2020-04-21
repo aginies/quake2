@@ -7,7 +7,7 @@
 #	This file was originally part of the Quake2 3.20 source tree.
 #	I simply barrowed it for inclusion here.
 
-BUILD_DEBUG_DIR=/home/aginies/.quake2/chaos
+BUILD_DEBUG_DIR=debug
 BUILD_RELEASE_DIR=release
 
 CC=gcc

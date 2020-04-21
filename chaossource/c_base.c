@@ -645,7 +645,6 @@ void LoadMOTD()
 	char file[256];
 	char line[80];
 	cvar_t	*game_dir;
-	int i;
 
 #ifdef _WIN32
 	int i;
