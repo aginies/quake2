@@ -1,6 +1,18 @@
 These are bugs that have been fixed in Chaotic Dreams
 -----------------------------------------------------------------------------
-* compatible with yq2 version (guibo)
+* Fix vortex and chainsaw ban
+
+* Add a simple way to build windows DLL
+
+* cleanup some code not needed
+
+* fix some gcc warning at build time
+
+* use gl1_polyblend instead of deprecated gl_polyblend
+
+* botchat are disable by default (set to 0)
+
+* Compatible with yq2 / Q2PRO version and recent version of Q2 (> 3.18)
 
 * Player can switch to beeing a camera, suicide, which causes them become
   invisible and then they start running around killing people
