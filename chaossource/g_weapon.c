@@ -938,7 +938,7 @@ void plasma_explode(edict_t *self)
    self->nextthink = level.time + FRAMETIME;
    self->s.frame++;
    //free the entity after last frame
-   if (self->s.frame == 1) {
+   if (self->s.frame == 4) {
        self->think = G_FreeEdict;
    }
 }
@@ -972,8 +972,7 @@ void plasma_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
    VectorClear(self->velocity);
    self->s.modelindex = 0;
    //change the sprite to explosion
-   //self->s.modelindex = gi.modelindex("sprites/s_pls2.sp2");
-   self->s.modelindex = gi.modelindex ("sprites/s_bfg1.sp2");
+   self->s.modelindex = gi.modelindex("sprites/s_pls2.sp2");
    self->s.frame = 0;
    self->s.sound = 0;
    //disable blue light effect for the explosion sprite

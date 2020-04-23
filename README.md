@@ -1,12 +1,13 @@
 # Quake2 Chaos MOD
 
 This **Chaos mod** patched to be buildable on x86_64 and compatible with recent Quake2 game.
+This is based on the latest [source code]i(https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available.
 The current version of Quake2 (3.21) is usable as client only, as there is still some code which 
 are not really clean yet. The code is in the chaossource directory.
 
 The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/)
 
-![](chaossource/chaos.jpg)
+![](chaos.jpg)
 
 You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory.
 You can find more original source at [files.chaoticdreams.org](https://files.chaoticdreams.org/Chaos/ChaosDM/)
@@ -37,7 +38,23 @@ On client:
 ./q2pro +set game chaos +connect SERVERNAME +exec autoexec.cfg
 ```
 
-# Build and installation
+# Binairies release
+
+linux and Windows pre-built libs.
+Bunzip and copy to ``QUAKE2/chaos`` directory
+
+
+## chaos_bin/original_V1.15/
+
+Orignal version of Chaos.
+
+## chaos_bin/devel_V1.15.1/
+
+Version with more addons like more weapons and items.
+
+![](plasma.jpg)
+
+# Make your own Build and installation
 
 ## Linux
 
