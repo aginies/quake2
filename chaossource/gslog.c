@@ -167,6 +167,7 @@ void sl_WriteStdLogDeath( game_import_t     *gi,
                         break;
                     }
                     case MOD_TARGET_BLASTER:
+                    case MOD_PLASMA_RIFLE:
                     {
                         pWeaponName = "Blasted";
                         fSuicide = 1;
@@ -233,6 +234,7 @@ void sl_WriteStdLogDeath( game_import_t     *gi,
                             break;
                     }
                         case MOD_BLASTER:
+                        case MOD_PLASMA_RIFLE:
                         case MOD_SHOTGUN:
                         case MOD_SSHOTGUN:
                         case MOD_MACHINEGUN:
@@ -252,7 +254,7 @@ void sl_WriteStdLogDeath( game_import_t     *gi,
 			case MOD_ARROW:
 			case MOD_PARROW:
 			case MOD_ESSHOTGUN:
-		        case MOD_PROXYMINE:
+		    case MOD_PROXYMINE:
 			case MOD_AIRFIST:
 			case MOD_HOMING:
 			case MOD_BUZZ:

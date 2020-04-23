@@ -487,6 +487,7 @@ void Bot_Think(edict_t *ent)
 		vec_t	dist;
 
 		it_lturret = FindItem("automatic defence turret");	//bugfix
+		it_plasma = FindItem("plasma");	//bugfix
 
 		// HAVE ROCKET TURRET
 		if ((numturrets < 3)
@@ -1452,6 +1453,11 @@ void Bot_Attack(edict_t *ent, usercmd_t *cmd, vec3_t angles, vec3_t target)
 			if (Q_stricmp(weapon->classname, "weapon_hyperblaster") == 0)
 			{
 				angles[YAW] += crandom() * (ent->client->b_botlevel)/2;
+				angles[PITCH] += crandom() * (ent->client->b_botlevel)/2;
+			}
+			if (Q_stricmp(weapon->classname, "weapon_plasma") == 0)
+			{
+				angles[YAW] += crandom() * (ent->client->b_botlevel)/2;
 				angles[PITCH] += crandom() * (ent->client->b_botlevel)/2;		
 			}
 			else if (Q_stricmp(weapon->classname, "weapon_rocketlauncher") == 0
@@ -1765,7 +1771,6 @@ void Bot_ProjectileAvoidance (edict_t *self, usercmd_t *cmd, vec3_t angles)
 				|| Q_stricmp(blip->classname, "lasermine") == 0
 				|| Q_stricmp(blip->classname, "poisongrenade") == 0
 				|| Q_stricmp(blip->classname, "proxymine") == 0
-				|| Q_stricmp(blip->classname, "plasma") == 0
 				|| Q_stricmp(blip->classname, "bfg blast") == 0)
 		{
 			if (!visible(self, blip))
@@ -1780,6 +1785,7 @@ void Bot_ProjectileAvoidance (edict_t *self, usercmd_t *cmd, vec3_t angles)
 		if (Q_stricmp(blip->classname, "rocket") == 0
 			|| Q_stricmp(blip->classname, "homing") == 0
 			|| Q_stricmp(blip->classname, "buzz") == 0
+			|| Q_stricmp(blip->classname, "plasma") == 0
 			|| Q_stricmp(blip->classname, "turret_rocket") == 0
 			|| Q_stricmp(blip->classname, "grenade") == 0
 			|| Q_stricmp(blip->classname, "hgrenade") == 0)
