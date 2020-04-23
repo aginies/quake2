@@ -898,6 +898,7 @@ void SP_worldspawn (edict_t *ent)
 	gi.modelindex("#w_bfg.md2");
 	gi.modelindex("#a_vortex.md2");
 	gi.modelindex("#a_rturret.md2");
+    gi.modelindex("#w_plasmarifle.md2");
 
 	if (lightsoff->value == 0)
     {

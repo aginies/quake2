@@ -23,6 +23,7 @@ void Weapon_Grenade (edict_t *ent);
 void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
 void Weapon_BFG (edict_t *ent);
+void Weapon_PlasmaRifle(edict_t *ent);
 
 // MATTHIAS
 void Weapon_FlashGrenade (edict_t *ent);
@@ -362,12 +363,12 @@ void DoRespawn (edict_t *ent)
 			newit = 1;
 		}
 		else if (strcmp(ent->classname, "weapon_bfg") == 0
+			|| strcmp(ent->classname, "weapon_plasma") == 0
 			|| strcmp(ent->classname, "ammo_vortex") == 0
 			|| strcmp(ent->classname, "ammo_laserturret") == 0
 			|| strcmp(ent->classname, "ammo_rocketturret") == 0)
 		{
 			rn = random();
-
 			if ( rn <= 0.3)
 			{
 				item = it_vortex;
@@ -377,6 +378,11 @@ void DoRespawn (edict_t *ent)
 			{
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
+			}
+			else if ((rn > 0) && (rn <= 0.3))
+			{
+				item = it_plasma;
+				ent->classname = "weapon_plasma";
 			}
 			else if ((rn > 0.5) && (rn <= 0.7))
 			{
@@ -388,6 +394,7 @@ void DoRespawn (edict_t *ent)
 				item = it_bfg;
 				ent->classname = "weapon_bfg";
 			}
+
 			newit = 1;
 		}
 	//MATTHIAS - Weapon banning
@@ -419,6 +426,11 @@ void DoRespawn (edict_t *ent)
 			}
 		}
 		else if (strcmp(ent->classname, "weapon_supershotgun") == 0 && ban_supershotgun->value > 0)
+		{
+			G_FreeEdict (ent);
+			return;
+		}
+		else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_supershotgun->value > 0)
 		{
 			G_FreeEdict (ent);
 			return;
@@ -507,6 +519,11 @@ void DoRespawn (edict_t *ent)
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
 			}
+			else if (ban_plasma->value == 0)
+			{
+				item = it_plasma;
+				ent->classname = "weapon_plasma";
+			}
 			else
 			{
 				G_FreeEdict (ent);
@@ -530,6 +547,11 @@ void DoRespawn (edict_t *ent)
 			{
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
+			}
+			else if (ban_plasma->value == 0)
+			{
+				item = it_plasma;
+				ent->classname = "weapon_plasma";
 			}
 			else
 			{
@@ -2565,13 +2587,22 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	else if (strcmp(ent->classname, "weapon_bfg") == 0)
 	{
 		rn = random();
-
 		if ( rn <= 0.4)
 		{
 			item = it_vortex;
 			ent->classname = "ammo_vortex";
 		}
-	}
+    }
+	else if (strcmp(ent->classname, "weapon_plasma") == 0)
+	{
+		rn = random();
+		if ( rn <= 0.4)
+		{
+			item = it_plasma;
+			ent->classname = "weapon_plasma";
+		}
+    }
+
 
 //MATTHIAS - Weapon banning
 
@@ -2652,8 +2683,8 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			ent->classname = "weapon_railgun";
 		}
 	}
-	//BFG
-	else if (strcmp(ent->classname, "weapon_bfg") == 0 && ban_bfg->value > 0)
+	//BFG DEBUG
+	else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_bfg->value > 0)
 	{
 		if (ban_vortex->value == 0)
 		{
@@ -4025,6 +4056,31 @@ always owned, never in the world
 /* precache */ "sprites/s_bfg1.sp2 sprites/s_bfg2.sp2 sprites/s_bfg3.sp2 weapons/bfg__f1y.wav weapons/bfg__l1a.wav weapons/bfg__x1b.wav weapons/bfg_hum.wav"
 	},
 
+/*QUAKED weapon_plasma (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+	{
+		"weapon_plasma",
+		Pickup_Weapon,
+		Use_Weapon,
+		Drop_Weapon,
+		Weapon_PlasmaRifle,
+		"misc/w_pkup.wav",
+		"models/weapons/g_plasmr/tris.md2", EF_ROTATE,
+		"models/weapons/v_plasmr/tris.md2",
+/* icon */		"w_plasmarifle",
+/* pickup */	"Plasma",
+		0,
+		50,
+		"Cells",
+		IT_WEAPON|IT_STAY_COOP,
+        WEAP_PLASMA,
+		NULL,
+		0,
+        "",
+/* precache  "sprites/s_pls1.sp2 sprites/s_pls1_0.pcx sprites/s_pls1_1.pcx sprites/s_pls2.sp2 sprites/s_pls2_0.pcx sprites/s_pls2_1.pcx sprites/s_pls2_2.pcx sprites/s_pls2_3.pcx sprites/s_pls2_4.pcx "
+ */
+	},
+
 /*QUAKED ammo_vortex (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
@@ -5184,6 +5240,7 @@ void SetItemNames (void)
 	it_lturret	= FindItem("automatic defence turret");
 	it_rturret	= FindItem("automatic rocket turret");
 	it_vortex	= FindItem("gravity vortex");
+    it_plasma   = FindItem("plasma");
 
 	it_health		= FindItemByClassname("item_health");
 	it_health_large	= FindItemByClassname("item_health_large");

@@ -108,7 +108,9 @@ void ShowGun(edict_t *ent)	//vwep
 		nIndex = 15;
 	else if (strcmp(pszIcon, "a_rturret") == 0
 		|| strcmp(pszIcon, "a_lturret") == 0)
-		nIndex = 16;
+		nIndex = 15;
+	else if (strcmp(pszIcon, "w_plasmafire") == 0)
+	    nIndex = 17;
 	else
 		nIndex = 0;
 
@@ -293,6 +295,7 @@ void GetSettings()
 	ban_rocketturret = gi.cvar("ban_rocketturret", "0", CVAR_LATCH);
 	ban_vortex = gi.cvar("ban_vortex", "1", CVAR_LATCH);
 	ban_bfg = gi.cvar("ban_bfg", "0", CVAR_LATCH);
+	ban_plasma = gi.cvar("ban_plasma", "0", CVAR_LATCH);
 
 #ifdef	CHAOS_RETAIL
 	ban_grapple = gi.cvar("ban_grapple", "1", CVAR_LATCH);
@@ -349,6 +352,7 @@ void GetSettings()
 	start_railgun = gi.cvar("start_railgun", "0", CVAR_LATCH);
 	start_buzzsaw = gi.cvar("start_buzzsaw", "0", CVAR_LATCH);
 	start_bfg = gi.cvar("start_bfg", "0", CVAR_LATCH);
+	start_plasma = gi.cvar("start_plasma", "0", CVAR_LATCH);
 
 	start_grapple = gi.cvar("start_grapple", "0", CVAR_LATCH);
 	start_jetpack = gi.cvar("start_jetpack", "0", CVAR_LATCH);
@@ -1403,6 +1407,14 @@ void Use_Class0 (edict_t *ent)
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_lturret)] > 0)
 			ent->client->newweapon = it_lturret;
 	}
+	else if (ent->client->pers.weapon == it_plasma)
+	{
+		if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
+			ent->client->newweapon = it_vortex;
+		else if (ent->client->pers.inventory[ITEM_INDEX(it_bfg)] > 0
+			&& ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 0)
+			ent->client->newweapon = it_bfg;
+	}
 	else if (ent->client->pers.weapon == it_vortex)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(it_rturret)] > 0)
@@ -1444,6 +1456,8 @@ void Use_Class0 (edict_t *ent)
 			ent->client->newweapon = it_rturret;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_lturret)] > 0)
 			ent->client->newweapon = it_lturret;
+		else if (ent->client->pers.inventory[ITEM_INDEX(it_plasma)] > 0)
+			ent->client->newweapon = it_plasma;
 	}
 }
 
@@ -1931,6 +1945,7 @@ void ClientCommand2 (edict_t *ent)
 			|| Q_stricmp(blip->classname, "homing") == 0
 			|| Q_stricmp(blip->classname, "buzz") == 0
 			|| Q_stricmp(blip->classname, "bfg blast") == 0
+			|| Q_stricmp(blip->classname, "plasma blast") == 0
 			|| Q_stricmp(blip->classname, "item_flag_team1") == 0
 			|| Q_stricmp(blip->classname, "item_flag_team2") == 0
 			|| Q_stricmp(blip->classname, "bodyque") == 0)

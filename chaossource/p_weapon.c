@@ -1578,3 +1578,139 @@ void Weapon_BFG (edict_t *ent)
 
 
 //======================================================================
+// Marsilainen's Plasma Rifle mod
+
+
+void Plasma_Fire(edict_t *ent, vec3_t g_offset, int damage)
+{
+   vec3_t  forward, right;
+   vec3_t  start;
+   vec3_t  offset;
+   int consume = 1;
+
+   int sr;
+
+   if (is_quad)
+       damage *= 4;
+
+   AngleVectors(ent->client->v_angle, forward, right, NULL);
+
+   //small randomization
+   sr = (int)(random() * 10.0);
+
+   //Z, X, Y //
+   VectorSet(offset, 50, 12, ent->viewheight - (9 + sr));
+   P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+
+   VectorScale(forward, -2, ent->client->kick_origin);
+
+   ent->client->kick_angles[0] = -1;
+
+   //launch plasmaball
+   fire_plasma(ent, start, forward, damage, 1500);
+
+   //eats cells
+   if (!((int)dmflags->value & DF_INFINITE_AMMO))
+       ent->client->pers.inventory[ent->client->ammo_index] -= consume;
+
+   //play firing sound
+   gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/plsmfire.wav"), 1, ATTN_NORM, 0);
+
+   // send muzzle flash
+   gi.WriteByte(svc_muzzleflash);
+   gi.WriteShort(ent - g_edicts);
+
+   gi.WriteByte(MZ_BLUEHYPERBLASTER | is_silenced);
+
+   gi.multicast(ent->s.origin, MULTICAST_PVS);
+
+   PlayerNoise(ent, start, PNOISE_WEAPON);
+
+
+}
+
+void Weapon_PlasmaRifle_Fire(edict_t *ent)
+{
+   int     damage;
+
+   if (!(ent->client->buttons & BUTTON_ATTACK))
+   {
+       ent->client->ps.gunframe++;
+
+   }
+   else
+   {
+
+       if (!ent->client->pers.inventory[ent->client->ammo_index])
+       {
+           if (level.time >= ent->pain_debounce_time)
+           {
+               gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+               ent->pain_debounce_time = level.time + 1;
+           }
+
+           NoAmmoWeaponChange(ent);
+       }
+       else
+       {
+
+           if (deathmatch->value)
+               damage = 20;
+           else
+               damage = 30;
+
+           Plasma_Fire(ent, vec3_origin, damage);
+
+           ent->client->anim_priority = ANIM_ATTACK;
+
+           if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
+           {
+               ent->s.frame = FRAME_crattak1 - 1;
+               ent->client->anim_end = FRAME_crattak9;
+           }
+           else
+           {
+               ent->s.frame = FRAME_attack1 - 1;
+               ent->client->anim_end = FRAME_attack8;
+           }
+
+       }
+
+       ent->client->ps.gunframe++;
+
+       //loop
+       if (ent->client->ps.gunframe == 11 && ent->client->pers.inventory[ent->client->ammo_index]) {
+           ent->client->ps.gunframe = 9;
+       }
+
+
+
+   }
+
+   /*
+   //shooting ends
+   if (ent->client->ps.gunframe == 11)
+       gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/plsmend.wav"), 1, ATTN_NORM, 0);
+       //ent->client->weapon_sound = 0;
+   }
+   */
+
+}
+
+
+void Weapon_PlasmaRifle(edict_t *ent)
+{
+
+   //pause idle animations
+   static int  pause_frames[] = { 25, 29, 39 };
+
+   //weapon fire frames
+   static int  fire_frames[] = {9, 10 };
+
+   Weapon_Generic(ent, 8, 18, 43, 50,  pause_frames, fire_frames, Weapon_PlasmaRifle_Fire);
+
+}
+
+
+//
+//======================================================================

@@ -1805,6 +1805,7 @@ struct {
 	{	"item_invulnerability",		2 },
 	{	"weapon_bfg",				3 },
 	{	"weapon_railgun",			4 },
+	{	"weapon_plasma",			4 },
 	{	"weapon_rocketlauncher",	4 },
 	{	"weapon_hyperblaster",		4 },
 	{	"weapon_chaingun",			4 },

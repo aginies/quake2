@@ -919,6 +919,9 @@ void InitClientPersistant (gclient_t *client)
 		if (start_hyperblaster->value > 0)
 			client->pers.inventory[ITEM_INDEX(it_hyperblaster)] = 1;
 
+		if (start_plasma->value > 0)
+			client->pers.inventory[ITEM_INDEX(it_plasma)] = 1;
+
 		if (start_railgun->value > 0)
 			client->pers.inventory[ITEM_INDEX(it_railgun)] = 1;
 

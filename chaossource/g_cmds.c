@@ -290,7 +290,7 @@ void Cmd_Give_f (edict_t *ent)
 		it = FindItem (name);
 		if (!it)
 		{
-			gi.dprintf ("unknown item\n");
+			gi.dprintf ("unknown item %c\n", *name);
 			return;
 		}
 	}
@@ -964,6 +964,24 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 
 /*
 =================
+Plasma rifle
+=================
+*/
+
+void Cmd_Plasma_f(edict_t *ent)
+{
+   gi.cprintf(ent, PRINT_HIGH, "\nHot Plasma!\n");
+   gi.cprintf(ent, PRINT_HIGH, "Quake 2 Plasma Rifle mod by marsilainen \n\n");
+   gi.cprintf(ent, PRINT_HIGH, "plasma_alpha - Toggles plasma translucency\n\n");
+   gi.cprintf(ent, PRINT_HIGH, "Values\n");
+   gi.cprintf(ent, PRINT_HIGH, "0 : opaque plasma \n");
+   gi.cprintf(ent, PRINT_HIGH, "1 : translucent plasma \n");
+   gi.cprintf(ent, PRINT_HIGH, "2 : translucent plasma, opaque explosions \n");
+}
+
+
+/*
+=================
 ClientCommand
 =================
 */
@@ -1001,6 +1019,10 @@ void ClientCommand (edict_t *ent)
 		Cmd_Help_f (ent);
 		return;
 	}
+    if (Q_stricmp(cmd, "plasma") == 0){
+        Cmd_Plasma_f(ent);
+        return;
+    }
 
 	if (level.intermissiontime)
 		return;

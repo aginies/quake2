@@ -179,6 +179,8 @@ typedef enum
 #define WEAP_PGRENADELAUNCHER   25
 #define WEAP_HOMINGLAUNCHER     26
 #define WEAP_BUZZSAW            27
+#define WEAP_PLASMA             28
+
 
 
 // edict->movetype values
@@ -506,7 +508,8 @@ extern	int	body_armor_index;
 #define MOD_FGRENADE		49
 #define MOD_PARROW			50
 #define MOD_AK42			51
-#define MOD_ESSHOT_SPLASH               52
+#define MOD_PLASMA_RIFLE    52
+#define MOD_ESSHOT_SPLASH  53
 
 #define MOD_FRIENDLY_FIRE	0x8000000
 
@@ -702,6 +705,8 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage);
 void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick);
 void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius);
+//Plasma rifle mod
+void fire_plasma(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed);
 
 
 //
@@ -763,6 +768,7 @@ void G_RunEntity (edict_t *ent);
 //
 void SaveClientData (void);
 void FetchClientEntData (edict_t *ent);
+
 
 
 //============================================================================
@@ -1200,6 +1206,7 @@ cvar_t	*lasermine_health;
 cvar_t	*ex_arrow_damage;
 cvar_t	*ex_arrow_radius;
 cvar_t	*cosg; // FWP Debugging var, core on shutdown game
+cvar_t *plasma_alpha;
 
 cvar_t	*start_invulnerable_time;
 int		red_base, blue_base;	//node at red/blue flag
