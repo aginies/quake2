@@ -136,6 +136,7 @@ void DoRespawn (edict_t *ent)
 
 	it_lturret = FindItem("automatic defence turret");	//bugfix
 	it_airfist = FindItem("airgun");	//bugfix
+	it_plasma = FindItem("plasma");	//bugfix
 
 
 	if (ent->team)
@@ -430,7 +431,7 @@ void DoRespawn (edict_t *ent)
 			G_FreeEdict (ent);
 			return;
 		}
-		else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_supershotgun->value > 0)
+		else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_plasma->value > 0)
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2293,6 +2294,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 
 	it_lturret = FindItem("automatic defence turret");	//bugfix
 	it_airfist = FindItem("airgun");	//bugfix
+    it_plasma = FindItem("plasma");
 
 
 	PrecacheItem (item);
@@ -2531,7 +2533,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "ammo_rockets") == 0)
 	{
-		if (random() < 0.3)
+		if (random() < 0.4)
 		{
 			item = it_homings;
 			ent->classname = "ammo_homing";
@@ -2587,16 +2589,12 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	else if (strcmp(ent->classname, "weapon_bfg") == 0)
 	{
 		rn = random();
-		if ( rn <= 0.4)
+		if ( rn <= 0.3)
 		{
 			item = it_vortex;
 			ent->classname = "ammo_vortex";
 		}
-    }
-	else if (strcmp(ent->classname, "weapon_plasma") == 0)
-	{
-		rn = random();
-		if ( rn <= 0.4)
+        else if (rn >= 0.3 && rn <= 0.7)
 		{
 			item = it_plasma;
 			ent->classname = "weapon_plasma";
@@ -2683,8 +2681,32 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			ent->classname = "weapon_railgun";
 		}
 	}
-	//BFG DEBUG
-	else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_bfg->value > 0)
+	//BFG 
+	else if (strcmp(ent->classname, "weapon_bfg") == 0 && ban_bfg->value > 0)
+	{
+		if (ban_vortex->value == 0)
+		{
+			item = it_vortex;
+			ent->classname = "ammo_vortex";
+		}
+		else if (ban_defenceturret->value == 0)
+		{
+			item = it_lturret;
+			ent->classname = "ammo_laserturret";
+		}
+		else if (ban_rocketturret->value == 0)
+		{
+			item = it_rturret;
+			ent->classname = "ammo_rocketturret";
+		}
+		else
+		{
+			G_FreeEdict (ent);
+			return;
+		}
+	}
+	//Plasma
+	else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_plasma->value > 0)
 	{
 		if (ban_vortex->value == 0)
 		{
@@ -2749,6 +2771,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = it_vortex;
 			ent->classname = "ammo_vortex";
 		}
+		else if (ban_plasma->value == 0)
+		{
+			item = it_plasma;
+			ent->classname = "weapon_plasma";
+		}
 		else
 		{
 			G_FreeEdict (ent);
@@ -2772,6 +2799,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		{
 			item = it_lturret;
 			ent->classname = "ammo_laserturret";
+		}
+		else if (ban_plasma->value == 0)
+		{
+			item = it_plasma;
+			ent->classname = "weapon_plasma";
 		}
 		else
 		{

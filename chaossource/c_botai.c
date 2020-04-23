@@ -1045,6 +1045,7 @@ edict_t *Bot_FindBestWeapon(edict_t *ent)
 		if (current->item == it_rturret
 			|| current->item == it_lturret
 			|| current->item == it_vortex
+			|| current->item == it_plasma
 			|| current->item == it_bfg)
 		{
 			// We really really want these !!!
@@ -1764,6 +1765,7 @@ void Bot_ProjectileAvoidance (edict_t *self, usercmd_t *cmd, vec3_t angles)
 				|| Q_stricmp(blip->classname, "lasermine") == 0
 				|| Q_stricmp(blip->classname, "poisongrenade") == 0
 				|| Q_stricmp(blip->classname, "proxymine") == 0
+				|| Q_stricmp(blip->classname, "plasma") == 0
 				|| Q_stricmp(blip->classname, "bfg blast") == 0)
 		{
 			if (!visible(self, blip))

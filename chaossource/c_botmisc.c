@@ -525,6 +525,8 @@ float Bot_Fire_Freq(edict_t *ent)
 		return BUZZSAW_FREQ;
 	else if (ent->client->pers.weapon == it_bfg)
 		return BFG_FREQ;
+	else if (ent->client->pers.weapon == it_plasma)
+		return PLASMA_FREQ;
 	else if (ent->client->pers.weapon == it_vortex)
 		return VORTEX_FREQ;
 	else if (ent->client->pers.weapon == it_sword)
@@ -615,6 +617,13 @@ void Bot_BestMidWeapon(edict_t *self)
 	{
 		if (oldweapon != it_bfg)
 			self->client->newweapon = it_bfg;
+		return;
+	}
+	// Plasma
+	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
+	{
+		if (oldweapon != it_plasma)
+			self->client->newweapon = it_plasma;
 		return;
 	}
 	// Explosive Crossbow
@@ -804,6 +813,13 @@ void Bot_BestCloseWeapon(edict_t *self)
 			self->client->newweapon = it_bfg;
 		return;
 	}
+	// BFG
+	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
+	{
+		if (oldweapon != it_plasma)
+			self->client->newweapon = it_plasma;
+		return;
+	}
 	// Poison Crossbow
 	if ( client->pers.inventory[ITEM_INDEX(it_poisoncrossbow)]	&&  client->pers.inventory[ITEM_INDEX(it_poisonarrows)])
 	{
@@ -977,6 +993,13 @@ void Bot_BestFarWeapon(edict_t *self)
 	{
 		if (oldweapon != it_bfg)
 			self->client->newweapon = it_bfg;
+		return;
+	}
+	// Plasma
+	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
+	{
+		if (oldweapon != it_plasma)
+			self->client->newweapon = it_plasma;
 		return;
 	}
 	// Explosive Crossbow
