@@ -168,6 +168,9 @@ void InitGame (void)
 	bob_pitch = gi.cvar ("bob_pitch", "0.002", 0);
 	bob_roll = gi.cvar ("bob_roll", "0.002", 0);
 
+    //plasma rifle cvar variables
+    plasma_alpha = gi.cvar("plasma_alpha", "1", CVAR_ARCHIVE);
+
 	// items
 	InitItems ();
 

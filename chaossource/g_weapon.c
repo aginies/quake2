@@ -3,6 +3,29 @@
 
 /*
 =================
+check_dodge
+
+This is a support routine used when a client is firing
+a non-instant attack weapon.  It checks to see if a
+monster's dodge function should be called.
+=================
+*/
+static void check_dodge (edict_t *self, vec3_t start, vec3_t dir, int speed)
+{
+    vec3_t  end;
+
+    // easy mode only ducks one quarter the time
+    if (skill->value == 0)
+    {
+        if (random() > 0.25)
+            return;
+    }
+    VectorMA (start, 8192, dir, end);
+}
+
+
+/*
+=================
 fire_hit
 
 Used for all impact (hit/punch/slash) attacks
@@ -902,3 +925,159 @@ void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, f
 
 	gi.linkentity (ball);
 }
+
+//======================================================================
+//======================================================================
+// Marsilainen's Plasma Rifle mod
+
+
+void plasma_explode(edict_t *self)
+{
+   //just the exposion animation sprite. damage is made in hit
+
+   self->nextthink = level.time + FRAMETIME;
+   self->s.frame++;
+   //free the entity after last frame
+   if (self->s.frame == 1) {
+       self->think = G_FreeEdict;
+   }
+}
+
+void plasma_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+   if (other == self->owner)
+       return;
+
+   if (surf && (surf->flags & SURF_SKY))
+   {
+       G_FreeEdict(self);
+       return;
+   }
+
+   if (self->owner->client)
+       PlayerNoise(self->owner, self->s.origin, PNOISE_IMPACT);
+
+
+   if (other->takedamage)
+   {
+       T_Damage(other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_ENERGY, MOD_PLASMA_RIFLE);
+   }
+ 
+   //explosion sound
+   gi.sound(self, CHAN_VOICE, gi.soundindex("weapons/plsmexpl.wav"), 1, ATTN_STATIC, 0);
+   self->solid = SOLID_NOT;
+   self->touch = NULL;
+   // calculate position for the explosion entity
+   VectorMA(self->s.origin, -0.02, self->velocity, self->s.origin);
+   VectorClear(self->velocity);
+   self->s.modelindex = 0;
+   //change the sprite to explosion
+   //self->s.modelindex = gi.modelindex("sprites/s_pls2.sp2");
+   self->s.modelindex = gi.modelindex ("sprites/s_bfg1.sp2");
+   self->s.frame = 0;
+   self->s.sound = 0;
+   //disable blue light effect for the explosion sprite
+   self->s.effects &= ~EF_BLUEHYPERBLASTER;
+   self->s.effects |= EF_PLASMA;
+   //disable translucency for the explosion
+   if (plasma_alpha->value == 2) {
+       self->s.renderfx &= ~RF_TRANSLUCENT;
+   }
+   self->think = plasma_explode;
+   self->nextthink = level.time + FRAMETIME;
+   self->enemy = other;
+
+   gi.WriteByte(svc_temp_entity);
+   gi.WriteByte(TE_BFG_EXPLOSION);
+   gi.WritePosition(self->s.origin);
+   gi.multicast(self->s.origin, MULTICAST_PVS);
+
+   /*
+   //effect direction
+   if (!plane)
+   {
+       gi.WriteDir(vec3_origin);
+   }
+   else
+   {
+       gi.WriteDir(plane->normal);
+       gi.multicast(self->s.origin, MULTICAST_PVS);
+   }
+   */
+}
+
+
+void plasma_think(edict_t *self)
+{
+   self->nextthink = level.time + FRAMETIME;
+}
+
+
+void fire_plasma(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
+{
+
+   edict_t *plasma;
+   trace_t tr;
+   vec3_t  end;
+
+   vec3_t scaledv;
+   vec3_t spawnpos;
+
+   plasma = G_Spawn();
+
+   //check if wall too close
+   VectorMA(start, 8, dir, end);
+   tr = gi.trace(self->s.origin, NULL, NULL, end, self, MASK_SOLID);
+
+   //move spawn position back a little
+   if (tr.fraction < 1) {
+       if (tr.surface) {
+           VectorScale(dir, 42, scaledv);
+           VectorInverse(scaledv);
+           VectorAdd(scaledv, start, spawnpos);
+       }
+   }
+   else {
+       VectorCopy(start, spawnpos);
+   }
+
+   VectorCopy(spawnpos, plasma->s.origin);
+   VectorCopy(dir, plasma->movedir);
+
+   vectoangles(dir, plasma->s.angles);
+   VectorScale(dir, speed, plasma->velocity);
+
+   plasma->movetype = MOVETYPE_FLYMISSILE;
+   plasma->clipmask = MASK_SHOT | MASK_WATER;
+   plasma->solid = SOLID_BBOX;
+
+   // blue light, 10hz sprite animation loop
+   plasma->s.effects |= EF_ANIM_ALLFAST | EF_BLUEHYPERBLASTER;
+
+   //set alpha effect
+   if (plasma_alpha->value == 1 || plasma_alpha->value == 2) {
+       plasma->s.renderfx = RF_TRANSLUCENT;
+   }
+
+   VectorClear(plasma->mins);
+   VectorClear(plasma->maxs);
+
+   plasma->s.modelindex = gi.modelindex("sprites/s_pls1.sp2");
+
+   plasma->owner = self;
+   plasma->touch = plasma_touch;
+
+   plasma->nextthink = level.time + 2;
+   plasma->think = G_FreeEdict;
+   plasma->dmg = damage;
+   plasma->classname = "plasma";
+
+   plasma->think = plasma_think;
+   plasma->nextthink = level.time + FRAMETIME;
+
+   if (self->client)
+       check_dodge(self, plasma->s.origin, dir, speed);
+
+   gi.linkentity(plasma);
+}
+

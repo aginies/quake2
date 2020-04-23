@@ -544,6 +544,9 @@ typedef struct
 #define EF_FLAG2			0x00080000
 #define EF_BOOMER			0x00100000
 #define EF_GREENGIB			0x00200000
+#define EF_PLASMA          0x01000000
+#define	EF_BLUEHYPERBLASTER 0x00400000
+
 
 
 // entity_state_t->renderfx flags
@@ -585,11 +588,12 @@ typedef struct
 #define	MZ_HYPERBLASTER		14
 #define	MZ_ITEMRESPAWN		15
 #define MZ_BOOMERGUN		16
+#define MZ_BLUEHYPERBLASTER 17
 #define MZ_SILENCED			128		// bit flag ORed with one of the above numbers
 
 
 
-extern	vec3_t monster_flash_offset [];
+//extern	vec3_t monster_flash_offset [];
 
 
 // temp entity events
@@ -626,7 +630,9 @@ typedef enum
 	TE_BFG_LASER,
 	TE_GRAPPLE_CABLE,
 	TE_WELDING_SPARKS,
+    TE_PLASMA_EXPLOSION,
 	TE_PLASMATRAIL,
+    TE_FLECHETTE,
 	TE_GREENBLOOD
 } temp_event_t;
 
