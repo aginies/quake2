@@ -29,9 +29,10 @@ void Svcmd_addbots_f()	// adds "num" bots.
 		return;
 	else if (num == 1)
 	{
-		if (numbots >= 10)
+        // up to 15 bots is possible :)
+		if (numbots >= 15)
 		{
-			gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 10 Havoc-Bots!\n");
+			gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 15 Havoc-Bots!\n");
 			return;
 		}
 
@@ -47,18 +48,18 @@ void Svcmd_addbots_f()	// adds "num" bots.
 		if(Q_stricmp(name,"") == 0
 			|| Q_stricmp(name," ") == 0)
 		{
-			strcpy(name,(strchr(model, '/')+1));
+            strcpy(name,(strchr(model, '/')+1));
 		}
-
 		Bot_Create(skill, team, name, model);
 	}
 	else
 	{
 		for (i = 0; i < num; i++)
 		{
-			if (numbots >= 10)
+            // up to 15 bots is possible :)
+			if (numbots >= 15)
 			{
-				gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 10 Havoc-Bots!\n");
+				gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 15 Havoc-Bots!\n");
 				return;
 			}
 			
@@ -72,9 +73,7 @@ void Svcmd_addbots_f()	// adds "num" bots.
 
 			// set the name
 			strcpy(name,(strchr(model, '/')+1));
-
 			//char *_strupr( char *string );
-
 			Bot_Create(skill, team, name, model);
 		}
 	}
@@ -133,6 +132,10 @@ void Bot_Create(int level, int team, char *name, char *skin)
 	char      userinfo[MAX_INFO_STRING];
 	edict_t   *bot = 0;
 
+    // useful to find bot in the list of players :)
+    char *botname = "bot";
+    strncat(name, botname, strlen(botname));
+
 	for (i = maxclients->value; i > 0; i--)
 	{
 		bot = g_edicts + i + 1;
@@ -145,7 +148,7 @@ void Bot_Create(int level, int team, char *name, char *skin)
 
 	if (!bot)
 	{
-		bprintf2 (PRINT_HIGH, "%s cant connect, server is full!\n", name);
+		bprintf2 (PRINT_HIGH, "Real Player %s cant connect, server is full!\n", name);
 		return;
 	}
 
@@ -173,7 +176,7 @@ void Bot_Create(int level, int team, char *name, char *skin)
 	gi.WriteByte(MZ_LOGIN);
 	gi.multicast(bot->s.origin, MULTICAST_PVS);
 
-	bprintf2(PRINT_HIGH, "%s entered the game\n", bot->client->pers.netname);
+	bprintf2(PRINT_HIGH, "The Bot %s entered the game\n", bot->client->pers.netname);
 	ClientEndServerFrame(bot);
 	players[numplayers] = bot;
 	numplayers++;
@@ -199,12 +202,12 @@ void Bot_Create(int level, int team, char *name, char *skin)
 		else if ((team > 0) && (team < 100))
 		{
 			bot->client->resp.team	= team;
-			bprintf2 (PRINT_HIGH, "%s has joined team %d!\n", name, team);
+			bprintf2 (PRINT_HIGH, "The Bot %s has joined team %d!\n", name, team);
 		}
 		else
 		{
 			bot->client->resp.team	= 0;
-			bprintf2 (PRINT_HIGH, "Invalid team number! %s has joined NO team!\n", name);
+			bprintf2 (PRINT_HIGH, "Invalid team number! The Bot %s has joined NO team!\n", name);
 		}
 	}
 }
@@ -1650,40 +1653,35 @@ void Load_BotChat(void)
 
 char *Get_RandomBotSkin ()
 {
-	int rn;
-	
-
-	switch(rn = (int) (random() * 28 ))
-	{
-	  case 0:  	return "male/cipher";break;
-	  case 1:	return "male/claymore";break;
-	  case 2:	return "male/flak";break;
-	  case 3:	return "male/grunt";break;
-	  case 4:	return "male/howitzer";break;
-	  case 5:	return "male/major";break;
-	  case 6:	return "male/nightops";break;
-	  case 7:	return "male/pointman";break;
-	  case 8:	return "male/psycho";break;
-	  case 9:	return "male/rampage";break;
-	  case 10:	return "male/razor";break;
-	  case 11:	return "male/recon";break;
-	  case 12:	return "male/scout";break;
-	  case 13:	return "male/sniper";break;
-	  case 14:	return "male/viper";break;
-	  case 15: 	return "female/athena";break;
-	  case 16: 	return "female/brianna";break;
-	  case 17:	return "female/cobalt";break;
-	  case 18:	return "female/ensign";break;
-	  case 19:	return "female/jezebel";break;
-	  case 20:	return "female/jungle";break;
-	  case 21:	return "female/lotus";break;
-	  case 22:	return "female/stiletto";break;
-	  case 23:	return "female/venus";break;
-	  case 24:	return "female/voodoo";break;
-	  case 25:	return "cyborg/oni911";break;
-	  case 26:	return "cyborg/ps9000";break;
-	  case 27:	return "cyborg/tyr574";break;
-	  default:	return "male/major";break;
-	}
+  int rn;
+  
+  switch(rn = (int) (random() * 25 ))
+    {
+    case 1:   return "crakhor/chaosblue";break;
+    case 2:   return "crakhor/sumabeth";break;
+    case 3:   return "crakhor/sumacw";break;
+    case 4:   return "crakhor/r2dgre";break;
+    case 5:   return "crakhor/sumaouch";break;
+    case 6:   return "crakhor/chaosred";break;
+    case 7:   return "crakhor/r2aqua";break;
+    case 8:   return "crakhor/r2dgre";break;
+    case 9:   return "cyborg/chaosblue";break;
+    case 10:  return "zumlin/zumlin";break;
+    case 11:  return "zumlin/r2aqua";break;
+    case 12:  return "zumlin/r2blue";break;
+    case 13:  return "zumlin/r2dgre";break;
+    case 14:  return "male/cipher";break;
+    case 15:  return "male/claymore";break;
+    case 16:  return "male/flak";break;
+    case 17:  return "male/pointman";break;
+    case 18:  return "male/psycho";break;
+    case 19:  return "female/jezebel";break;
+    case 20:  return "male/razor";break;
+    case 21:  return "female/lotus";break;
+    case 22:  return "female/stiletto";break;
+    case 23:  return "female/venus";break;
+    case 24:  return "female/voodoo";break;
+    default:  return "crakhor/sumacw";break;
+    }
 }
 

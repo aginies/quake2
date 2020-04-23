@@ -1,5 +1,11 @@
 These are bugs that have been fixed in Chaotic Dreams
 -----------------------------------------------------------------------------
+* increase number of MAX bot to 15
+
+* use some other skins for bot (Chaos color and some others)
+
+* add 'bot' to botname to quickly find them in the list of players
+
 * Fix vortex and chainsaw ban
 
 * Add a simple way to build windows DLL
