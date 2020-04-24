@@ -707,7 +707,13 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius);
 //Plasma rifle mod
 void fire_plasma(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed);
+void fire_guidedrocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage);
 
+//
+// lsight.c
+//
+void LaserSight_Check (edict_t *self);
+void LaserSight_Off (edict_t *self);
 
 //
 // g_client.c
@@ -1144,6 +1150,10 @@ struct edict_s
 	//MATTHIAS
 	float		avoidtime;
 	vec3_t      spawnorigin;
+
+    edict_t     *lasersight;
+    qboolean        lasersightOn;
+
 };
 
 //MATTHIAS

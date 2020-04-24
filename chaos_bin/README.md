@@ -6,3 +6,4 @@ Original version of Chaos. No modification
 
 Devel version of Chaos, more weapons inside:
 * Plasma gun from Quake 2 Plasma Rifle mod by marsilainen
+* Guided Rocket with laser pointer [from WOD mod](https://github.com/ulatekh/quake2-WOD)

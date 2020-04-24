@@ -3,29 +3,6 @@
 
 /*
 =================
-check_dodge
-
-This is a support routine used when a client is firing
-a non-instant attack weapon.  It checks to see if a
-monster's dodge function should be called.
-=================
-*/
-static void check_dodge (edict_t *self, vec3_t start, vec3_t dir, int speed)
-{
-    vec3_t  end;
-
-    // easy mode only ducks one quarter the time
-    if (skill->value == 0)
-    {
-        if (random() > 0.25)
-            return;
-    }
-    VectorMA (start, 8192, dir, end);
-}
-
-
-/*
-=================
 fire_hit
 
 Used for all impact (hit/punch/slash) attacks
@@ -618,6 +595,155 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 	gi.linkentity (rocket);
 }
 
+void guidedrocket_think (edict_t *ent)
+{
+    vec_t speed;
+    vec3_t targetdir;
+
+    // If our owner is dead, stop tracking & just fly straight.
+    if (ent->owner->deadflag)
+        return;
+
+    // Nudge our direction toward our laser-sight.
+    if (ent->owner->lasersight)
+    {
+        VectorSubtract (ent->owner->lasersight->s.origin, ent->s.origin,
+            targetdir);
+        targetdir[2] += 16;
+        VectorNormalize (targetdir);
+        VectorScale (targetdir, 0.35, targetdir);
+        VectorAdd (targetdir, ent->movedir, targetdir);
+        VectorNormalize (targetdir);
+        VectorCopy (targetdir, ent->movedir);
+        vectoangles (targetdir, ent->s.angles);
+        speed = VectorLength(ent->velocity);
+        VectorScale (targetdir, speed, ent->velocity);
+    }
+
+    ent->nextthink = level.time + FRAMETIME;
+
+    gi.linkentity (ent);
+}
+
+void guidedrocket_explode (edict_t *ent)
+{
+   vec3_t      origin;
+
+    if (ent->owner->client)
+        PlayerNoise (ent->owner, ent->s.origin, PNOISE_IMPACT);
+
+    // calculate position for the explosion entity
+    VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+
+    ent->takedamage = DAMAGE_NO;
+    T_RadiusDamage (ent, ent->owner, ent->radius_dmg, ent->enemy,
+        ent->dmg_radius, MOD_ROCKET);
+
+    gi.WriteByte (svc_temp_entity);
+    if (ent->waterlevel)
+        gi.WriteByte (TE_ROCKET_EXPLOSION_WATER);
+    else
+        gi.WriteByte (TE_ROCKET_EXPLOSION);
+    gi.WritePosition (origin);
+    gi.multicast (ent->s.origin, MULTICAST_PHS);
+
+    G_FreeEdict (ent);
+}
+
+
+void guidedrocket_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
+{
+    // Don't take any more damage.
+    self->takedamage = DAMAGE_NO;
+
+    // Give them credit for shooting us out of the sky, by not hurting them.
+    self->enemy = attacker;
+
+    // Blow up.
+    self->think = guidedrocket_explode;
+    self->nextthink = level.time + FRAMETIME;
+}
+void guidedrocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+    if (other == ent->owner)
+        return;
+
+    if (surf && (surf->flags & SURF_SKY))
+    {
+        G_FreeEdict (ent);
+        return;
+    }
+
+    if (other->takedamage)
+    {
+     T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin,
+            plane->normal, ent->dmg, 120, 0, MOD_ROCKET);
+    }
+    else
+    {
+        // don't throw any debris in net games
+        if (!deathmatch->value && !coop->value)
+        {
+            if ((surf) && !(surf->flags & (SURF_WARP|SURF_TRANS33|SURF_TRANS66|SURF_FLOWING)))
+            {
+                int         n;
+
+                n = rand() % 5;
+                while(n--)
+                    ThrowDebris (ent, "models/objects/debris2/tris.md2", 2, ent->s.origin);
+            }
+        }
+    }
+
+    // Now make the rocket explode.
+    ent->enemy = other;
+    guidedrocket_explode (ent);
+}
+void fire_guidedrocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage)
+{
+    edict_t *rocket;
+
+    rocket = G_Spawn();
+    VectorCopy (start, rocket->s.origin);
+    VectorCopy (dir, rocket->movedir);
+    vectoangles (dir, rocket->s.angles);
+    VectorScale (dir, speed, rocket->velocity);
+    rocket->movetype = MOVETYPE_FLYMISSILE;
+    rocket->clipmask = MASK_SHOT;
+    rocket->solid = SOLID_BBOX;
+    rocket->s.effects |= EF_ROCKET;
+    VectorClear (rocket->mins);
+    VectorClear (rocket->maxs);
+    rocket->model = "models/objects/rocket/tris.md2";
+    rocket->s.modelindex = gi.modelindex (rocket->model);
+    rocket->owner = self;
+    rocket->touch = guidedrocket_touch;
+    rocket->enemy = NULL;
+
+    /* Make guided rocket rocket shootable.
+    rocket->movetype = MOVETYPE_FLYMISSILE;
+    rocket->takedamage = DAMAGE_YES;
+    //rocket->svflags |= SVF_MONSTER;
+    //rocket->clipmask |= CONTENTS_MONSTERCLIP;
+    VectorSet (rocket->mins, -8, -8, -8);
+    VectorSet (rocket->maxs, 8, 8, 8);
+    rocket->mass = 10;
+    rocket->health = 20;
+    rocket->max_health = 20;
+    rocket->die = guidedrocket_die; */
+
+    rocket->dmg = damage;
+    rocket->dmg = damage;
+    rocket->radius_dmg = 120;
+    rocket->dmg_radius = 120;
+    rocket->s.sound = gi.soundindex ("weapons/rockfly.wav");
+    rocket->classname = "guided rocket";
+    rocket->nextthink = level.time + FRAMETIME;
+    rocket->think = guidedrocket_think;
+
+    gi.linkentity (rocket);
+}
+
 
 /*
 =================
@@ -1073,9 +1199,6 @@ void fire_plasma(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
 
    plasma->think = plasma_think;
    plasma->nextthink = level.time + FRAMETIME;
-
-   if (self->client)
-       check_dodge(self, plasma->s.origin, dir, speed);
 
    gi.linkentity(plasma);
 }

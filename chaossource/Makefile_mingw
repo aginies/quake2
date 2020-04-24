@@ -139,6 +139,7 @@ OBJS_g := \
     m_move.o         \
     p_client.o       \
     p_hud.o          \
+    lsight.o          \
     p_weapon.o \
 	p_menu.o \
 	p_view.o \

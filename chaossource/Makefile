@@ -84,6 +84,7 @@ GAME_OBJS = \
 	$(BUILDDIR)/g_svcmds.o \
 	$(BUILDDIR)/g_target.o \
 	$(BUILDDIR)/g_trigger.o \
+    $(BUILDDIR)/lsight.o \
 	$(BUILDDIR)/g_utils.o \
 	$(BUILDDIR)/g_weapon.o \
 	$(BUILDDIR)/gslog.o \
@@ -116,6 +117,9 @@ $(BUILDDIR)/c_cam.o : c_cam.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/c_item.o : c_item.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/lsight.o : lsight.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/c_weapon.o : c_weapon.c
