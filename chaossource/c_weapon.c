@@ -3998,10 +3998,10 @@ int Valid_Target( edict_t *ent, edict_t *blip )
 	  return false;
 
 	/* 
-	 * The Vortex doesn't care who launched it or who is one what team,
+	 * The Vortex or the nuke doesn't care who launched it or who is one what team,
 	 * it just eats everything in it's path
 	 */
-	if(Q_stricmp(ent->classname, "vortex") /*== 0)*/)
+	if(Q_stricmp(ent->classname, "vortex") || Q_stricmp(ent->classname, "nuke")) /*== 0)*/
 	  /*
 	{
 	  if (blip->item || blip->client)
@@ -4532,6 +4532,331 @@ void Weapon_Vortex (edict_t *ent)
 		{
 			ent->client->weapon_sound = 0;
 			weapon_vortex_fire (ent);
+		}
+
+		if ((ent->client->ps.gunframe == 15) && (level.time < ent->client->grenade_time))
+			return;
+
+		ent->client->ps.gunframe++;
+
+		if (ent->client->ps.gunframe == 16)
+		{
+			ent->client->grenade_time = 0;
+			ent->client->weaponstate = WEAPON_READY;
+		}
+	}
+}
+//
+//----------------------------------------------------------------------------------------------
+// NUKE based on vortex
+//----------------------------------------------------------------------------------------------
+
+#define	NUKE_INACTIVE		0
+#define	NUKE_FIRED		1
+#define	NUKE_STARTING		2
+#define	NUKE_SPAWNSTUFF	3
+#define	NUKE_ACTIVE		4
+
+void Nuke_Free (edict_t *ent)
+{
+	nuke_pointer = NULL;
+	nukestate = NUKE_INACTIVE;
+	G_FreeEdict(ent);
+}
+
+void Cata_Explode (edict_t *ent)
+{
+    ent->s.frame+=2;
+    if(ent->s.frame > 12)
+        ent->s.frame = 0;
+    ent->nextthink = level.time + FRAMETIME;
+    ent->delay = ent->delay - FRAMETIME;
+    if(ent->delay <= 0)
+        G_FreeEdict (ent);
+}
+
+
+void Nuke_Explode (edict_t *ent)
+{
+  vec3_t      origin, v;
+  vec3_t      nuke_angs;
+  edict_t     *nuke, *target = NULL;
+  vec3_t      forward, right, up;
+  float       Distance, BlindTimeAdd;
+  int         n;
+  
+  //gi.dprintf("DEBUG IN Nuke_Explode");
+  
+    if (ent->owner && ent->owner->client)
+      PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
+    
+    gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/vortex/storm.wav"), 1, ATTN_NORM, 0);
+    
+   // if (ent->enemy)
+        T_RadiusDamage (ent, ent->owner, 2000, NULL, 2000, MOD_NUKE);
+    
+    // Big explosion effect:
+    for(n = 0; n < 128; n+=32)
+      {
+	VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+	origin[0] = origin[0] + 16*crandom();
+	origin[1] = origin[1] + 16*crandom();
+	origin[2] = origin[2] + n;
+	gi.WriteByte (svc_temp_entity);
+	gi.WriteByte (TE_GRENADE_EXPLOSION);
+	gi.WritePosition (origin);
+	gi.multicast (origin, MULTICAST_PVS);
+      }
+    
+    VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+    origin[2] = origin[2] + 64;
+    
+    for (n = 0; n < 200; n++)
+      {
+	nuke_angs[0] = 0;
+	nuke_angs[1] = n * 16;
+	nuke_angs[2] = 0;
+	AngleVectors (nuke_angs, forward, right, up);
+	nuke = G_Spawn();
+	VectorCopy (origin, nuke->s.origin);
+	VectorClear (nuke->velocity);
+	VectorMA (nuke->velocity, 550, forward, nuke->velocity);
+	nuke->movetype = MOVETYPE_FLYMISSILE;
+	nuke->clipmask = MASK_SHOT;
+	nuke->solid = SOLID_TRIGGER;
+	
+	nuke->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
+	nuke->s.frame = random()*4;
+	nuke->s.effects |= EF_HYPERBLASTER;
+	nuke->s.sound = gi.soundindex ("weapons/bfg__l1a.wav");
+	
+	VectorSet (nuke->mins, -3, -3, -3);
+	VectorSet (nuke->maxs, 3, 3, 3);
+	nuke->owner = ent->owner;
+	nuke->delay = 5;
+	nuke->think = Cata_Explode;
+	nuke->nextthink = level.time + FRAMETIME;
+	nuke->classname = "nuke";
+      }
+    
+    while ((target = findradius(target, ent->s.origin, 1024)) != NULL)
+      {
+	
+	if (!target->client)
+	  continue;
+	if (!CanDamage (target, ent))
+	  continue;
+    if (target->client->camera)
+      continue;
+    if (target->client->invincible_framenum > level.framenum) // invulnerable
+      continue;
+    if (target->flags & FL_GODMODE) // god
+      continue;
+
+
+
+    BlindTimeAdd = 10;
+    target->client->BlindTime = BlindTimeAdd * 1.5 ;
+    target->client->BlindBase = blindtime->value;
+	target->client->v_dmg_pitch = 20 * crandom();
+	target->client->v_dmg_roll = 20 * crandom();
+	target->client->damage_blend[0] = 1;
+	target->client->damage_blend[1] = 1;
+	target->client->damage_blend[2] = 1;
+	target->client->damage_alpha = 0.8;
+	target->client->v_dmg_time = level.time + 1;
+	T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 2000, 1, 2000, MOD_NUKE);
+     }
+    
+    Nuke_Free(ent);
+    return ;
+}
+
+void Nuke_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+    if (other == ent->owner)
+        return;
+
+    if (surf && (surf->flags & SURF_SKY))
+    {
+        Nuke_Free(ent);
+        return;
+    }
+
+    if (!other->takedamage)
+    {
+        ent->delay = level.time + 3;
+        ent->solid = SOLID_NOT;
+        ent->movetype = MOVETYPE_FLYMISSILE;
+        ent->nextthink = level.time + 0.1;
+        ent->think = Nuke_Explode;
+        ent->touch = NULL;
+    }
+    else
+    {
+    ent->enemy = other;
+    Nuke_Explode(ent);
+    }
+}
+
+
+//void fire_nuke (edict_t *self, vec3_t start, vec3_t dir, int speed)
+void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t	*nuke;
+    vec3_t  dir;
+    vec3_t  forward, right, up;
+
+    vectoangles (aimdir, dir);
+    AngleVectors (dir, forward, right, up);
+
+	nuke = G_Spawn();
+	VectorCopy (start, nuke->s.origin);
+    VectorScale (aimdir, speed, nuke->velocity);
+    VectorMA (nuke->velocity, 200 + crandom() * 10.0, up, nuke->velocity);
+    VectorMA (nuke->velocity, crandom() * 10.0, right, nuke->velocity);
+    VectorSet (nuke->avelocity, 300, 300, 300);
+    nuke->movetype = MOVETYPE_BOUNCE;
+	nuke->clipmask = MASK_SHOT;
+	nuke->solid = SOLID_BBOX;
+	nuke->s.effects = 0;
+	VectorClear (nuke->mins);
+	VectorClear (nuke->maxs);
+	nuke->s.modelindex = gi.modelindex ("models/objects/rocket/tris.md2");
+	nuke->owner = self;
+	//nuke->touch = Nuke_Touch;
+	nuke->nextthink = level.time + timer;
+	nuke->think = Nuke_Explode;
+	//nuke->think = Nuke_Think;
+    nuke->dmg = damage;
+    nuke->dmg_radius = damage_radius;
+	nuke->classname = "nuke";
+
+	gi.linkentity (nuke);
+	nuke_pointer = nuke;
+	nukestate = NUKE_FIRED;
+}
+
+void weapon_nuke_fire (edict_t *ent, qboolean held)
+{
+	vec3_t	offset, forward, right, start;
+    int     damage = 2000;
+    float   radius;
+    int     speed =600;
+
+    radius = 400;
+    if (is_quad)
+        damage *= 4;
+    
+    if (nukestate != NUKE_INACTIVE)
+	{
+		cprintf2(ent, PRINT_HIGH, "Only one Nuke can be active at the same time...try later!");
+		return;
+	}
+
+	VectorSet(offset, 8, 8, ent->viewheight-8);
+	AngleVectors (ent->client->v_angle, forward, right, NULL);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+
+    VectorScale (forward, -2, ent->client->kick_origin);
+	gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/vortex/throw.wav"), 1, ATTN_IDLE, 0);
+    fire_nuke(ent, start, forward, damage, speed, 2.5, radius);
+    //gi.dprintf("DEBUG after firenuke\n");
+
+    gi.WriteByte (svc_muzzleflash);
+    gi.WriteShort (ent-g_edicts);
+    gi.WriteByte (MZ_GRENADE | is_silenced);
+    gi.multicast (ent->s.origin, MULTICAST_PVS);
+
+    ent->client->ps.gunframe++;
+    PlayerNoise(ent, start, PNOISE_WEAPON);
+
+	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+		ent->client->pers.inventory[ent->client->ammo_index]--;
+
+	NoAmmoWeaponChange (ent);
+}
+
+void Weapon_Nuke (edict_t *ent)
+{
+	if ((ent->client->newweapon) && (ent->client->weaponstate == WEAPON_READY))
+	{
+		ChangeWeapon (ent);
+		return;
+	}
+
+	if (ent->client->weaponstate == WEAPON_ACTIVATING)
+	{
+		ent->client->weaponstate = WEAPON_READY;
+		ent->client->ps.gunframe = 16;
+		return;
+	}
+
+	if (ent->client->weaponstate == WEAPON_READY)
+	{
+		if ( ((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK) )
+		{
+			ent->client->latched_buttons &= ~BUTTON_ATTACK;
+			if (ent->client->pers.inventory[ent->client->ammo_index])
+			{
+				ent->client->ps.gunframe = 1;
+				ent->client->weaponstate = WEAPON_FIRING;
+				ent->client->grenade_time = 0;
+			}
+			else
+			{
+				if (level.time >= ent->pain_debounce_time)
+				{
+					gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+					ent->pain_debounce_time = level.time + 1;
+				}
+				NoAmmoWeaponChange (ent);
+			}
+			return;
+		}
+
+		if ((ent->client->ps.gunframe == 29) || (ent->client->ps.gunframe == 34) || (ent->client->ps.gunframe == 39) || (ent->client->ps.gunframe == 48))
+		{
+			if (rand()&15)
+				return;
+		}
+
+		if (++ent->client->ps.gunframe > 48)
+			ent->client->ps.gunframe = 16;
+		return;
+	}
+
+	if (ent->client->weaponstate == WEAPON_FIRING)
+	{
+		if (ent->client->ps.gunframe == 11)
+		{
+			if (!ent->client->grenade_time)
+			{
+				ent->client->grenade_time = level.time + GRENADE_TIMER + 0.2;
+			}
+
+			if (ent->client->buttons & BUTTON_ATTACK)
+				return;
+
+			if (ent->client->grenade_blew_up)
+			{
+				if (level.time >= ent->client->grenade_time)
+				{
+					ent->client->ps.gunframe = 15;
+					ent->client->grenade_blew_up = false;
+				}
+				else
+				{
+					return;
+				}
+			}
+		}
+
+		if (ent->client->ps.gunframe == 12)
+		{
+			ent->client->weapon_sound = 0;
+            gi.dprintf("DEUBG weapon_nuke_fire\n");
+			weapon_nuke_fire (ent, false);
 		}
 
 		if ((ent->client->ps.gunframe == 15) && (level.time < ent->client->grenade_time))

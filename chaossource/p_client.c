@@ -324,6 +324,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				message2 = "'s shrapnel";
 				break;
 			case MOD_ESSHOT_SPLASH:
+			case MOD_NUKE:
 				message = "was pulverized by";
 				message2 = "'s explosive blast";
 				break;
@@ -937,6 +938,9 @@ void InitClientPersistant (gclient_t *client)
 		if (start_gravityvortex->value > 0)
 			client->pers.inventory[ITEM_INDEX(it_vortex)] = 1;
 
+		if (start_nuke->value > 0)
+			client->pers.inventory[ITEM_INDEX(it_nuke)] = 1;
+
 		if (start_defenceturret->value > 0)
 			client->pers.inventory[ITEM_INDEX(it_lturret)] = start_defenceturret->value;
 
@@ -1049,6 +1053,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_lturret	     = 1;
 	client->pers.max_rturret	     = 1;
 	client->pers.max_vortex          = 1;
+	client->pers.max_nuke          = 1;
 
 	client->pers.connected = true;
 }

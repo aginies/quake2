@@ -42,6 +42,7 @@ void Weapon_Airfist (edict_t *ent);
 void Weapon_HomingLauncher (edict_t *ent);
 void Weapon_Buzzsaw (edict_t *ent);
 void Weapon_Vortex (edict_t *ent);
+void Weapon_Nuke (edict_t *ent);
 void Weapon_LaserTurret (edict_t *ent);
 void Weapon_RocketTurret (edict_t *ent);
 
@@ -366,15 +367,22 @@ void DoRespawn (edict_t *ent)
 		else if (strcmp(ent->classname, "weapon_bfg") == 0
 			|| strcmp(ent->classname, "weapon_plasma") == 0
 			|| strcmp(ent->classname, "ammo_vortex") == 0
+			|| strcmp(ent->classname, "ammo_nuke") == 0
 			|| strcmp(ent->classname, "ammo_laserturret") == 0
 			|| strcmp(ent->classname, "ammo_rocketturret") == 0)
 		{
 			rn = random();
-			if ( rn <= 0.3)
+			if ( rn <= 0.1)
 			{
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
 			}
+			if ( (rn > 0.1) && (rn <= 0.2))
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
+			}
+
 			else if ((rn > 0.3) && (rn <= 0.5))
 			{
 				item = it_rturret;
@@ -510,6 +518,11 @@ void DoRespawn (edict_t *ent)
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
 			}
+            else if (ban_nuke->value == 0)
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
+			}
 			else if (ban_defenceturret->value == 0)
 			{
 				item = it_lturret;
@@ -560,6 +573,35 @@ void DoRespawn (edict_t *ent)
 				return;
 			}
 		}
+		else if (strcmp(ent->classname, "ammo_nuke") == 0 && ban_nuke->value > 0)
+		{
+
+			if (ban_bfg->value == 0)
+			{
+				item = it_bfg;
+				ent->classname = "weapon_bfg";
+			}
+			else if (ban_defenceturret->value == 0)
+			{
+				item = it_lturret;
+				ent->classname = "ammo_laserturret";
+			}
+			else if (ban_rocketturret->value == 0)
+			{
+				item = it_rturret;
+				ent->classname = "ammo_rocketturret";
+			}
+			else if (ban_plasma->value == 0)
+			{
+				item = it_plasma;
+				ent->classname = "weapon_plasma";
+			}
+			else
+			{
+				G_FreeEdict (ent);
+				return;
+			}
+		}
 		else if (strcmp(ent->classname, "ammo_laserturret") == 0 && ban_defenceturret->value > 0)
 		{
 			if (ban_bfg->value == 0)
@@ -571,6 +613,11 @@ void DoRespawn (edict_t *ent)
 			{
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
+			}
+			else if (ban_nuke->value == 0)
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
 			}
 			else if (ban_rocketturret->value == 0)
 			{
@@ -594,6 +641,11 @@ void DoRespawn (edict_t *ent)
 			{
 				item = it_lturret;
 				ent->classname = "ammo_laserturret";
+			}
+			else if (ban_nuke->value == 0)
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
 			}
 			else if (ban_vortex->value == 0)
 			{
@@ -1636,6 +1688,8 @@ qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 		max = ent->client->pers.max_buzzes;
 	else if (item->tag == AMMO_VORTEX)
 		max = ent->client->pers.max_vortex;
+	else if (item->tag == AMMO_NUKE)
+		max = ent->client->pers.max_nuke;
 	else if (item->tag == AMMO_LTURRET)
 		max = ent->client->pers.max_lturret;
 	else if (item->tag == AMMO_RTURRET)
@@ -2599,6 +2653,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = it_plasma;
 			ent->classname = "weapon_plasma";
 		}
+        else if (rn >= 0.7 && rn <= 1)
+		{
+			item = it_nuke;
+			ent->classname = "ammo_nuke";
+		}
     }
 
 
@@ -2694,6 +2753,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = it_lturret;
 			ent->classname = "ammo_laserturret";
 		}
+		else if (ban_nuke->value == 0)
+		{
+			item = it_nuke;
+			ent->classname = "ammo_nuke";
+		}
 		else if (ban_rocketturret->value == 0)
 		{
 			item = it_rturret;
@@ -2753,6 +2817,31 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
+	//Nuke
+	else if (strcmp(ent->classname, "ammo_nuke") == 0 && ban_nuke->value > 0)
+	{
+		if (ban_defenceturret->value == 0)
+		{
+			item = it_lturret;
+			ent->classname = "ammo_laserturret";
+		}
+		else if (ban_rocketturret->value == 0)
+		{
+			item = it_rturret;
+			ent->classname = "ammo_rocketturret";
+		}
+		else if (ban_bfg->value == 0)
+		{
+			item = it_bfg;
+			ent->classname = "weapon_bfg";
+		}
+		else
+		{
+			G_FreeEdict (ent);
+			return;
+		}
+	}
+
 	//defence turret
 	else if (strcmp(ent->classname, "ammo_laserturret") == 0 && ban_defenceturret->value > 0)
 	{
@@ -2770,6 +2859,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		{
 			item = it_vortex;
 			ent->classname = "ammo_vortex";
+		}
+		else if (ban_nuke->value == 0)
+		{
+			item = it_nuke;
+			ent->classname = "ammo_nuke";
 		}
 		else if (ban_plasma->value == 0)
 		{
@@ -4136,6 +4230,31 @@ always owned, never in the world
 /* precache */
 	},
 
+/*QUAKED ammo_nuke (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+	{
+		"ammo_nuke",
+		Pickup_Ammo,
+		Use_Weapon,
+		Drop_Ammo,
+		Weapon_Nuke,
+		"misc/am_pkup.wav",
+//        "models/items/ammo/grenade/medium/tris.md2", EF_ROTATE,
+        "models/weapons/v_nuke/tris.md2", EF_ROTATE,
+        "models/weapons/v_nuke/tris.md2",
+/* icon */		"a_nuke",
+/* pickup */	"Nuke",
+/* width */		0,
+		1,
+		"Nuke",
+		IT_AMMO|IT_WEAPON,
+        0,
+		NULL,
+		AMMO_NUKE,
+/* precache */
+	},
+
+
 /*QUAKED ammo_laserturret (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
@@ -5273,6 +5392,7 @@ void SetItemNames (void)
 	it_rturret	= FindItem("automatic rocket turret");
 	it_vortex	= FindItem("gravity vortex");
     it_plasma   = FindItem("plasma");
+	it_nuke	= FindItem("nuke");
 
 	it_health		= FindItemByClassname("item_health");
 	it_health_large	= FindItemByClassname("item_health_large");

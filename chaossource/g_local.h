@@ -101,8 +101,9 @@ typedef enum
 	AMMO_HOMING,
 	AMMO_BUZZES,
 	AMMO_VORTEX,
+	AMMO_NUKE,
 	AMMO_LTURRET,
-	AMMO_RTURRET
+	AMMO_RTURRET,
 } ammo_t;
 
 
@@ -509,7 +510,8 @@ extern	int	body_armor_index;
 #define MOD_PARROW			50
 #define MOD_AK42			51
 #define MOD_PLASMA_RIFLE    52
-#define MOD_ESSHOT_SPLASH  53
+#define MOD_NUKE			53
+#define MOD_ESSHOT_SPLASH  54
 
 #define MOD_FRIENDLY_FIRE	0x8000000
 
@@ -701,6 +703,7 @@ void fire_bullet (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int ki
 void fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int hspread, int vspread, int count, int mod);
 void fire_blaster (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int effect, qboolean hyper);
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
+void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius, qboolean held);
 void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage);
 void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick);
@@ -825,6 +828,7 @@ typedef struct
 	int			max_homing;
 	int			max_buzzes;
 	int			max_vortex;
+	int			max_nuke;
 	int			max_lturret;
 	int			max_rturret;
 
@@ -1169,6 +1173,7 @@ int		numred;	//size of the red team
 int		numblue;	//size of the blue team
 int		numturrets;
 int		vortexstate;
+int		nukestate;
 
 #define MAX_MAPS           64 
 #define MAX_MAPNAME_LEN    32
@@ -1202,6 +1207,7 @@ edict_t	*health_list;
 edict_t	*powerup_list;
 edict_t	*ammo_list;
 edict_t	*vortex_pointer;	//pointer to the vortex if one is currently active
+edict_t	*nuke_pointer;	//pointer to the nuke if one is currently active
 cvar_t	*node_debug;
 cvar_t	*lightsoff;
 cvar_t	*botchat;

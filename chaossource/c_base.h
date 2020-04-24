@@ -25,7 +25,7 @@ cvar_t	*ban_sword, *ban_chainsaw, *ban_supershotgun,
 		*ban_crossbow,*ban_airgun, *ban_grenadelauncher,
 		*ban_proxylauncher, *ban_rocketlauncher, *ban_hyperblaster,
 		*ban_railgun, *ban_buzzsaw, *ban_vortex, *ban_defenceturret,
-		*ban_rocketturret, *ban_bfg, *ban_plasma;
+		*ban_rocketturret, *ban_bfg, *ban_plasma, *ban_nuke;
 
 // Item banning console variables
 
@@ -48,7 +48,7 @@ cvar_t	*ban_grapple, *ban_bodyarmor, *ban_combatarmor, *ban_jacketarmor,
 cvar_t	*start_sword, *start_chainsaw, *start_supershotgun, *start_crossbow,
 		*start_airgun, *start_grenadelauncher, *start_proxylauncher,
 		*start_rocketlauncher, *start_hyperblaster, *start_railgun,
-		*start_buzzsaw, *start_bfg, *start_plasma;
+		*start_buzzsaw, *start_bfg, *start_plasma, *start_nuke;
 
 // Startup item console variables
 
@@ -80,5 +80,5 @@ gitem_t	*it_shells, *it_eshells, *it_cells, *it_arrows, *it_rockets,
 		*it_poisonarrows, *it_explosivearrows, *it_poisoncrossbow,
 		*it_explosivecrossbow, *it_grapple, *it_jetpack, *it_chainsaw,
 		*it_health, *it_health_large, *it_health_mega, *it_lturret,
-		*it_airfist, *it_plasma;
+		*it_airfist, *it_plasma, *it_nuke;
 

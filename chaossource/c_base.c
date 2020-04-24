@@ -357,6 +357,7 @@ void GetSettings()
 	start_grapple = gi.cvar("start_grapple", "0", CVAR_LATCH);
 	start_jetpack = gi.cvar("start_jetpack", "0", CVAR_LATCH);
 	start_gravityvortex = gi.cvar("start_gravityvortex", "0", CVAR_LATCH);
+	start_nuke = gi.cvar("start_nuke", "0", CVAR_LATCH);
 	start_defenceturret = gi.cvar("start_defenceturret", "0", CVAR_LATCH);
 	start_rocketturret = gi.cvar("start_rocketturret", "0", CVAR_LATCH);
 	start_bodyarmor = gi.cvar("start_bodyarmor", "0", CVAR_LATCH);
@@ -1402,6 +1403,8 @@ void Use_Class0 (edict_t *ent)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
 			ent->client->newweapon = it_vortex;
+		else if (ent->client->pers.inventory[ITEM_INDEX(it_nuke)] > 0)
+			ent->client->newweapon = it_nuke;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_rturret)] > 0)
 			ent->client->newweapon = it_rturret;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_lturret)] > 0)
@@ -1411,6 +1414,8 @@ void Use_Class0 (edict_t *ent)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
 			ent->client->newweapon = it_vortex;
+        else if (ent->client->pers.inventory[ITEM_INDEX(it_nuke)] > 0)
+            ent->client->newweapon = it_nuke;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_bfg)] > 0
 			&& ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 0)
 			ent->client->newweapon = it_bfg;
@@ -1425,6 +1430,16 @@ void Use_Class0 (edict_t *ent)
 			&& ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 0)
 			ent->client->newweapon = it_bfg;
 	}
+	else if (ent->client->pers.weapon == it_nuke)
+	{
+		if (ent->client->pers.inventory[ITEM_INDEX(it_rturret)] > 0)
+			ent->client->newweapon = it_rturret;
+		else if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
+			ent->client->newweapon = it_vortex;
+		else if (ent->client->pers.inventory[ITEM_INDEX(it_bfg)] > 0
+			&& ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 0)
+			ent->client->newweapon = it_bfg;
+	}
 	else if (ent->client->pers.weapon == it_rturret)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(it_lturret)] > 0)
@@ -1434,12 +1449,16 @@ void Use_Class0 (edict_t *ent)
 			ent->client->newweapon = it_bfg;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
 			ent->client->newweapon = it_vortex;
+        else if (ent->client->pers.inventory[ITEM_INDEX(it_nuke)] > 0)
+            ent->client->newweapon = it_nuke;
 	}
 	else if (ent->client->pers.weapon == it_lturret)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(it_bfg)] > 0
 			&& ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 0)
 			ent->client->newweapon = it_bfg;
+        else if (ent->client->pers.inventory[ITEM_INDEX(it_nuke)] > 0)
+            ent->client->newweapon = it_nuke;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
 			ent->client->newweapon = it_vortex;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_rturret)] > 0)
@@ -1452,6 +1471,8 @@ void Use_Class0 (edict_t *ent)
 			ent->client->newweapon = it_bfg;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
 			ent->client->newweapon = it_vortex;
+        else if (ent->client->pers.inventory[ITEM_INDEX(it_nuke)] > 0)
+            ent->client->newweapon = it_nuke;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_rturret)] > 0)
 			ent->client->newweapon = it_rturret;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_lturret)] > 0)

@@ -699,6 +699,7 @@ void guidedrocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface
     ent->enemy = other;
     guidedrocket_explode (ent);
 }
+
 void fire_guidedrocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage)
 {
     edict_t *rocket;
@@ -743,7 +744,6 @@ void fire_guidedrocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int
 
     gi.linkentity (rocket);
 }
-
 
 /*
 =================
