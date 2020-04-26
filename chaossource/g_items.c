@@ -4240,8 +4240,10 @@ always owned, never in the world
 		Weapon_Nuke,
 		"misc/am_pkup.wav",
 //        "models/items/ammo/grenade/medium/tris.md2", EF_ROTATE,
-        "models/weapons/v_nuke/tris.md2", EF_ROTATE,
+        "models/objects/nuke/tris.md2", EF_ROTATE,
+// models/weapons/v_nuke/tris.md2", EF_ROTATE,
         "models/weapons/v_nuke/tris.md2",
+
 /* icon */		"a_nuke",
 /* pickup */	"Nuke",
 /* width */		0,
