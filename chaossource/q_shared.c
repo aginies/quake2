@@ -242,6 +242,7 @@ float Q_fabs (float f)
 #endif
 }
 
+/*
 #if defined _M_IX86 && !defined C_ONLY
 #pragma warning (disable:4035)
 __declspec( naked ) long Q_ftol( float f )
@@ -254,6 +255,7 @@ __declspec( naked ) long Q_ftol( float f )
 }
 #pragma warning (default:4035)
 #endif
+*/
 
 /*
 ===============
@@ -396,6 +398,7 @@ dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
 #else
 #pragma warning( disable: 4035 )
 
+/*
 __declspec( naked ) int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 {
 	static int bops_initialized;
@@ -625,9 +628,9 @@ Lerror:
 		int 3
 	}
 }
+*/
 #pragma warning( default: 4035 )
 #endif
-
 void ClearBounds (vec3_t mins, vec3_t maxs)
 {
 	mins[0] = mins[1] = mins[2] = 99999;
