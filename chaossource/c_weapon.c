@@ -4619,7 +4619,8 @@ void Nuke_Explode (edict_t *ent)
       origin[1] = origin[1] + 16*crandom();
       origin[2] = origin[2] + n;
       gi.WriteByte (svc_temp_entity);
-      gi.WriteByte (TE_GRENADE_EXPLOSION);
+//      gi.WriteByte (TE_GRENADE_EXPLOSION);
+      gi.WriteByte (TE_EXPLOSION1);
       gi.WritePosition (origin);
       gi.multicast (origin, MULTICAST_PVS);
     }
@@ -4637,46 +4638,14 @@ void Nuke_Explode (edict_t *ent)
       stuff->solid = SOLID_NOT;
       VectorClear (stuff->mins);
       VectorClear (stuff->maxs);
-      stuff->s.effects |= EF_ROCKET;
+      stuff->s.effects |= EF_PLASMA;
       stuff->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
       stuff->s.sound = gi.soundindex ("weapons/bfg__l1a.wav");
       stuff->owner = ent;
-      stuff->nextthink = level.time + 3;
+      stuff->nextthink = level.time + 2;
       stuff->think = G_FreeEdict;
       stuff->classname = "nuke";
-      gi.linkentity (stuff);
-    }
-
-    
-  VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
-  origin[2] = origin[2] + 64;
-
-  while ((target = findradius(target, ent->s.origin, 1024)) != NULL)
-    {
-      if (!target->client)
-	continue;
-      if (!CanDamage (target, ent))
-	continue;
-      if (target->client->camera)
-	continue;
-      if (target->client->invincible_framenum > level.framenum) // invulnerable
-	continue;
-      if (target->flags & FL_GODMODE) // god
-	continue;
-
-      BlindTimeAdd = 10;
-      target->client->BlindTime = BlindTimeAdd * 1.5 ;
-      target->client->BlindBase = blindtime->value;
-
-      target->client->v_dmg_pitch = 20 * crandom();
-      target->client->v_dmg_roll = 20 * crandom();
-      target->client->damage_blend[0] = 1;
-      target->client->damage_blend[1] = 1;
-      target->client->damage_blend[2] = 1;
-      target->client->damage_alpha = 0.8;
-      target->client->v_dmg_time = level.time + 1;
-
-      T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 2000, 1, 2000, MOD_NUKE);
+      gi.linkentity(stuff);
     }
 
   // explosion around
@@ -4696,19 +4665,20 @@ void Nuke_Explode (edict_t *ent)
 	
       nuke->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
       nuke->s.frame = random()*4;
-      nuke->s.effects |= EF_ROCKET;
+      nuke->s.effects |= EF_PLASMA;
       nuke->s.sound = gi.soundindex ("weapons/bfg__l1a.wav");
 	
       VectorSet (nuke->mins, -3, -3, -3);
       VectorSet (nuke->maxs, 3, 3, 3);
       nuke->owner = ent->owner;
-      nuke->delay = 3;
+      nuke->delay = 2;
       nuke->think = Cata_Explode;
       nuke->nextthink = level.time + FRAMETIME;
       nuke->classname = "nuke";
+      gi.linkentity(nuke);
     }
 
-  while ((target = findradius(target, ent->s.origin, 1024)) != NULL)
+  while ((target = findradius(target, ent->s.origin, 2024)) != NULL)
     {
       if (!target->client)
 	continue;
@@ -4734,8 +4704,8 @@ void Nuke_Explode (edict_t *ent)
       target->client->damage_alpha = 0.8;
       target->client->v_dmg_time = level.time + 5;
 
-      T_RadiusDamage (ent, ent->owner, 2000, NULL, 2000, MOD_NUKE);
-    
+      T_RadiusDamage (ent, ent->owner, 2000, NULL, 4000, MOD_NUKE);
+      T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 2000, 1, 2000, MOD_NUKE);
     }
     
   Nuke_Free(ent);
@@ -4792,7 +4762,7 @@ void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spee
   nuke->s.effects = 0;
   VectorClear (nuke->mins);
   VectorClear (nuke->maxs);
-  nuke->s.modelindex = gi.modelindex ("models/objects/rocket/tris.md2");
+  nuke->s.modelindex = gi.modelindex ("models/objects/nuke/tris.md2");
   nuke->owner = self;
   //nuke->touch = Nuke_Touch;
   nuke->nextthink = level.time + timer;
