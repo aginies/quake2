@@ -11,6 +11,8 @@ The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org
 
 [![Video](https://i.ytimg.com/vi/Yjb_YpavBUE/hqdefault.jpg)](https://www.youtube.com/watch?v=Yjb_YpavBUE)
 
+Devel release:
+[![Video](https://i.ytimg.com/vi/-80LPgSuP6w/hqdefault.jpg)](https://www.youtube.com/watch?v=-80LPgSuP6w)
 
 You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory.
 You can find more original source at [files.chaoticdreams.org](https://files.chaoticdreams.org/Chaos/ChaosDM/)
