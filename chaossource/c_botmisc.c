@@ -29,10 +29,10 @@ void Svcmd_addbots_f()	// adds "num" bots.
 		return;
 	else if (num == 1)
 	{
-        // up to 15 bots is possible :)
-		if (numbots >= 15)
+        // up to 31 bots is possible :)
+		if (numbots >= 31)
 		{
-			gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 15 Havoc-Bots!\n");
+			gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 31 Havoc-Bots!\n");
 			return;
 		}
 
@@ -56,10 +56,10 @@ void Svcmd_addbots_f()	// adds "num" bots.
 	{
 		for (i = 0; i < num; i++)
 		{
-            // up to 15 bots is possible :)
-			if (numbots >= 15)
+            // up to 31 bots is possible :)
+			if (numbots >= 31)
 			{
-				gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 15 Havoc-Bots!\n");
+				gi.cprintf (NULL, PRINT_HIGH, "You can't spawn more than 31 Havoc-Bots!\n");
 				return;
 			}
 			
@@ -490,6 +490,7 @@ void bot_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 float Bot_Fire_Freq(edict_t *ent)
 {
 	it_lturret = FindItem("automatic defence turret");	//bugfix
+    it_nuke = FindItem("nuke"); //bugfix
 
 	if (ent->client->pers.weapon == it_ak42)
 		return AK42_FREQ;
@@ -529,6 +530,8 @@ float Bot_Fire_Freq(edict_t *ent)
 		return PLASMA_FREQ;
 	else if (ent->client->pers.weapon == it_vortex)
 		return VORTEX_FREQ;
+	else if (ent->client->pers.weapon == it_nuke)
+		return NUKE_FREQ;
 	else if (ent->client->pers.weapon == it_sword)
 		return SWORD_FREQ;
 	else if (ent->client->pers.weapon == it_chainsaw)
@@ -553,6 +556,7 @@ void Bot_BestMidWeapon(edict_t *self)
 
 	it_lturret = FindItem("automatic defence turret");	//bugfix
 	it_airfist = FindItem("airgun");	//bugfix
+    it_nuke = FindItem("nuke");     //bugfix
 
 	// Is our enemy a turret ?
 	if (self->enemy
@@ -610,6 +614,13 @@ void Bot_BestMidWeapon(edict_t *self)
 	{
 		if (oldweapon != it_vortex)
 			self->client->newweapon = it_vortex;
+		return;
+	}
+    // Nuke
+	if (client->pers.inventory[ITEM_INDEX(it_nuke)])
+	{
+		if (oldweapon != it_nuke)
+			self->client->newweapon = it_nuke;
 		return;
 	}
 	// BFG
@@ -747,6 +758,7 @@ void Bot_BestCloseWeapon(edict_t *self)
 
 	it_lturret = FindItem("automatic defence turret");	//bugfix
 	it_airfist = FindItem("airgun");	//bugfix
+    it_nuke = FindItem("nuke"); //bugfix
 
 	// Is our enemy a turret ?
 	if (self->enemy
@@ -806,6 +818,13 @@ void Bot_BestCloseWeapon(edict_t *self)
 			self->client->newweapon = it_vortex;
 		return;
 	}
+    // Nuke
+	if (client->pers.inventory[ITEM_INDEX(it_nuke)])
+	{
+		if (oldweapon != it_nuke)
+			self->client->newweapon = it_nuke;
+		return;
+	}
 	// BFG
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_bfg)])
 	{
@@ -813,7 +832,7 @@ void Bot_BestCloseWeapon(edict_t *self)
 			self->client->newweapon = it_bfg;
 		return;
 	}
-	// BFG
+	// Plasma
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
 	{
 		if (oldweapon != it_plasma)
@@ -941,6 +960,7 @@ void Bot_BestFarWeapon(edict_t *self)
 
 	it_lturret = FindItem("automatic defence turret");	//bugfix
 	it_airfist = FindItem("airgun");	//bugfix
+    it_nuke = FindItem("nuke"); //bugfix
 
 	// Is our enemy a turret ?
 	if (self->enemy
@@ -1079,6 +1099,13 @@ void Bot_BestFarWeapon(edict_t *self)
 			self->client->newweapon = it_vortex;
 		return;
 	}
+    // Nuke
+	if (client->pers.inventory[ITEM_INDEX(it_nuke)])
+	{
+		if (oldweapon != it_nuke)
+			self->client->newweapon = it_nuke;
+		return;
+	}
 	// Proxymine Launcher
 	if ( client->pers.inventory[ITEM_INDEX(it_proxymines)]	&&  client->pers.inventory[ITEM_INDEX(it_proxyminelauncher)])
 	{
@@ -1152,6 +1179,7 @@ qboolean Bot_CanPickupAmmo(edict_t *ent, edict_t *eitem)
 	gitem_t	*item;
 	
 	it_lturret = FindItem("automatic defence turret");	//bugfix
+    it_nuke = FindItem("nuke"); //bugfix
 
 	item = eitem->item;
 
@@ -1209,6 +1237,9 @@ qboolean Bot_CanPickupAmmo(edict_t *ent, edict_t *eitem)
 	if (item->tag == AMMO_VORTEX
 		&& ent->client->pers.inventory[ITEM_INDEX(it_vortex)] >= ent->client->pers.max_vortex)
 		return 0;
+	if (item->tag == AMMO_NUKE
+		&& ent->client->pers.inventory[ITEM_INDEX(it_nuke)] >= ent->client->pers.max_nuke)
+		return 0;
 
 	return 1;
 }
@@ -1218,6 +1249,7 @@ qboolean Bot_CanPickupItem(edict_t *ent, edict_t *eitem)
 	gitem_t	*item;
 	
 	it_lturret = FindItem("automatic defence turret");	//bugfix
+    it_nuke = FindItem("nuke"); //bugfix
 
 	item = eitem->item;
 
@@ -1458,6 +1490,7 @@ void AddItemToList(edict_t *ent)
 	if (ent->item->pickup == Pickup_Weapon
 		|| ent->item->pickup == Pickup_NoAmmoWeapon
 		|| Q_stricmp(ent->classname, "ammo_vortex") == 0
+		|| Q_stricmp(ent->classname, "ammo_nuke") == 0
 		|| Q_stricmp(ent->classname, "ammo_laserturret") == 0
 		|| Q_stricmp(ent->classname, "ammo_rocketturret") == 0
 		)
