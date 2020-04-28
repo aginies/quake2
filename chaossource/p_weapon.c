@@ -318,7 +318,13 @@ void NoAmmoWeaponChange (edict_t *ent)
 			ent->client->newweapon = it_buzzsaw;
 			return;
 		}
-
+        if( ! it_nuke )
+            it_nuke = FindItem("nuke");
+		if ( ent->client->pers.inventory[ITEM_INDEX(it_nuke)])
+		{
+			ent->client->newweapon = it_nuke;
+			return;
+		}
 		if (ent->client->pers.inventory[ITEM_INDEX(it_slugs)]
 			&&  ent->client->pers.inventory[ITEM_INDEX(it_railgun)])
 		{
