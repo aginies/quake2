@@ -138,6 +138,7 @@ void DoRespawn (edict_t *ent)
 	it_lturret = FindItem("automatic defence turret");	//bugfix
 	it_airfist = FindItem("airgun");	//bugfix
 	it_plasma = FindItem("plasma");	//bugfix
+	it_nuke = FindItem("nuke");	//bugfix
 
 
 	if (ent->team)
@@ -364,10 +365,21 @@ void DoRespawn (edict_t *ent)
 			}
 			newit = 1;
 		}
+		else if (strcmp(ent->classname, "weapon_airfist") == 0
+                || strcmp(ent->classname, "ammo_nuke") == 0)
+		{
+            if (random() < 0.5)
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
+			}
+			newit = 1;
+		}
+
 		else if (strcmp(ent->classname, "weapon_bfg") == 0
 			|| strcmp(ent->classname, "weapon_plasma") == 0
-			|| strcmp(ent->classname, "ammo_vortex") == 0
 			|| strcmp(ent->classname, "ammo_nuke") == 0
+			|| strcmp(ent->classname, "ammo_vortex") == 0
 			|| strcmp(ent->classname, "ammo_laserturret") == 0
 			|| strcmp(ent->classname, "ammo_rocketturret") == 0)
 		{
@@ -377,7 +389,7 @@ void DoRespawn (edict_t *ent)
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
 			}
-			if ( (rn > 0.1) && (rn <= 0.2))
+			else if ((rn >= 0.1) && (rn <= 0.3))
 			{
 				item = it_nuke;
 				ent->classname = "ammo_nuke";
@@ -408,7 +420,7 @@ void DoRespawn (edict_t *ent)
 		}
 	//MATTHIAS - Weapon banning
 
-		if (!Q_stricmp(ent->classname, "weapon_sword") && ban_sword->value)
+		if (!Q_stricmp(ent->classname, "weapon_sword") && ban_sword->value > 0)
 		{
 			if (ban_chainsaw->value > 0) //banned,too
 			{
@@ -434,22 +446,38 @@ void DoRespawn (edict_t *ent)
 				ent->classname = "weapon_sword";
 			}
 		}
+		else if (strcmp(ent->classname, "weapon_airfist") == 0 && ban_airgun->value > 0)
+		{
+			if (ban_nuke->value > 0) //banned,too
+			{
+				G_FreeEdict (ent);
+				return;
+			}
+			else
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
+			}
+		}
 		else if (strcmp(ent->classname, "weapon_supershotgun") == 0 && ban_supershotgun->value > 0)
 		{
 			G_FreeEdict (ent);
 			return;
 		}
 		else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_plasma->value > 0)
-		{
-			G_FreeEdict (ent);
-			return;
-		}
+        {
+			if (ban_nuke->value > 0) //banned,too
+			{
+				G_FreeEdict (ent);
+				return;
+			}
+			else
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
+			}
+        }
 		else if (strcmp(ent->classname, "weapon_crossbow") == 0 && ban_crossbow->value > 0)
-		{
-			G_FreeEdict (ent);
-			return;
-		}
-		else if (strcmp(ent->classname, "weapon_airfist") == 0 && ban_airgun->value > 0)
 		{
 			G_FreeEdict (ent);
 			return;
@@ -561,6 +589,11 @@ void DoRespawn (edict_t *ent)
 			{
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
+			}
+            else if (ban_nuke->value == 0) 
+			{
+				item = it_nuke;
+				ent->classname = "ammo_nuke";
 			}
 			else if (ban_plasma->value == 0)
 			{
@@ -2349,6 +2382,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	it_lturret = FindItem("automatic defence turret");	//bugfix
 	it_airfist = FindItem("airgun");	//bugfix
     it_plasma = FindItem("plasma");
+    it_nuke = FindItem("nuke");
 
 
 	PrecacheItem (item);
@@ -2624,6 +2658,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		item = it_airfist;
 		ent->classname = "weapon_airfist";
 	}
+	else if (strcmp(ent->classname, "ammo_nuke") == 0)
+	{
+		item = it_nuke;
+		ent->classname = "ammo_nuke";
+	}
 	else if (strcmp(ent->classname, "weapon_grenadelauncher") == 0)
 	{
 		if (random() < 0.3)
@@ -2889,6 +2928,12 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = it_vortex;
 			ent->classname = "ammo_vortex";
 		}
+		else if (ban_nuke->value == 0)
+		{
+			item = it_nuke;
+			ent->classname = "ammo_nuke";
+		}
+
 		else if (ban_defenceturret->value == 0)
 		{
 			item = it_lturret;
@@ -4239,14 +4284,11 @@ always owned, never in the world
 		Drop_Ammo,
 		Weapon_Nuke,
 		"misc/am_pkup.wav",
-//        "models/items/ammo/grenade/medium/tris.md2", EF_ROTATE,
         "models/objects/nuke/tris.md2", EF_ROTATE,
-// models/weapons/v_nuke/tris.md2", EF_ROTATE,
         "models/weapons/v_nuke/tris.md2",
-
 /* icon */		"a_nuke",
 /* pickup */	"Nuke",
-/* width */		0,
+/* width */		3,
 		1,
 		"Nuke",
 		IT_AMMO|IT_WEAPON,
