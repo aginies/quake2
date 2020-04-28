@@ -4553,9 +4553,7 @@ void Weapon_Vortex (edict_t *ent)
 
 #define	NUKE_INACTIVE		0
 #define	NUKE_FIRED		1
-#define	NUKE_STARTING		2
-#define	NUKE_SPAWNSTUFF	3
-#define	NUKE_ACTIVE		4
+#define	NUKE_ACTIVE		2
 
 void Nuke_Free (edict_t *ent)
 {
@@ -4573,13 +4571,14 @@ void Cata_Explode (edict_t *ent)
   ent->delay = ent->delay - FRAMETIME;
   if(ent->delay <= 0)
     G_FreeEdict (ent);
+
 }
 
 void Nuke_Explode (edict_t *ent)
 {
   vec3_t      origin, v;
-  vec3_t      nuke_angs;
   edict_t     *nuke, *stuff, *target = NULL;
+  vec3_t      nuke_angs;
   vec3_t      forward, right, up;
   float       Distance, BlindTimeAdd;
   int         n, i;
@@ -4589,26 +4588,7 @@ void Nuke_Explode (edict_t *ent)
   if (ent->owner && ent->owner->client)
     PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
-/* FROM GRENADE
-  if (ent->enemy)
-        {
-                float   points;
-                vec3_t  v;
-                vec3_t  dir;
-
-                VectorAdd (ent->enemy->mins, ent->enemy->maxs, v);
-                VectorMA (ent->enemy->s.origin, 0.5, v, v);
-                VectorSubtract (ent->s.origin, v, v);
-                points = ent->dmg - 0.5 * VectorLength (v);
-                VectorSubtract (ent->enemy->s.origin, ent->s.origin, dir);
-                if (ent->spawnflags & 1)
-                        mod = MOD_HANDGRENADE;
-                else
-                        mod = MOD_GRENADE;
-                T_Damage (ent->enemy, ent, ent->owner, dir, ent->s.origin, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS, mod);
-        }
-*/
-    
+  nukestate = NUKE_ACTIVE;
   gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/vortex/storm.wav"), 1, ATTN_NORM, 0);
     
   // Big explosion effect:
@@ -4619,11 +4599,14 @@ void Nuke_Explode (edict_t *ent)
       origin[1] = origin[1] + 16*crandom();
       origin[2] = origin[2] + n;
       gi.WriteByte (svc_temp_entity);
-//      gi.WriteByte (TE_GRENADE_EXPLOSION);
-      gi.WriteByte (TE_EXPLOSION1);
+      gi.WriteByte (TE_GRENADE_EXPLOSION);
+//      gi.WriteByte (TE_EXPLOSION1);
       gi.WritePosition (origin);
       gi.multicast (origin, MULTICAST_PVS);
     }
+
+    VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+    origin[2] = origin[2] + 64;
 
   // send explosion in all angles
   for (i = 0; i < 128; i++)
@@ -4631,20 +4614,26 @@ void Nuke_Explode (edict_t *ent)
       stuff = G_Spawn();
       VectorCopy (ent->s.origin, stuff->s.origin);
       stuff->velocity[0] += crandom () * 400;
-      stuff->velocity[1] += crandom () * 400;
+      stuff->velocity[1] += crandom () * 200;
       stuff->velocity[2] += crandom () * 400;
       stuff->movetype = MOVETYPE_FLYMISSILE;
       stuff->clipmask = MASK_SHOT;
-      stuff->solid = SOLID_NOT;
+      stuff->solid = SOLID_TRIGGER;
+//    stuff->solid = SOLID_NONE;
       VectorClear (stuff->mins);
       VectorClear (stuff->maxs);
-      stuff->s.effects |= EF_PLASMA;
       stuff->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
       stuff->s.sound = gi.soundindex ("weapons/bfg__l1a.wav");
-      stuff->owner = ent;
-      stuff->nextthink = level.time + 2;
-      stuff->think = G_FreeEdict;
-      stuff->classname = "nuke";
+      stuff->owner = ent->owner;
+      VectorSet (stuff->mins, -3, -3, -3);
+      VectorSet (stuff->maxs, 3, 3, 3);
+      stuff->s.frame = random()*2;
+      stuff->s.effects |= EF_PLASMA;
+      stuff->nextthink = level.time + 1;
+      stuff->think = Cata_Explode;
+      stuff->delay = 4;
+      //stuff->think = G_FreeEdict;
+      stuff->classname = "stuff";
       gi.linkentity(stuff);
     }
 
@@ -4678,7 +4667,7 @@ void Nuke_Explode (edict_t *ent)
       gi.linkentity(nuke);
     }
 
-  while ((target = findradius(target, ent->s.origin, 2024)) != NULL)
+  while ((target = findradius(target, ent->s.origin, 7000)) != NULL)
     {
       if (!target->client)
 	continue;
@@ -4696,16 +4685,34 @@ void Nuke_Explode (edict_t *ent)
       target->client->BlindTime = BlindTimeAdd * 1.5 ;
       target->client->BlindBase = blindtime->value;
 
-      target->client->v_dmg_pitch = 200 * crandom();
-      target->client->v_dmg_roll = 200 * crandom();
+      target->client->v_dmg_pitch = 100 * crandom();
+      target->client->v_dmg_roll = 100 * crandom();
       target->client->damage_blend[0] = 1;
       target->client->damage_blend[1] = 1;
       target->client->damage_blend[2] = 1;
       target->client->damage_alpha = 0.8;
       target->client->v_dmg_time = level.time + 5;
 
-      T_RadiusDamage (ent, ent->owner, 2000, NULL, 4000, MOD_NUKE);
-      T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 2000, 1, 2000, MOD_NUKE);
+    // Calculate the distance from the Nuke to the victim.
+      VectorSubtract(ent->s.origin, target->s.origin, v);
+      Distance = VectorLength(v);
+
+
+    // NO way to avoid an effect from a nuke blast
+      if ( Distance < 4000 )
+      {
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 300, 1, 4000, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 300, NULL, 300, MOD_NUKE);
+      } else if (Distance >= 3000 && Distance <=5000)
+      {
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 200, 1, 200, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 200, NULL, 2000, MOD_NUKE);
+
+      } else if (Distance >= 5000 && Distance <= 7000)
+      {
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 50, 1, 60, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 50, NULL, 60, MOD_NUKE);
+      }
     }
     
   Nuke_Free(ent);
@@ -4759,7 +4766,7 @@ void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spee
   nuke->movetype = MOVETYPE_BOUNCE;
   nuke->clipmask = MASK_SHOT;
   nuke->solid = SOLID_BBOX;
-  nuke->s.effects = 0;
+  nuke->s.effects |= EF_PENT;
   VectorClear (nuke->mins);
   VectorClear (nuke->maxs);
   nuke->s.modelindex = gi.modelindex ("models/objects/nuke/tris.md2");
@@ -4895,7 +4902,6 @@ void Weapon_Nuke (edict_t *ent)
       if (ent->client->ps.gunframe == 12)
 	{
 	  ent->client->weapon_sound = 0;
-	  gi.dprintf("DEUBG weapon_nuke_fire\n");
 	  weapon_nuke_fire (ent, false);
 	}
 
