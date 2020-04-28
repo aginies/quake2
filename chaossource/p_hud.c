@@ -178,6 +178,8 @@ void BeginIntermission (edict_t *targ)
 	numred		= 0;
 	vortexstate	= 0;
 	vortex_pointer = NULL;
+    nukestate   = 0;
+    nuke_pointer = NULL;
 	blue_base	= -1;
 	red_base	= -1;
 }
