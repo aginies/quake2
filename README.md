@@ -2,10 +2,9 @@
 
 This **Chaos mod** patched to be buildable on x86_64 and compatible with recent Quake2 game.
 This is based on the latest [source code](https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available.
-The current version of Quake2 (3.21) is usable as client only, as there is still some code which 
-are not really clean yet. The code is in the chaossource directory.
+The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean, you should prefer used **yquake2** or **Q2Pro** instead. The code is in the ``chaossource`` directory.
 
-The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/)
+The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/), all credits go to the original Chaos team.
 
 ![](images/chaos.jpg)
 
