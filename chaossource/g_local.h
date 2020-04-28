@@ -181,6 +181,7 @@ typedef enum
 #define WEAP_HOMINGLAUNCHER     26
 #define WEAP_BUZZSAW            27
 #define WEAP_PLASMA             28
+#define WEAP_NUKE               29
 
 
 
