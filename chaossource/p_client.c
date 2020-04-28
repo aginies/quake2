@@ -860,6 +860,7 @@ void InitClientPersistant (gclient_t *client)
 	gitem_t		*item;
 
 	it_lturret = FindItem("automatic defence turret");	//bugfix
+    it_nuke = FindItem("nuke"); //bugfix
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
