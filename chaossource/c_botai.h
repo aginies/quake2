@@ -15,6 +15,7 @@
 #define BFG_FREQ				2.8
 #define PLASMA_FREQ				0
 #define VORTEX_FREQ				1
+#define NUKE_FREQ				1
 #define SWORD_FREQ				0
 #define	CHAINSAW_FREQ			0
 #define TURRET_FREQ				3
