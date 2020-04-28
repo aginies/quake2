@@ -110,6 +110,8 @@ void ShowGun(edict_t *ent)	//vwep
 		|| strcmp(pszIcon, "a_lturret") == 0)
 		nIndex = 15;
 	else if (strcmp(pszIcon, "w_plasmafire") == 0)
+	    nIndex = 16;
+	else if (strcmp(pszIcon, "a_nuke") == 0)
 	    nIndex = 17;
 	else
 		nIndex = 0;
@@ -293,7 +295,8 @@ void GetSettings()
 	ban_buzzsaw = gi.cvar("ban_buzzsaw", "0", CVAR_LATCH);
 	ban_defenceturret = gi.cvar("ban_defenceturret", "0", CVAR_LATCH);
 	ban_rocketturret = gi.cvar("ban_rocketturret", "0", CVAR_LATCH);
-	ban_vortex = gi.cvar("ban_vortex", "1", CVAR_LATCH);
+	ban_vortex = gi.cvar("ban_vortex", "0", CVAR_LATCH);
+	ban_nuke = gi.cvar("ban_nuke", "0", CVAR_LATCH);
 	ban_bfg = gi.cvar("ban_bfg", "0", CVAR_LATCH);
 	ban_plasma = gi.cvar("ban_plasma", "0", CVAR_LATCH);
 
