@@ -488,6 +488,7 @@ void Bot_Think(edict_t *ent)
 
 		it_lturret = FindItem("automatic defence turret");	//bugfix
 		it_plasma = FindItem("plasma");	//bugfix
+		it_nuke = FindItem("nuke");	//bugfix
 
 		// HAVE ROCKET TURRET
 		if ((numturrets < 3)
@@ -1047,6 +1048,7 @@ edict_t *Bot_FindBestWeapon(edict_t *ent)
 			|| current->item == it_lturret
 			|| current->item == it_vortex
 			|| current->item == it_plasma
+			|| current->item == it_nuke
 			|| current->item == it_bfg)
 		{
 			// We really really want these !!!
@@ -1054,7 +1056,8 @@ edict_t *Bot_FindBestWeapon(edict_t *ent)
 
 			if ((current->item->tag == AMMO_RTURRET && ent->client->pers.inventory[ITEM_INDEX(it_rturret)] >= ent->client->pers.max_rturret)
 				|| (current->item->tag == AMMO_LTURRET && ent->client->pers.inventory[ITEM_INDEX(it_lturret)] >= ent->client->pers.max_lturret)
-				|| (current->item->tag == AMMO_VORTEX && ent->client->pers.inventory[ITEM_INDEX(it_vortex)] >= ent->client->pers.max_vortex))
+				|| (current->item->tag == AMMO_VORTEX && ent->client->pers.inventory[ITEM_INDEX(it_vortex)] >= ent->client->pers.max_vortex)
+				|| (current->item->tag == AMMO_NUKE && ent->client->pers.inventory[ITEM_INDEX(it_nuke)] >= ent->client->pers.max_nuke))
 			{
 				current = current->next_listitem;
 				continue;
