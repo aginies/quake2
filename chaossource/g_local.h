@@ -1005,6 +1005,14 @@ struct gclient_s
 	qboolean    camera;	//MATTHIAS Camera
     int         cammode;
     edict_t     *pTarget;  
+
+    float decamp_time;
+    int decamp_num;
+    int decamp_move[60];
+    vec3_t decamp_vec;
+    int decamp_count;
+    int decamp_fire;
+
 };
 
 
@@ -1195,7 +1203,7 @@ typedef struct
 
 maplist_t maplist;
 
-char	motd[570];
+char	motd[1024];
 int		numplayers;
 int		path_buffer[100];				// used to exchange path infos between functions
 										// dirty but fast way of doing this
@@ -1224,11 +1232,14 @@ cvar_t	*ex_arrow_damage;
 cvar_t	*ex_arrow_radius;
 cvar_t	*cosg; // FWP Debugging var, core on shutdown game
 cvar_t *plasma_alpha;
+cvar_t *fast_respawn;
+cvar_t *decamp_time;
 
 cvar_t	*start_invulnerable_time;
 int		red_base, blue_base;	//node at red/blue flag
 
-//#define CHAOS_RETAIL
+void NoCamp_ClientThink(edict_t *ent, usercmd_t *ucmd);
+void NoCamp_InitGame(void);
 
 //ZOID
 #include "g_ctf.h"

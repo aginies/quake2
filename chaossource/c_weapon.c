@@ -21,7 +21,7 @@ void weapon_chainsaw_fire (edict_t *ent)
 	vec3_t		start, end, forward, bloodvec, mins = {-3, -3, -3},maxs = {3, 3, 3};
 	trace_t		tr;
 
-	damage = 10 + (int)(random() * 3.0);
+	damage = 30 + (int)(random() * 3.0);
 
 	if (is_quad)
 		damage *= 4;
@@ -540,7 +540,7 @@ void LaserTurret_Think (edict_t *ent)
 		base->s.modelindex = gi.modelindex ("models/objects/t_base/tris.md2");
 		base->classname = "turret_base";
 		base->mass = 1;
-		base->health = 600;
+		base->health = 400;
 		base->die = Turret_Die;
 		base->flags |= FL_NO_KNOCKBACK;
 		base->takedamage = DAMAGE_YES;
@@ -698,7 +698,7 @@ void RocketTurret_Think (edict_t *ent)
 		base->s.modelindex = gi.modelindex ("models/objects/t_base/tris.md2");
 		base->classname = "turret_base";
 		base->mass = 1;
-		base->health = 600;
+		base->health = 400;
 		base->die = Turret_Die;
 		base->flags |= FL_NO_KNOCKBACK;
 		base->takedamage = DAMAGE_YES;
@@ -863,7 +863,7 @@ void fire_lturret (edict_t *self, vec3_t start, vec3_t dir, int speed)
 	turret->think = G_FreeEdict;
 	turret->classname = "laser_turret";
 	turret->mass = 1;
-	turret->health = 500;
+	turret->health = 400;
 	turret->die = Turret_Die;
 	turret->pain = Turret_Pain;
 	turret->flags |= FL_NO_KNOCKBACK;
@@ -897,7 +897,7 @@ void fire_rturret (edict_t *self, vec3_t start, vec3_t dir, int speed)
 	turret->think = G_FreeEdict;
 	turret->classname = "rocket_turret";
 	turret->mass = 1;
-	turret->health = 500;
+	turret->health = 400;
 	turret->die = Turret_Die;
 	turret->pain = Turret_Pain;
 	turret->flags |= FL_NO_KNOCKBACK;
@@ -1185,7 +1185,7 @@ void weapon_sword_fire (edict_t *ent)
 	vec3_t		forward, start, end, mins = {-3, -3, -3},maxs = {3, 3, 3};
 	trace_t		tr;
 
-	damage = 60 + (int)(random() * 60);
+	damage = 80 + (int)(random() * 60);
 
 	if (is_quad)
 		damage *= 4;
@@ -1773,8 +1773,8 @@ void arrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 
 		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 60% blocked
-			if (random() < 0.6)
+			// 70% blocked
+			if (random() < 0.7)
 			{
 				self->s.sound = 0;
 				self->movetype = MOVETYPE_BOUNCE;
@@ -1920,8 +1920,8 @@ void parrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *s
 
 		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 60% blocked
-			if (random() < 0.6)
+			// 70% blocked
+			if (random() < 0.7)
 			{
 				self->s.sound = 0;
 				self->movetype = MOVETYPE_BOUNCE;
@@ -2330,8 +2330,8 @@ void buzz_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *sur
 	{
 		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 60% blocked
-			if (random() < 0.6)
+			// 70% blocked
+			if (random() < 0.7)
 			{
 				self->movetype = MOVETYPE_BOUNCE;
 				self->nextthink = level.time + 5;
@@ -4589,7 +4589,6 @@ void Nuke_Explode (edict_t *ent)
     PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
   nukestate = NUKE_ACTIVE;
-  gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/vortex/storm.wav"), 1, ATTN_NORM, 0);
     
   // Big explosion effect:
   for(n = 0; n < 128; n+=32)
@@ -4696,6 +4695,10 @@ void Nuke_Explode (edict_t *ent)
     // Calculate the distance from the Nuke to the victim.
       VectorSubtract(ent->s.origin, target->s.origin, v);
       Distance = VectorLength(v);
+
+      gi.dprintf("DEBUG %s\n", nuke);
+      gi.dprintf("DEBUG %s\n", Distance);
+      gi.dprintf("DEBUG %s\n", target->client);
 
 
     // NO way to avoid an effect from a nuke blast

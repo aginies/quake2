@@ -1,8 +1,27 @@
-These are bugs that have been fixed in Chaotic Dreams
+These are bugs that have been fixed in Chaotic Dreams 
 -----------------------------------------------------------------------------
-* bot up to 31
+* no camp mode (from lithium mod)
+    * use_nocamp (default 0)
+    * camp_threshold (default 250)
+    * camp_time (default 12)
+    * cvar_t (default 10)
 
-* small bugfixes
+* Re-balance damage:
+   - increase damage of chainsaw / Sword
+   - decrase damage and life of turrets
+
+* Sword can now block up to 70% of non explosive weapon (arrow, buzzsaw)
+
+* fix re-spawn of weapons
+
+* add a new "fast_respawn" CVAR to set the delay for respawning items/weapons 
+    (this time will be x4 for rate items like MegaHealth, Quad damage etc..)
+
+* scanner and anti-gravity bolt use more cells
+
+* bot up to 31 now (Carnage mode !)
+
+* a lot of bugfixes
 
 * fix ban sword
 
@@ -32,6 +51,9 @@ These are bugs that have been fixed in Chaotic Dreams
 
 * Compatible with yq2 / Q2PRO version and recent version of Q2 (> 3.18)
 
+------------------------------------------------------------------------------
+ VERSION 1.14B4
+------------------------------------------------------------------------------
 * Player can switch to beeing a camera, suicide, which causes them become
   invisible and then they start running around killing people
   -Fixed Wed May 19 21:10:23 CDT 1999

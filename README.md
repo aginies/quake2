@@ -2,7 +2,7 @@
 
 This **Chaos mod** patched to be buildable on x86_64 and compatible with recent Quake2 game.
 This is based on the latest [source code](https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available.
-The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean, you should prefer used **yquake2** or **Q2Pro** instead. The code is in the ``chaossource`` directory.
+The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean, you should used **yquake2** or **Q2Pro** instead. The code is in the ``chaossource`` directory.
 
 The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/), all credits go to the original Chaos team.
 
@@ -51,11 +51,39 @@ Bunzip and copy to ``QUAKE2/chaos`` directory
 
 ## chaos_bin/original_V1.15/
 
-Orignal version of Chaos.
+Orignal version of Chaos. ``master`` repository
 
-## chaos_bin/devel_V1.15.1/
+## chaos_bin/devel/
 
-Version with more addons like more weapons and items.
+Default repository ``plasma``.
+This version include:
+
+* No camp mode (from lithium mod)
+ * use_nocamp (default 0)
+ * camp_threshold (default 250)
+ * camp_time (default 12)
+ * cvar_t (default 10)
+* Re-balance damage:
+ * increase damage of chainsaw / Sword
+ * decrase damage and life of turrets
+* Sword can now block up to 70% of non explosive weapon (arrow, buzzsaw)
+* fix re-spawn of weapons (more reliable and balanced)
+* add a new "fast_respawn" CVAR to set the delay in seconds for respawning items/weapons (this time will be x4 for rate items like MegaHealth, Quad damage etc..)
+* scanner and anti-gravity bolt use more cells (3 per seconds)
+* bot up to 31 now (Carnage mode !)
+* fix ban sword
+* add nuke weapon
+* add laser guided rocket launcher (based on WOD mod)
+* add a plasma gun (based on marsilainen mod)
+* use some other skins for bot (Chaos color and some others)
+* add 'bot' to botname to quickly find them in the list of players
+* Fix vortex and chainsaw ban
+* Add a simple way to build windows DLL
+* cleanup some code not needed
+* fix some gcc warning at build time
+* use gl1_polyblend instead of deprecated gl_polyblend
+* botchat are disable by default (set to 0)
+
 
 ![](images/plasma.jpg)
 

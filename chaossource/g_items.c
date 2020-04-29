@@ -365,14 +365,12 @@ void DoRespawn (edict_t *ent)
 			}
 			newit = 1;
 		}
-		else if (strcmp(ent->classname, "weapon_airfist") == 0
-                || strcmp(ent->classname, "ammo_nuke") == 0)
+		else if (strcmp(ent->classname, "weapon_airfist") == 0)
 		{
-            if (random() < 0.5)
-			{
-				item = it_nuke;
-				ent->classname = "ammo_nuke";
-			}
+            {
+                item = it_airfist;
+                ent->classname = "weapon_airfist";
+            }
 			newit = 1;
 		}
 
@@ -383,32 +381,32 @@ void DoRespawn (edict_t *ent)
 			|| strcmp(ent->classname, "ammo_laserturret") == 0
 			|| strcmp(ent->classname, "ammo_rocketturret") == 0)
 		{
+            // try to get power weapon very rare
 			rn = random();
 			if ( rn <= 0.1)
 			{
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
 			}
-			else if ((rn >= 0.1) && (rn <= 0.3))
+			else if ((rn >= 0.1) && (rn <= 0.2))
 			{
 				item = it_nuke;
 				ent->classname = "ammo_nuke";
 			}
-
-			else if ((rn > 0.3) && (rn <= 0.5))
+			else if ((ban_rocketlauncher->value == 0) && (rn > 0.3) && (rn <= 0.4))
 			{
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
 			}
-			else if ((rn > 0) && (rn <= 0.3))
-			{
-				item = it_plasma;
-				ent->classname = "weapon_plasma";
-			}
-			else if ((rn > 0.5) && (rn <= 0.7))
+			else if ((ban_rocketlauncher->value == 0) && (rn > 0.4) && (rn <= 0.5))
 			{
 				item = it_lturret;
 				ent->classname = "ammo_laserturret";
+			}
+			else if ((rn > 0.5) && (rn <= 0.75))
+			{
+				item = it_plasma;
+				ent->classname = "weapon_plasma";
 			}
 			else
 			{
@@ -448,15 +446,9 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_airfist") == 0 && ban_airgun->value > 0)
 		{
-			if (ban_nuke->value > 0) //banned,too
 			{
 				G_FreeEdict (ent);
 				return;
-			}
-			else
-			{
-				item = it_nuke;
-				ent->classname = "ammo_nuke";
 			}
 		}
 		else if (strcmp(ent->classname, "weapon_supershotgun") == 0 && ban_supershotgun->value > 0)
@@ -466,15 +458,9 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_plasma") == 0 && ban_plasma->value > 0)
         {
-			if (ban_nuke->value > 0) //banned,too
 			{
 				G_FreeEdict (ent);
 				return;
-			}
-			else
-			{
-				item = it_nuke;
-				ent->classname = "ammo_nuke";
 			}
         }
 		else if (strcmp(ent->classname, "weapon_crossbow") == 0 && ban_crossbow->value > 0)
@@ -541,12 +527,13 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_bfg") == 0 && ban_bfg->value > 0)
 		{
+			rn = random();
 			if (ban_vortex->value == 0)
 			{
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
 			}
-            else if (ban_nuke->value == 0)
+            else if ((ban_nuke->value == 0) && (rn > 0.5))
 			{
 				item = it_nuke;
 				ent->classname = "ammo_nuke";
@@ -561,7 +548,7 @@ void DoRespawn (edict_t *ent)
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
 			}
-			else if (ban_plasma->value == 0)
+			else if ((ban_plasma->value == 0) && (rn <= 0.5))
 			{
 				item = it_plasma;
 				ent->classname = "weapon_plasma";
@@ -574,8 +561,8 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_vortex") == 0 && ban_vortex->value > 0)
 		{
-
-			if (ban_bfg->value == 0)
+			rn = random();
+			if ((ban_bfg->value == 0) && (rn >= 0.3))
 			{
 				item = it_bfg;
 				ent->classname = "weapon_bfg";
@@ -590,12 +577,12 @@ void DoRespawn (edict_t *ent)
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
 			}
-            else if (ban_nuke->value == 0) 
+            else if ((ban_nuke->value == 0) && (rn > 0.7)) 
 			{
 				item = it_nuke;
 				ent->classname = "ammo_nuke";
 			}
-			else if (ban_plasma->value == 0)
+			else if ((ban_plasma->value == 0)  && (rn < 0.3))
 			{
 				item = it_plasma;
 				ent->classname = "weapon_plasma";
@@ -608,7 +595,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_nuke") == 0 && ban_nuke->value > 0)
 		{
-
+            rn = random();
 			if (ban_bfg->value == 0)
 			{
 				item = it_bfg;
@@ -1183,8 +1170,27 @@ void DoRespawn (edict_t *ent)
 	ent->s.event = EV_ITEM_RESPAWN;
 }
 
+int FasterRespawn(float delay) 
+{
+    int faster;
+
+    if (fast_respawn->value == 0) {
+        faster = delay;
+    }
+    else
+    {
+        faster = fast_respawn->value;
+    }
+
+    if(delay >= 60)
+        faster *= 4;
+
+    return faster;
+}
+
 void SetRespawn (edict_t *ent, float delay)
 {
+    delay = FasterRespawn(delay);
 	ent->flags |= FL_RESPAWN;
 	ent->svflags |= SVF_NOCLIENT;
 	ent->solid = SOLID_NOT;
@@ -2687,12 +2693,12 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = it_vortex;
 			ent->classname = "ammo_vortex";
 		}
-        else if (rn >= 0.3 && rn <= 0.7)
+        else if (rn >= 0.3 && rn < 0.7)
 		{
 			item = it_plasma;
 			ent->classname = "weapon_plasma";
 		}
-        else if (rn >= 0.7 && rn <= 1)
+        else if (rn >= 0.7 && rn < 1)
 		{
 			item = it_nuke;
 			ent->classname = "ammo_nuke";

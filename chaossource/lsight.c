@@ -77,7 +77,8 @@ void LaserSight_On (edict_t *self)
 	lss->movetype = MOVETYPE_NOCLIP;
 	lss->solid = SOLID_NOT;
 	lss->classname = "lasersight";
-	lss->s.modelindex = gi.modelindex ("models/objects/gibs/sm_meat/tris.md2");
+//	lss->s.modelindex = gi.modelindex ("models/objects/gibs/sm_meat/tris.md2");
+    lss->s.modelindex = gi.modelindex ("models/objects/homing/tris.md2");
 	lss->s.skinnum = 0;
 
 	lss->s.renderfx |= RF_FULLBRIGHT;

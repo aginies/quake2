@@ -143,6 +143,7 @@ OBJS_g := \
     p_weapon.o \
 	p_menu.o \
 	p_view.o \
+	l_nocamp.o \
 	q_shared.o \
 	stdlog.o
 

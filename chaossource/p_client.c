@@ -1783,9 +1783,9 @@ void ClientBegin (edict_t *ent)
 			bprintf2 (PRINT_HIGH, "%s entered the game\n", ent->client->pers.netname);
 		}
 	}
+        // make sure all view stuff is valid
+        ClientEndServerFrame (ent);
 
-	// make sure all view stuff is valid
-	ClientEndServerFrame (ent);
 }
 
 /*
@@ -2219,7 +2219,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			else
 				gi.sound(ent, CHAN_VOICE, gi.soundindex("misc/radar.wav"), 1, ATTN_IDLE, 0);
 			ent->client->pers.inventory[ITEM_INDEX(it_cells)]--;
-			client->nextscannercell = level.time + 2;
+			client->nextscannercell = level.time + 3;
 		}
 	}
 //ANTI GRAVITY BELT
@@ -2234,7 +2234,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		else
 		{
 			ent->client->pers.inventory[ITEM_INDEX(it_cells)]--;
-			client->nextbeltcell = level.time + 2;
+			client->nextbeltcell = level.time + 3;
 		}
 	}
 // INVISIBLE
@@ -2304,6 +2304,9 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			level.exitintermission = true;
 		return;
 	}
+
+    //DEUBG
+    NoCamp_ClientThink(ent, ucmd);
 
 	pm_passent = ent;
 

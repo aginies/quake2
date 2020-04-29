@@ -97,7 +97,7 @@ void InitGame (void)
 	sl_Logging( &gi, "chaos" );	// StdLog - Mark Davies (Only required to set patch name)
 
 	gi.dprintf ("====          InitGame          ====\n");
-    gi.dprintf ("==== Chaos Deathmatch v1.15 (+ some yq2 fix)  ====\n");
+    gi.dprintf ("==== Chaos Deathmatch v1.16  ====\n");
 
 	gun_x = gi.cvar ("gun_x", "0", 0);
 	gun_y = gi.cvar ("gun_y", "0", 0);
@@ -131,6 +131,8 @@ void InitGame (void)
 	numred		= 0;
 	vortex_pointer = NULL;
 	vortexstate	= 0;
+    nuke_pointer = NULL;
+    nukestate   =0;
 	blue_base	= -1;
 	red_base	= -1;
 
@@ -187,6 +189,9 @@ void InitGame (void)
 	game.maxclients = maxclients->value;
 	game.clients = gi.TagMalloc (game.maxclients * sizeof(game.clients[0]), TAG_GAME);
 	globals.num_edicts = game.maxclients+1;
+
+    //DEBUG
+    NoCamp_InitGame();
 
 	CTFInit();
 }

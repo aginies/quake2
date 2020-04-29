@@ -505,6 +505,8 @@ void NodeCheck (edict_t	*ent)
 	if (numnodes >= MAX_NODES - 1)	//MAX_NODES = 512
 		gi.cvar_set("dntg", "0");
 
+    /*
+    // dont need to display that
 	if (dntg->value > 0)
 	{
 		gi.dprintf("\nDynamic node table generation ON\n\n");
@@ -513,6 +515,7 @@ void NodeCheck (edict_t	*ent)
 	{
 		gi.dprintf("\nDynamic node table generation OFF\n\n");
 	}
+    */
 
 	G_FreeEdict(ent);
 }
@@ -672,6 +675,9 @@ char *dm_statusbar =
 "	xv	250 "
 "	pic 4 "
 "endif "
+
+// config string output (observing / safety msg)
+"if 30 yb -16 xv 8 stat_string 30 endif "
 
 // selected item
 "if 6 "

@@ -93,6 +93,7 @@ GAME_OBJS = \
 	$(BUILDDIR)/p_hud.o \
 	$(BUILDDIR)/p_menu.o \
 	$(BUILDDIR)/p_view.o \
+	$(BUILDDIR)/l_nocamp.o \
 	$(BUILDDIR)/p_weapon.o \
 	$(BUILDDIR)/q_shared.o \
 	$(BUILDDIR)/stdlog.o
@@ -102,6 +103,9 @@ $(BUILDDIR)/game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 
 
 $(BUILDDIR)/c_base.o : c_base.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/l_nocamp.o : l_nocamp.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/c_botai.o : c_botai.c

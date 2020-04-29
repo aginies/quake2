@@ -281,6 +281,7 @@ void GetSettings()
 	start_invulnerable_time = gi.cvar("start_invulnerable_time", "3", CVAR_SERVERINFO);
 	lightsoff = gi.cvar("lightsoff", "0", CVAR_SERVERINFO);
 	botchat = gi.cvar("botchat", "0", CVAR_SERVERINFO);
+    fast_respawn = gi.cvar("fast_respawn", "0", CVAR_SERVERINFO);
 
 	ban_sword = gi.cvar("ban_sword", "0", CVAR_LATCH);
 	ban_chainsaw = gi.cvar("ban_chainsaw", "0", CVAR_LATCH);
@@ -650,7 +651,7 @@ qboolean TeamMembers(edict_t *p1, edict_t *p2)
 void LoadMOTD()
 {
 	FILE *fp;
-	char file[256];
+	char file[512];
 	char line[80];
 	cvar_t	*game_dir;
 	int i;
@@ -667,30 +668,12 @@ void LoadMOTD()
     strcat(file, "/motd.txt");
 #endif
 
-    /* 	if ((fp = fopen(file, "r")) != NULL)
-	{
-		if (fgets(motd, 500, fp) )
-		{
-		        charcnt = 0;
-			while (charcnt < 559 && ( fgets(line, 80,fp) ))
-			{
-				strcat(motd, line);
-				charcnt += 80;
-			}
-		        if (charcnt >= 559)
-			   gi.dprintf("MOTD length exceeded maximum (560) , may be truncated.\n");
-		}
-		fclose(fp);
-	}
-
-    */
-
-
 	if ((fp = fopen(file, "r")) == NULL)
     { 
 		gi.cprintf (NULL, PRINT_HIGH, "Could not find file \"%s\".\n\n", file); 
 		return;
     }
+
 	if (fp)
 	{ 
 		i = 0;
@@ -699,7 +682,7 @@ void LoadMOTD()
 		{ 
 			int		len;
 
-			fgets (line, 256, fp);
+			fgets (line, 559, fp);
 			len=strlen(line);
 
 			while(line[len] == '\n'||line[len] == '\r')
