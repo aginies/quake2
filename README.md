@@ -59,13 +59,13 @@ Default repository ``plasma``.
 This version include:
 
 * No camp mode (from lithium mod)
- * use_nocamp (default 0)
- * camp_threshold (default 250)
- * camp_time (default 12)
- * cvar_t (default 10)
+    * use_nocamp (default 0)
+    * camp_threshold (default 250)
+    * camp_time (default 12)
+    * cvar_t (default 10)
 * Re-balance damage:
- * increase damage of chainsaw / Sword
- * decrase damage and life of turrets
+    * increase damage of chainsaw / Sword
+    * decrase damage and life of turrets
 * Sword can now block up to 70% of non explosive weapon (arrow, buzzsaw)
 * fix re-spawn of weapons (more reliable and balanced)
 * add a new "fast_respawn" CVAR to set the delay in seconds for respawning items/weapons (this time will be x4 for rate items like MegaHealth, Quad damage etc..)
