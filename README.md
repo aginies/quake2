@@ -62,7 +62,7 @@ This version include:
     * use_nocamp (default 0)
     * camp_threshold (default 250)
     * camp_time (default 12)
-    * cvar_t (default 10)
+    * camp_warn (default 10)
 * Re-balance damage:
     * increase damage of chainsaw / Sword
     * decrase damage and life of turrets
