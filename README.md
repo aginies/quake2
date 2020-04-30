@@ -58,6 +58,15 @@ Orignal version of Chaos. ``master`` repository
 Default repository ``plasma``.
 This version include:
 
+* add ```playerlist``` command
+* add Jedi Force Push and Pull tractor! bind pull and push key, ie in your configuration file:
+    * bind n "cmd push"
+    * bind h "cmd pull"
+* new effect while get explosion (taken from WOD mod):
+    * items are moving if near the explosion
+    * shockware effect
+    * some debris
+* cleanup windows DLL build warning (needs some more works...)
 * fix a bug of not being able to use plasma is less than 50 cells.
 * get bot less acurate with railgun
 * No camp mode (from lithium mod)
