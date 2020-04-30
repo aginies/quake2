@@ -2305,7 +2305,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		return;
 	}
 
-    //DEUBG
+    //DEBUG
     NoCamp_ClientThink(ent, ucmd);
 
 	pm_passent = ent;

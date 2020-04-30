@@ -337,6 +337,12 @@ void NoAmmoWeaponChange (edict_t *ent)
 			ent->client->newweapon = it_hyperblaster;
 			return;
 		}
+		if (ent->client->pers.inventory[ITEM_INDEX(it_plasma)]
+			&&  ent->client->pers.inventory[ITEM_INDEX(it_plasma)])
+		{
+			ent->client->newweapon = it_plasma;
+			return;
+		}
 		if( ! it_airfist )
 			it_airfist = FindItem( "airgun" );
 		if ( it_airfist && ent->client->pers.inventory[ITEM_INDEX(it_airfist)])
@@ -441,7 +447,7 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 
 		if (ent->client->pers.inventory[ammo_index] < item->quantity)
 		{
-			cprintf2 (ent, PRINT_HIGH, "Not enough %s for %s.\n", ammo_item->pickup_name, item->pickup_name);
+			cprintf2 (ent, PRINT_HIGH, "Not enough %s for %s (needs %i at least, only get %i...).\n", ammo_item->pickup_name, item->pickup_name, item->quantity, ent->client->pers.inventory[ammo_index]);
 			return;
 		}
 	}
@@ -1638,7 +1644,6 @@ void Plasma_Fire(edict_t *ent, vec3_t g_offset, int damage)
    vec3_t  start;
    vec3_t  offset;
    int consume = 1;
-
    int sr;
 
    if (is_quad)
@@ -1670,13 +1675,10 @@ void Plasma_Fire(edict_t *ent, vec3_t g_offset, int damage)
    // send muzzle flash
    gi.WriteByte(svc_muzzleflash);
    gi.WriteShort(ent - g_edicts);
-
    gi.WriteByte(MZ_BLUEHYPERBLASTER | is_silenced);
-
    gi.multicast(ent->s.origin, MULTICAST_PVS);
 
    PlayerNoise(ent, start, PNOISE_WEAPON);
-
 
 }
 
@@ -1687,11 +1689,9 @@ void Weapon_PlasmaRifle_Fire(edict_t *ent)
    if (!(ent->client->buttons & BUTTON_ATTACK))
    {
        ent->client->ps.gunframe++;
-
    }
    else
    {
-
        if (!ent->client->pers.inventory[ent->client->ammo_index])
        {
            if (level.time >= ent->pain_debounce_time)
@@ -1699,7 +1699,6 @@ void Weapon_PlasmaRifle_Fire(edict_t *ent)
                gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
                ent->pain_debounce_time = level.time + 1;
            }
-
            NoAmmoWeaponChange(ent);
        }
        else
@@ -1733,9 +1732,6 @@ void Weapon_PlasmaRifle_Fire(edict_t *ent)
        if (ent->client->ps.gunframe == 11 && ent->client->pers.inventory[ent->client->ammo_index]) {
            ent->client->ps.gunframe = 9;
        }
-
-
-
    }
 
    /*
@@ -1745,7 +1741,6 @@ void Weapon_PlasmaRifle_Fire(edict_t *ent)
        //ent->client->weapon_sound = 0;
    }
    */
-
 }
 
 

@@ -3,6 +3,7 @@
 #include "c_weapon.h"
 #include "m_player.h"
 #include "c_botai.h"
+#include "c_effects.h"
 
 #define GRENADE_TIMER				3.0
 #define GRENADE_MINSPEED			400
@@ -4696,10 +4697,9 @@ void Nuke_Explode (edict_t *ent)
       VectorSubtract(ent->s.origin, target->s.origin, v);
       Distance = VectorLength(v);
 
-      gi.dprintf("DEBUG %s\n", nuke);
       gi.dprintf("DEBUG %s\n", Distance);
-      gi.dprintf("DEBUG %s\n", target->client);
 
+      T_ShockWave(ent, 2550, 5024);
 
     // NO way to avoid an effect from a nuke blast
       if ( Distance < 4000 )

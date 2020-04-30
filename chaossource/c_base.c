@@ -700,7 +700,6 @@ void LoadMOTD()
 	if (fp)
 		fclose(fp); 
 
-
 }
 
 void FakeDeath(edict_t *self)
@@ -1350,11 +1349,19 @@ void Use_Class7 (edict_t *ent)
 }
 void Use_Class8 (edict_t *ent)
 {
-	if (ent->client->pers.weapon != it_hyperblaster)
+	if (ent->client->pers.weapon == it_hyperblaster)
 	{
-		if (ent->client->pers.inventory[ITEM_INDEX(it_hyperblaster)] > 0)
+		if ((ent->client->pers.inventory[ITEM_INDEX(it_hyperblaster)] > 0)
+            && (ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 20))
 			ent->client->newweapon = it_hyperblaster;
 	}
+	else if (ent->client->pers.weapon == it_plasma)
+	{
+		if ((ent->client->pers.inventory[ITEM_INDEX(it_plasma)] > 0)
+			&& (ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 20))
+			ent->client->newweapon = it_plasma;
+	}
+
 }
 void Use_Class9 (edict_t *ent)
 {
@@ -1395,16 +1402,6 @@ void Use_Class0 (edict_t *ent)
 			ent->client->newweapon = it_rturret;
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_lturret)] > 0)
 			ent->client->newweapon = it_lturret;
-	}
-	else if (ent->client->pers.weapon == it_plasma)
-	{
-		if (ent->client->pers.inventory[ITEM_INDEX(it_vortex)] > 0)
-			ent->client->newweapon = it_vortex;
-        else if (ent->client->pers.inventory[ITEM_INDEX(it_nuke)] > 0)
-            ent->client->newweapon = it_nuke;
-		else if (ent->client->pers.inventory[ITEM_INDEX(it_bfg)] > 0
-			&& ent->client->pers.inventory[ITEM_INDEX(it_cells)] > 0)
-			ent->client->newweapon = it_bfg;
 	}
 	else if (ent->client->pers.weapon == it_vortex)
 	{

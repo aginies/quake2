@@ -512,7 +512,9 @@ extern	int	body_armor_index;
 #define MOD_AK42			51
 #define MOD_PLASMA_RIFLE    52
 #define MOD_NUKE			53
-#define MOD_ESSHOT_SPLASH  54
+#define MOD_CLUSTER         54
+#define MOD_JEDI            55
+#define MOD_ESSHOT_SPLASH  56
 
 #define MOD_FRIENDLY_FIRE	0x8000000
 
@@ -688,6 +690,7 @@ void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_
 void ThrowClientHead (edict_t *self, int damage);
 void ThrowGib (edict_t *self, char *gibname, int damage, int type);
 void BecomeExplosion1(edict_t *self);
+void BecomeExplosion2(edict_t *self);
 void DoRespawn (edict_t *ent);
 
 //
@@ -859,7 +862,9 @@ typedef struct
 	vec3_t		cmd_angles;			// angles sent over in the last command
 	int			game_helpchanged;
 	int			helpchanged;
+
 } client_respawn_t;
+
 
 // this structure is cleared on each PutClientInServer(),
 // except for 'client->pers'

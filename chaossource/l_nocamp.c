@@ -32,8 +32,8 @@ cvar_t *camp_warn;
 void NoCamp_InitGame(void) {
 	use_nocamp = gi.cvar("use_nocamp", "0", CVAR_LATCH);
 	camp_threshold = gi.cvar("camp_threshold", "250", CVAR_LATCH);
-	camp_time = gi.cvar("camp_time", "12.0", CVAR_LATCH);
-	camp_warn = gi.cvar("camp_warn", "10.0", CVAR_LATCH);
+	camp_time = gi.cvar("camp_time", "10.0", CVAR_LATCH);
+	camp_warn = gi.cvar("camp_warn", "8.0", CVAR_LATCH);
 }
 
 void NoCamp_ClientThink(edict_t *ent, usercmd_t *ucmd) {
@@ -85,12 +85,12 @@ void NoCamp_ClientThink(edict_t *ent, usercmd_t *ucmd) {
 
 	sec = camp_warn->value - client->decamp_count / 2 + 2;
 	if(sec >= 0 && sec <= camp_warn->value && client->decamp_count > 3)
-        gi.dprintf("!!!!!!!!!!!! No camping %s !!!!!!!!!!!!\n", ent->client->pers.netname);
-        gi.dprintf(" Move your ass %s! (still %d seconds to comply)\n", ent->client->pers.netname, sec);
+        gi.dprintf("!!!! %s is doing Camping !!!!\n", ent->client->pers.netname);
+        gi.dprintf(" Move your ass %s! (you still have %d seconds to comply)\n", ent->client->pers.netname, sec);
 
 	if(client->decamp_count > camp_warn->value * 2 + 5) {
 		//centerprintf(ent, "Killed for camping.");
-        gi.dprintf(" Killed for camping!\n");
+        gi.dprintf(" %s Killed for camping!\n", ent->client->pers.netname);
 
 		ent->health = 0;
 		player_die(ent, ent, ent, 100000, vec3_origin);

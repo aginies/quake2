@@ -58,6 +58,8 @@ Orignal version of Chaos. ``master`` repository
 Default repository ``plasma``.
 This version include:
 
+* fix a bug of not being able to use plasma is less than 50 cells.
+* get bot less acurate with railgun
 * No camp mode (from lithium mod)
     * use_nocamp (default 0)
     * camp_threshold (default 250)

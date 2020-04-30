@@ -631,7 +631,7 @@ void Bot_BestMidWeapon(edict_t *self)
 		return;
 	}
 	// Plasma
-	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
+	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 20) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
 	{
 		if (oldweapon != it_plasma)
 			self->client->newweapon = it_plasma;
@@ -833,7 +833,7 @@ void Bot_BestCloseWeapon(edict_t *self)
 		return;
 	}
 	// Plasma
-	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
+	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 20) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
 	{
 		if (oldweapon != it_plasma)
 			self->client->newweapon = it_plasma;
@@ -1016,7 +1016,7 @@ void Bot_BestFarWeapon(edict_t *self)
 		return;
 	}
 	// Plasma
-	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
+	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 20) &&  client->pers.inventory[ITEM_INDEX(it_plasma)])
 	{
 		if (oldweapon != it_plasma)
 			self->client->newweapon = it_plasma;

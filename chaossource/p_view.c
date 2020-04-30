@@ -427,7 +427,7 @@ void SV_CalcBlend (edict_t *ent)
     {
 		if (strcmp(ent->classname,"player") == 0)
 		{
-			float alpha;
+			float alpha = 0;
 				
 			if (ent->client->BlindBase)
 				alpha = ent->client->BlindTime / ent->client->BlindBase;

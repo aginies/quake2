@@ -120,6 +120,7 @@ OBJS_g := \
 	c_cam.o \
 	c_item.o \
 	c_weapon.o \
+	c_effects.o \
     g_cmds.o \
 	g_ctf.o \
 	gslog.o \
@@ -136,10 +137,10 @@ OBJS_g := \
     g_trigger.o      \
     g_utils.o        \
     g_weapon.o       \
-    m_move.o         \
     p_client.o       \
     p_hud.o          \
     lsight.o          \
+	m_move.o	\
     p_weapon.o \
 	p_menu.o \
 	p_view.o \

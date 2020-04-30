@@ -1,5 +1,6 @@
 #include "g_local.h"
 #include "c_base.h"
+#include "c_effects.h"
 
 /*
 =================
@@ -392,6 +393,13 @@ void Grenade_Explode (edict_t *ent)
 		mod = MOD_G_SPLASH;
 	T_RadiusDamage(ent, ent->owner, ent->dmg, ent->enemy, ent->dmg_radius, mod);
 
+    // shake view
+    T_ShockWave(ent, 255, 1024);
+    // let blast move items
+    T_ShockItems(ent);
+    // do some debris
+    make_debris (ent);
+
 	VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
 	gi.WriteByte (svc_temp_entity);
 	if (ent->waterlevel)
@@ -525,45 +533,58 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 
 /*
 =================
-fire_rocket
+rocket_touch
+Grenade explosion + a few glowing trails.  Creates ~15 new entities.
 =================
 */
 void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	vec3_t		origin;
+    int     i;
+    vec3_t  org;
+    float       spd;
+    vec3_t  origin;
+    int mod;
+    // can't be hit by own rocket
+    if (other == ent->owner)
+        return;
 
-	if (other == ent->owner)
-		return;
+    // can't hit sky
+    if (surf && (surf->flags & SURF_SKY))
+    {
+        G_FreeEdict (ent);
+        return;
+    }
+    // noise if hits other player
+    if (ent->owner->client)
+        PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
-	if (surf && (surf->flags & SURF_SKY))
-	{
-		G_FreeEdict (ent);
-		return;
-	}
+    // calculate position for the explosion entity
+    VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+    // impact damage
+    if (other->takedamage)
+    {
+        // Set up the means of death.
+        mod = MOD_ROCKET;
+        T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin,
+            plane->normal, ent->dmg, 0, 0, mod);
+    }
+   // make some glowing shrapnel
+    spd = 15.0 * ent->dmg / 200;
+    for (i = 0; i < 3; i++)
+    {
+        org[0] = ent->s.origin[0] + crandom() * ent->size[0];
+        org[1] = ent->s.origin[1] + crandom() * ent->size[1];
+        org[2] = ent->s.origin[2] + crandom() * ent->size[2];
+        ThrowShrapnel(ent, "models/objects/debris2/tris.md2", spd, org);
+    }
 
-	if (ent->owner && ent->owner->client)
-		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
-
-	// calculate position for the explosion entity
-	VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
-
-	if (other->takedamage)
-	{
-		T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 0, 0, MOD_ROCKET);
-	}
-
-	T_RadiusDamage(ent, ent->owner, ent->radius_dmg, other, ent->dmg_radius, MOD_R_SPLASH);
-
-	gi.WriteByte (svc_temp_entity);
-	if (ent->waterlevel)
-		gi.WriteByte (TE_ROCKET_EXPLOSION_WATER);
-	else
-		gi.WriteByte (TE_ROCKET_EXPLOSION);
-	gi.WritePosition (origin);
-	gi.multicast (ent->s.origin, MULTICAST_PHS);
-
-
-	G_FreeEdict (ent);
+    make_debris (ent);
+    mod = MOD_R_SPLASH;
+    T_RadiusDamage(ent, ent->owner, ent->radius_dmg, other, ent->dmg_radius,
+        mod);
+    T_ShockItems(ent);
+    T_ShockWave(ent, 255, 1024);
+    BecomeNewExplosion (ent);
 }
 
 void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage)
@@ -1146,7 +1167,7 @@ void fire_plasma(edict_t *self, vec3_t start, vec3_t dir, int damage, int speed)
    vec3_t  end;
 
    vec3_t scaledv;
-   vec3_t spawnpos;
+   vec3_t spawnpos = {0,0,0};
 
    plasma = G_Spawn();
 

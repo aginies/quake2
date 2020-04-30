@@ -1037,6 +1037,7 @@ void SP_worldspawn (edict_t *ent)
 
 	//PreCacheAll();
 	LoadMOTD();
+
 	Load_BotChat();
 
 	Bot_InitNodes();		//init route table

@@ -88,12 +88,13 @@ GAME_OBJS = \
 	$(BUILDDIR)/g_utils.o \
 	$(BUILDDIR)/g_weapon.o \
 	$(BUILDDIR)/gslog.o \
-	$(BUILDDIR)/m_move.o \
 	$(BUILDDIR)/p_client.o \
 	$(BUILDDIR)/p_hud.o \
 	$(BUILDDIR)/p_menu.o \
 	$(BUILDDIR)/p_view.o \
+	$(BUILDDIR)/m_move.o \
 	$(BUILDDIR)/l_nocamp.o \
+	$(BUILDDIR)/c_effects.o \
 	$(BUILDDIR)/p_weapon.o \
 	$(BUILDDIR)/q_shared.o \
 	$(BUILDDIR)/stdlog.o
@@ -101,11 +102,16 @@ GAME_OBJS = \
 $(BUILDDIR)/game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 	$(CC) $(SHLIBLDFLAGS) $(CFLAGS) -o $@ $(GAME_OBJS)
 
-
 $(BUILDDIR)/c_base.o : c_base.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/l_nocamp.o : l_nocamp.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/m_move.o : m_move.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/c_effects.o : c_effects.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/c_botai.o : c_botai.c
@@ -175,9 +181,6 @@ $(BUILDDIR)/g_weapon.o : g_weapon.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/gslog.o : gslog.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/m_move.o : m_move.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/p_client.o : p_client.c

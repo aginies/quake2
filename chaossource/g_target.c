@@ -1,4 +1,5 @@
 #include "g_local.h"
+#include "c_effects.h"
 
 /*QUAKED target_temp_entity (1 0 0) (-8 -8 -8) (8 8 8)
 Fire an origin based temp entity event to the clients.
@@ -149,7 +150,7 @@ Spawns an explosion temporary entity when used.
 "delay"		wait this long before going off
 "dmg"		how much radius damage should be done, defaults to 0
 */
-void target_explosion_explode (edict_t *self)
+void target_explosion_explode_old (edict_t *self)
 {
 	float		save;
 

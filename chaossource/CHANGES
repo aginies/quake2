@@ -1,10 +1,30 @@
-These are bugs that have been fixed in Chaotic Dreams 
+These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
+* add playerlist command
+
+* add Jedi Force Push and Pull tractor! bind pull and push key, 
+  ie in your configuration file:
+    * bind n "cmd push"
+    * bind h "cmd pull"
+
+* new effect while get explosion (taken from WOD mod):
+    * items are moving if near the explosion
+    * shockware effect
+    * some debris
+
+* cleanup windows DLL build warning (needs some more works...)
+
+* fix a bug of not being able to use plasma is less than 50 cells.
+
+* fix lsight laser pointer for guided rocket
+
+* get bot less acurate with railgun
+
 * no camp mode (from lithium mod)
     * use_nocamp (default 0)
     * camp_threshold (default 250)
-    * camp_time (default 12)
-    * cvar_t (default 10)
+    * camp_time (default 10)
+    * cvar_t (default 8)
 
 * Re-balance damage:
    - increase damage of chainsaw / Sword

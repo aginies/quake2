@@ -1677,6 +1677,7 @@ int CTFApplyStrength(edict_t *ent, int dmg)
 
 	if (!tech)
 		tech = FindItemByClassname("item_tech2");
+
 	if (dmg && tech && ent && ent->client && ent->client->pers.inventory[ITEM_INDEX(tech)]) {
 		return dmg * 2;
 	}
@@ -2277,7 +2278,7 @@ void CTFShowScores(edict_t *ent, pmenu_t *p)
 
 pmenu_t creditsmenu[] = {
 	{ "*Quake II",						PMENU_ALIGN_CENTER, NULL, NULL },
-	{ "*Chaos Deathmatch v1.1",				PMENU_ALIGN_CENTER, NULL, NULL },
+	{ "*Chaos Deathmatch v1.16",				PMENU_ALIGN_CENTER, NULL, NULL },
 	{ NULL,								PMENU_ALIGN_CENTER, NULL, NULL },
 	{ "*Programming",					PMENU_ALIGN_CENTER, NULL, NULL }, 
 	{ "Flash (flash@telefragged.com)",	PMENU_ALIGN_CENTER, NULL, NULL },
