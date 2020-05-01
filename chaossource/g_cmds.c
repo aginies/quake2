@@ -850,188 +850,160 @@ Jedi_Force_Push
 */
 void Jedi_Force_Push (edict_t *ent)
 {
-    vec3_t  start;
-    vec3_t  forward;
-    vec3_t  end;
-    vec3_t  extent;
-    vec_t       strength;
-    trace_t tr;
-    int i;
+  vec3_t  start;
+  vec3_t  forward;
+  vec3_t  end;
+  vec3_t  extent;
+  vec_t       strength;
+  trace_t tr;
+  int i;
 
-    // No pushing when you're dead.
-    if (ent->deadflag)
-        return;
+  // No pushing when you're dead.
+  if (ent->deadflag)
+    return;
 
-    if (ent->client->pers.weapon == it_sword || ent->client->pers.weapon == it_chainsaw)
+  if (ent->client->pers.weapon == it_sword || ent->client->pers.weapon == it_chainsaw)
     {
-    VectorCopy (ent->s.origin, start);
-    start[2] += ent->viewheight; // + 2;
-    AngleVectors (ent->client->v_angle, forward, NULL, NULL);
-    tr = gi.trace (start, NULL, NULL, end, ent, MASK_SHOT);
-    if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
-    {
-        // Show some effect while using the force !
-        for (i = 0; i < 5; i++) {
+      VectorCopy (ent->s.origin, start);
+      start[2] += ent->viewheight; // + 2;
+      AngleVectors (ent->client->v_angle, forward, NULL, NULL);
+      tr = gi.trace (start, NULL, NULL, end, ent, MASK_SHOT);
+      if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
+	{
+	  // Show some effect while using the force !
+	  for (i = 0; i < 5; i++) {
 
-        gi.WriteByte (svc_temp_entity);
-        gi.WriteByte (TE_BUBBLETRAIL);
-        gi.WritePosition (start);
-        gi.WritePosition (tr.endpos);
-        gi.multicast (ent->s.origin, MULTICAST_PHS);
-        }
+	    gi.WriteByte (svc_temp_entity);
+	    gi.WriteByte (TE_BUBBLETRAIL);
+	    gi.WritePosition (start);
+	    gi.WritePosition (tr.endpos);
+	    gi.multicast (ent->s.origin, MULTICAST_PHS);
+	  }
 
-        // Have the pusher emit a sound.
-        gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcethrow01.wav"), 1, ATTN_NORM, 0);
+	  // Have the pusher emit a sound.
+	  gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcethrow01.wav"), 1, ATTN_NORM, 0);
 
-        // Calculate how much power to give to the push.
-        VectorSubtract (tr.endpos, start, extent);
-        strength = kPushPullRange - VectorLength (extent) +500;
+	  // Calculate how much power to give to the push.
+	  VectorSubtract (tr.endpos, start, extent);
+	  strength = kPushPullRange - VectorLength (extent) +500;
 
-        // Now push them.
-        VectorScale (forward, strength, forward);
-        VectorAdd(forward, tr.ent->velocity, tr.ent->velocity);
+	  // Now push them.
+	  VectorScale (forward, strength, forward);
+	  VectorAdd(forward, tr.ent->velocity, tr.ent->velocity);
+	}
     }
-    }
-    else
+  else
     {
-        cprintf2 (ent, PRINT_HIGH, " You can only used Jedi firce with a Sword or a Chainsaw !\n");
+      cprintf2 (ent, PRINT_HIGH, " You can only used Jedi firce with a Sword or a Chainsaw !\n");
     }
 }
 
 /*
-=================
-Jedi_Force_Attract
-=================
+  =================
+  Jedi_Force_Attract
+  =================
 */
 void Jedi_Force_Attract (edict_t *ent)
 {
-    vec3_t  start;
-    vec3_t  forward;
-    vec3_t  end;
-    trace_t tr;
-    vec3_t  extent;
-    vec_t   strength;
-    int i;
+  vec3_t  start;
+  vec3_t  forward;
+  vec3_t  end;
+  trace_t tr;
+  vec3_t  extent;
+  vec_t   strength;
+  int i;
 
-    // No pulling when you're dead.
-    if (ent->deadflag)
-        return;
+  // No pulling when you're dead.
+  if (ent->deadflag)
+    return;
  
-    if (ent->client->pers.weapon == it_sword || ent->client->pers.weapon == it_chainsaw)
+  if (ent->client->pers.weapon == it_sword || ent->client->pers.weapon == it_chainsaw)
     {
 
-    VectorCopy(ent->s.origin, start);
-    //start[2] += ent->viewheight - 8;
-    start[2] += ent->viewheight + 5;
-    AngleVectors(ent->client->v_angle, forward, NULL, NULL);
-    VectorMA(start, kPushPullRange, forward, end);
-    tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
-    if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
-    {
+      VectorCopy(ent->s.origin, start);
+      //start[2] += ent->viewheight - 8;
+      start[2] += ent->viewheight + 5;
+      AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+      VectorMA(start, kPushPullRange, forward, end);
+      tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
+      if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
+	{
 
-        // Show some effect while using the force !
-        for (i = 0; i < 10; i++) {
-        gi.WriteByte (svc_temp_entity);
-        gi.WriteByte (TE_BUBBLETRAIL);
-        gi.WritePosition (start);
-        gi.WritePosition (tr.endpos);
-        gi.multicast (ent->s.origin, MULTICAST_PHS);
-        }
-        //
-        // Have the puller emit a sound.
-        gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcepull01.wav"), 1, ATTN_NORM, 0);
+	  // Show some effect while using the force !
+	  for (i = 0; i < 10; i++) {
+	    gi.WriteByte (svc_temp_entity);
+	    gi.WriteByte (TE_BUBBLETRAIL);
+	    gi.WritePosition (start);
+	    gi.WritePosition (tr.endpos);
+	    gi.multicast (ent->s.origin, MULTICAST_PHS);
+	  }
+	  //
+	  // Have the puller emit a sound.
+	  gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcepull01.wav"), 1, ATTN_NORM, 0);
 
-        // Calculate how much power to give to the push.
-        VectorSubtract (tr.endpos, start, extent);
-        strength = kPushPullRange - VectorLength (extent) +500;
+	  // Calculate how much power to give to the push.
+	  VectorSubtract (tr.endpos, start, extent);
+	  strength = kPushPullRange - VectorLength (extent) +500;
 
-        // Now pull them.
-        VectorScale (forward, -strength, forward);
-        VectorAdd (forward, tr.ent->velocity, tr.ent->velocity);
+	  // Now pull them.
+	  VectorScale (forward, -strength, forward);
+	  VectorAdd (forward, tr.ent->velocity, tr.ent->velocity);
+	}
     }
-    }
-    else
+  else
     {
-        cprintf2 (ent, PRINT_HIGH, " You can only use Jedi Force with a Sword or a Chainsaw !\n");
+      cprintf2 (ent, PRINT_HIGH, " You can only use Jedi Force with a Sword or a Chainsaw !\n");
     }
 }
 
 /*
-=================
-Jedi_Force_Kill
-=================
+  =================
+  Jedi_Force_Kill
+  =================
 */
 void Jedi_Force_Kill (edict_t *ent)
 {
-    vec3_t  start;
-    vec3_t  forward;
-    vec3_t  end;
-    edict_t *self;
-    trace_t tr;
-    int i;
+  vec3_t  start;
+  vec3_t  forward;
+  vec3_t  end;
+  trace_t tr;
+  int i;
 
-    // No pulling when you're dead.
-    if (ent->deadflag)
-        return;
+  // No pulling when you're dead.
+  if (ent->deadflag)
+    return;
  
-    if (ent->client->pers.weapon == it_sword || ent->client->pers.weapon == it_chainsaw)
+  if (ent->client->pers.weapon == it_sword || ent->client->pers.weapon == it_chainsaw)
     {
 
-    VectorCopy(ent->s.origin, start);
-    start[2] += ent->viewheight - 8;
-    AngleVectors(ent->client->v_angle, forward, NULL, NULL);
-    VectorMA(start, kPushPullRange, forward, end);
-    tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
-    if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
-    {
-        // Show some effect while using the force !
-        for (i = 0; i < 10; i++) {
+      VectorCopy(ent->s.origin, start);
+      start[2] += ent->viewheight - 8;
+      AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+      VectorMA(start, kPushPullRange, forward, end);
+      tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
+      if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
+	{
+	  // Show some effect while using the force !
+	  for (i = 0; i < 10; i++) {
 
-        gi.WriteByte (svc_temp_entity);
-        gi.WriteByte (TE_BUBBLETRAIL);
-        gi.WritePosition (start);
-        gi.WritePosition (tr.endpos);
-        gi.multicast (ent->s.origin, MULTICAST_PHS);
-        }
+	    gi.WriteByte (svc_temp_entity);
+	    gi.WriteByte (TE_BUBBLETRAIL);
+	    gi.WritePosition (start);
+	    gi.WritePosition (tr.endpos);
+	    gi.multicast (ent->s.origin, MULTICAST_PHS);
+	  }
 
-       if (tr.ent->takedamage)
-       {
-        // Have the Jedi emit a sound.
-        gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcegrip01.wav"), 1, ATTN_NORM, 0);
-/*
-        ============
-T_Damage
-
-targ        entity that is being damaged
-inflictor   entity that is causing the damage
-attacker    entity that caused the inflictor to damage targ
-    example: targ=monster, inflictor=rocket, attacker=player
-
-dir         direction of the attack
-point       point at which the damage is being inflicted
-normal      normal vector from that point
-damage      amount of damage being inflicted
-knockback   force to be applied against targ as a result of the damage
-
-dflags      these flags are used to control how T_Damage works
-    DAMAGE_RADIUS           damage was indirect (from a nearby explosion)
-    DAMAGE_NO_ARMOR         armor does not protect from this damage
-    DAMAGE_ENERGY           damage is from an energy based weapon
-    DAMAGE_NO_KNOCKBACK     do not affect velocity, just view angles
-    DAMAGE_BULLET           damage is from a bullet (used for ricochets)
-    DAMAGE_NO_PROTECTION    kills godmode, armor, everything
-============
-*/
-//        T_Damage (ent, inflictor, attacker, dir, inflictor->s.origin, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS, mod);
-        T_Damage(tr.ent, ent, ent, ent->velocity, tr.endpos, NULL, 1, 1, 1, MOD_JEDI);
-//        T_Damage (tr.ent, self, self->owner, ent->velocity, tr.endpos, vec3_origin, 100, 1, 100, MOD_JEDI);
-
-       }
+	  if (tr.ent->takedamage)
+	    {
+	      // Have the Jedi emit a sound.
+	      gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcegrip01.wav"), 1, ATTN_NORM, 0);
+	      T_Damage(tr.ent, ent, ent, ent->velocity, tr.endpos, NULL, 1, 1, 5, MOD_JEDI);
+	    }
+	}
     }
-    }
-    else
+  else
     {
-        cprintf2 (ent, PRINT_HIGH, " You can only use Jedi Force with a Sword or a Chainsaw !\n");
+      cprintf2 (ent, PRINT_HIGH, " You can only use Jedi Force with a Sword or a Chainsaw !\n");
     }
 }
 

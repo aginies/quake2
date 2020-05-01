@@ -1123,8 +1123,8 @@ void plasma_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
    self->s.frame = 0;
    self->s.sound = 0;
    //disable blue light effect for the explosion sprite
-   self->s.effects &= ~EF_BLUEHYPERBLASTER;
-   self->s.effects |= EF_PLASMA;
+//   self->s.effects &= ~EF_BLUEHYPERBLASTER;
+   self->s.effects |= EF_BFG;
    //disable translucency for the explosion
    if (plasma_alpha->value == 2) {
        self->s.renderfx &= ~RF_TRANSLUCENT;
