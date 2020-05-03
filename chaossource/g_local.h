@@ -13,7 +13,7 @@
 //ZOID
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Chaos Deathmatch v1.15"
+#define	GAMEVERSION	"Chaos Deathmatch v1.16"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -809,6 +809,8 @@ typedef struct
 	// values saved and restored from edicts when changing levels
 	int			health;
 	int			max_health;
+    int         force;
+	int			max_force;
 	qboolean	powerArmorActive;
 
 	int			selected_item;
@@ -1113,6 +1115,8 @@ struct edict_s
 
 	int			health;
 	int			max_health;
+	int			force;
+	int			max_force;
 	int			deadflag;
 
 	float		powerarmor_time;
@@ -1188,6 +1192,7 @@ int		numblue;	//size of the blue team
 int		numturrets;
 int		vortexstate;
 int		nukestate;
+int     pic_force;
 
 #define MAX_MAPS           64 
 #define MAX_MAPNAME_LEN    32
