@@ -1461,8 +1461,8 @@ void Bot_Attack(edict_t *ent, usercmd_t *cmd, vec3_t angles, vec3_t target)
             // bots are too efficient with railgun, so decreasing their ability
 			if (Q_stricmp(weapon->classname, "weapon_railgun") == 0)
 			{
-				angles[YAW] += crandom() * (ent->client->b_botlevel)/3;
-				angles[PITCH] += crandom() * (ent->client->b_botlevel)/3;
+				angles[YAW] += crandom() * (ent->client->b_botlevel) * 2;
+				angles[PITCH] += crandom() * (ent->client->b_botlevel) * 2 ;
 			}
 			if (Q_stricmp(weapon->classname, "weapon_plasma") == 0)
 			{
