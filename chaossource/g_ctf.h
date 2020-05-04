@@ -74,7 +74,7 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other);
 void CTFDrop_Flag(edict_t *ent, gitem_t *item);
 void CTFEffects(edict_t *player);
 void CTFCalcScores(void);
-void SetCTFStats(edict_t *ent);
+void SetCTFStats(edict_t *ent,  short *stats);
 void CTFDeadDropFlag(edict_t *self);
 void CTFScoreboardMessage (edict_t *ent, edict_t *killer);
 void CTFTeam_f (edict_t *ent);

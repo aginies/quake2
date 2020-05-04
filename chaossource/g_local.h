@@ -52,6 +52,7 @@
 #define FL_NO_KNOCKBACK			0x00000800
 #define FL_POWER_ARMOR			0x00001000	// power armor (if any) is active
 #define FL_RESPAWN				0x80000000	// used for item respawning
+#define FL_OBSERVER             1
 
 
 #define	FRAMETIME		0.1
@@ -64,6 +65,7 @@
 #define MELEE_DISTANCE	80
 
 #define BODY_QUEUE_SIZE		8
+
 
 typedef enum
 {

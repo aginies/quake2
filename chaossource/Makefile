@@ -15,7 +15,7 @@ CC=gcc
 # Base Flags
 # If you want to add a CFLAG to be included in both the 
 # debug and the release build, add it here
-BASE_CFLAGS=-Wall -pipe -std=gnu99 -fno-strict-aliasing -fwrapv
+BASE_CFLAGS=-Wall -pipe -std=gnu99 -fno-strict-aliasing -fwrapv -DNEED_STRLCAT -DNEED_STRLCPY
 
 # Release Flags
 # Flags added here are ONLY used for building the release
@@ -93,7 +93,9 @@ GAME_OBJS = \
 	$(BUILDDIR)/p_menu.o \
 	$(BUILDDIR)/p_view.o \
 	$(BUILDDIR)/m_move.o \
+	$(BUILDDIR)/chaos.o \
 	$(BUILDDIR)/l_nocamp.o \
+	$(BUILDDIR)/strl.o \
 	$(BUILDDIR)/c_effects.o \
 	$(BUILDDIR)/p_weapon.o \
 	$(BUILDDIR)/q_shared.o \
@@ -106,6 +108,12 @@ $(BUILDDIR)/c_base.o : c_base.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/l_nocamp.o : l_nocamp.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/chaos.o : chaos.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/strl.o : strl.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/m_move.o : m_move.c

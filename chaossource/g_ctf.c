@@ -1026,7 +1026,7 @@ static void CTFSetIDView(edict_t *ent)
 			CS_PLAYERSKINS + (best - g_edicts - 1);
 }
 
-void SetCTFStats(edict_t *ent)
+void SetCTFStats(edict_t *ent, short *stats)
 {
 	gitem_t *tech;
 	int i;

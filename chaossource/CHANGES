@@ -1,5 +1,9 @@
 These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
+* add an observer mode
+
+* display status of all Ammo (probably map this to a key could be usefull)
+
 * add playerlist command
 
 * add Jedi Force Push and Pull tractor! bind pull and push key, 

@@ -48,7 +48,7 @@ cvar_t	*ban_grapple, *ban_bodyarmor, *ban_combatarmor, *ban_jacketarmor,
 cvar_t	*start_sword, *start_chainsaw, *start_supershotgun, *start_crossbow,
 		*start_airgun, *start_grenadelauncher, *start_proxylauncher,
 		*start_rocketlauncher, *start_hyperblaster, *start_railgun,
-		*start_buzzsaw, *start_bfg, *start_plasma, *start_nuke;
+		*start_buzzsaw, *start_bfg, *start_plasma, *start_nuke, *use_startobserver;
 
 // Startup item console variables
 

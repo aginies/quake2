@@ -1,5 +1,6 @@
 #include "g_local.h"
 #include "c_base.h"
+#include "chaos.h"
 
 void Bot_Respawn(edict_t *ent);
 qboolean Jet_Active( edict_t *ent );
@@ -276,8 +277,6 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 				strcpy (string + stringlength, entry);
 				stringlength += j;
 			}
-
-			// send the layout
 			Com_sprintf (entry, sizeof(entry),
 				"client %i %i %i %i %i %i ",
 				x, y, sorted[i], cl->resp.score, cl->ping, (level.framenum - cl->resp.enterframe)/600);
@@ -295,6 +294,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
     if (ent->client->scanneractive > 0)
 		ShowScanner(ent,string);
 	
+
     gi.WriteByte (svc_layout);
     gi.WriteString (string);
 }
@@ -367,15 +367,14 @@ void HelpComputer (edict_t *ent)
 	else
 		sk = "hard+";
 
-	// send the layout
 	Com_sprintf (string, sizeof(string),
 		"xv 32 yv 8 picn help "			// background
-		"xv 202 yv 12 string2 \"%s\" "		// skill
+		"xv 202 yv 12 string2 \"%s\" "       // skill
 		"xv 0 yv 24 cstring2 \"%s\" "		// level name
 		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
 		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
 		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
+		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ",
 		sk,
 		level.level_name,
 		game.helpmessage1,
@@ -598,8 +597,7 @@ void G_SetStats (edict_t *ent)
 	else
 		ent->client->ps.stats[STAT_HELPICON] = 0;
 
-//ZOID
-	SetCTFStats(ent);
-//ZOID
+    Chaos_SetStats(ent);
+
 }
 

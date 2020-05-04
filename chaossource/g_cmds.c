@@ -1278,6 +1278,8 @@ void ClientCommand (edict_t *ent)
 		CTFTeam_f (ent);
 	else if (Q_stricmp(cmd, "id") == 0) 
 		CTFID_f (ent);
+    else if(Q_stricmp(cmd, "observer") == 0)
+        Observer(ent, true);
 	else
 		ClientCommand2(ent);
 }

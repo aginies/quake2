@@ -45,6 +45,8 @@ void NoCamp_ClientThink(edict_t *ent, usercmd_t *ucmd) {
 	if(ent->deadflag != DEAD_NO)
 		return;
 
+    if(ent->flags != FL_OBSERVER) { return; }
+
 	if(level.time < client->decamp_time) {
 		if(client->decamp_count) {
 			if(client->decamp_count < 4 && client->decamp_fire && (ucmd->forwardmove || ucmd->sidemove))

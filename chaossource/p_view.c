@@ -3,6 +3,7 @@
 #include "m_player.h"
 #include "c_base.h"
 #include "c_item.h"
+#include "chaos.h"
 
 static	edict_t		*current_player;
 static	gclient_t	*current_client;
@@ -1087,6 +1088,8 @@ void ClientEndServerFrame (edict_t *ent)
 	current_player = ent;
 	current_client = ent->client;
 
+    StatusBar_Update(ent);
+
 	//
 	// If the origin or velocity have changed since ClientThink(),
 	// update the pmove values.  This will happen when the client
@@ -1118,6 +1121,7 @@ void ClientEndServerFrame (edict_t *ent)
 
 	// burn from lava, etc
 	P_WorldEffects ();
+
 
 	//
 	// set model angles from view angles so other things in

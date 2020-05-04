@@ -390,6 +390,7 @@ void GetSettings()
 	start_silencer = gi.cvar("start_silencer", "0", CVAR_LATCH);
 	start_rebreather = gi.cvar("start_rebreather", "0", CVAR_LATCH);
 	start_environmentsuit = gi.cvar("start_environmentsuit", "0", CVAR_LATCH);
+    use_startobserver = gi.cvar("use_startobserver", "1", CVAR_LATCH);
 }
 
 qboolean infront2 (edict_t *self, edict_t *other)
