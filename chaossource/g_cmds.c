@@ -507,6 +507,28 @@ void Cmd_Drop_f (edict_t *ent)
 	it->drop (ent, it);
 }
 
+/*
+=================
+Cmd_Test
+=================
+*/
+void Cmd_Test (edict_t *ent)
+{
+	gclient_t	*cl;
+
+	cl = ent->client;
+	cl->showscores = false;
+	cl->showhelp = false;
+
+	ChaosOpenMenu(ent);
+	return;
+
+
+	///gi.WriteByte (svc_inventory);
+	//gi.unicast (ent, true);
+}
+
+
 
 /*
 =================
@@ -1255,6 +1277,8 @@ void ClientCommand (edict_t *ent)
         Cmd_PlayerList_f (ent);
     else if (Q_stricmp(cmd, "showammo") == 0)
         Cmd_ShowAmmo (ent);
+    else if (Q_stricmp(cmd, "test") == 0)
+        Cmd_Test (ent);
 	else if (Q_stricmp (cmd, "give") == 0)
 		Cmd_Give_f (ent);
 	else if (Q_stricmp (cmd, "god") == 0)

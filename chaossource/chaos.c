@@ -1,4 +1,7 @@
 #include "g_local.h"
+#include "stdlog.h"
+
+
 
 qboolean Observer(edict_t *ent, qboolean check) 
 {
@@ -174,3 +177,83 @@ int StatusBar_Update(edict_t *ent) {
     gi.unicast(ent, false);
     return strlen(statusbar);
 }
+
+// MENU
+
+void ChaosOpenMenu(edict_t *ent);
+void ChaosCredits(edict_t *ent, pmenu_t *p);
+void MenuChangeVar(edict_t *ent, pmenu_t *p);
+
+void ChaosReturnToMain(edict_t *ent, pmenu_t *p)
+{
+        PMenu_Close(ent);
+        ChaosOpenMenu(ent);
+}
+
+
+pmenu_t ccreditsmenu[] = {
+        { "*Chaos Deathmatch v1.16",                            PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Programming",                                       PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Flash (flash@telefragged.com)",      PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Current devel",                                       PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Guibo (guibo@guibo.com)",      PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Level Design",                                      PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Nat (nnp@greennet.net)",                     PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Craig (car188@psu.edu)",                     PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Art",                                                       PMENU_ALIGN_CENTER, NULL, NULL },
+        { "SPA (spa@telefragged.com)",          PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Sound",                                                     PMENU_ALIGN_CENTER, NULL, NULL },
+        { "SPA (spa@telefragged.com)",          PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Nat (nnp@greennet.net)",                     PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Return to Main Menu",                        PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+};
+
+void ChaosCredits(edict_t *ent, pmenu_t *p)
+{
+        PMenu_Close(ent);
+        PMenu_Open(ent, ccreditsmenu, -1, sizeof(ccreditsmenu) / sizeof(pmenu_t));
+}
+
+pmenu_t changevar[] = {
+        { "Change some var",                            PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Return to Main Menu",                        PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+};
+
+
+
+pmenu_t mainmenu[] = {
+        { "*Chaos Deathmatch",  PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Version 1.16",       PMENU_ALIGN_RIGHT, NULL, NULL },
+        { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Change Var",                    PMENU_ALIGN_LEFT, NULL, MenuChangeVar },
+        { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Credits",                    PMENU_ALIGN_LEFT, NULL, ChaosCredits },
+        { NULL,                                 PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Use [ and ] to move cursor", PMENU_ALIGN_LEFT, NULL, NULL },
+        { "ENTER to select",    PMENU_ALIGN_LEFT, NULL, NULL },
+        { "ESC to Exit Menu",   PMENU_ALIGN_LEFT, NULL, NULL },
+        { "(TAB to Return)",    PMENU_ALIGN_LEFT, NULL, NULL },
+        { NULL,                                 PMENU_ALIGN_LEFT, NULL, NULL },
+};
+
+
+void ChaosOpenMenu(edict_t *ent)
+{
+        PMenu_Open(ent, mainmenu, 1, sizeof(mainmenu) / sizeof(pmenu_t));
+}
+
+void MenuChangeVar(edict_t *ent, pmenu_t *p)
+{
+        PMenu_Close(ent);
+        PMenu_Open(ent, changevar, -1, sizeof(changevar) / sizeof(pmenu_t));
+}
+
+
