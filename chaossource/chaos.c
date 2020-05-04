@@ -183,6 +183,7 @@ int StatusBar_Update(edict_t *ent) {
 void ChaosOpenMenu(edict_t *ent);
 void ChaosCredits(edict_t *ent, pmenu_t *p);
 void MenuChangeVar(edict_t *ent, pmenu_t *p);
+void MenuHelp(edict_t *ent, pmenu_t *p);
 
 void ChaosReturnToMain(edict_t *ent, pmenu_t *p)
 {
@@ -216,7 +217,7 @@ void ChaosCredits(edict_t *ent, pmenu_t *p)
         PMenu_Open(ent, ccreditsmenu, -1, sizeof(ccreditsmenu) / sizeof(pmenu_t));
 }
 
-pmenu_t changevar[] = {
+pmenu_t changevarmenu[] = {
         { "Change some var",                            PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
@@ -225,6 +226,24 @@ pmenu_t changevar[] = {
         { "Return to Main Menu",                        PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
 };
 
+pmenu_t helpmenu[] = {
+        { "*HELP",                            PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*showammo",                        PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Show Ammos (on/off)",                        PMENU_ALIGN_RIGHT, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Jedi force:",                                                      PMENU_ALIGN_CENTER, NULL, NULL },
+        { "-----------",                                                      PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*pull",                        PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Jedi force to pull enemy",                        PMENU_ALIGN_RIGHT, NULL, NULL },
+        { "*push",                        PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Jedi force to push enemy",                        PMENU_ALIGN_RIGHT, NULL, NULL },
+        { "*fkill",                        PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Darth Vader force!",                        PMENU_ALIGN_RIGHT, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,                                                         PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Return to Main Menu",                        PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+};
 
 
 pmenu_t mainmenu[] = {
@@ -233,6 +252,7 @@ pmenu_t mainmenu[] = {
         { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Help",                    PMENU_ALIGN_LEFT, NULL, MenuHelp },
         { "Change Var",                    PMENU_ALIGN_LEFT, NULL, MenuChangeVar },
         { NULL,                                 PMENU_ALIGN_CENTER, NULL, NULL },
         { "Credits",                    PMENU_ALIGN_LEFT, NULL, ChaosCredits },
@@ -253,7 +273,13 @@ void ChaosOpenMenu(edict_t *ent)
 void MenuChangeVar(edict_t *ent, pmenu_t *p)
 {
         PMenu_Close(ent);
-        PMenu_Open(ent, changevar, -1, sizeof(changevar) / sizeof(pmenu_t));
+        PMenu_Open(ent, changevarmenu, -1, sizeof(changevarmenu) / sizeof(pmenu_t));
+}
+
+void MenuHelp(edict_t *ent, pmenu_t *p)
+{
+        PMenu_Close(ent);
+        PMenu_Open(ent, helpmenu, -1, sizeof(helpmenu) / sizeof(pmenu_t));
 }
 
 
