@@ -194,6 +194,6 @@ int StatusBar_Update(edict_t *ent) {
     gi.WriteByte(0x0D);
     gi.WriteShort(5);
     gi.WriteString(statusbar);
-    gi.unicast(ent, true);
+    gi.unicast(ent, false);
     return strlen(statusbar);
 }
