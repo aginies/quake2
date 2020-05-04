@@ -32,7 +32,7 @@ RM ?= rm -f
 RMDIR ?= rm -rf
 MKDIR ?= mkdir -p
 
-CFLAGS ?= -std=gnu99 -O2 -Wall -g -MMD $(INCLUDES)
+CFLAGS ?= -std=gnu99 -O2 -Wall -g -MMD $(INCLUDES) -DNEED_STRLCAT -DNEED_STRLCPY
 RCFLAGS ?=
 LDFLAGS ?=
 LIBS ?=
@@ -141,6 +141,8 @@ OBJS_g := \
     p_hud.o          \
     lsight.o          \
 	m_move.o	\
+	strl.o \
+	chaos.o \
     p_weapon.o \
 	p_menu.o \
 	p_view.o \
@@ -151,7 +153,7 @@ OBJS_g := \
 ### Configuration Options ###
 
 ifdef CONFIG_X86_GAME_ABI_HACK
-    CFLAGS_g += -DUSE_GAME_ABI_HACK=1
+    CFLAGS_g += -DUSE_GAME_ABI_HACK=1 
 endif
 
 ifdef CONFIG_WINDOWS
