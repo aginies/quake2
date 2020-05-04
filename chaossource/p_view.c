@@ -1088,7 +1088,9 @@ void ClientEndServerFrame (edict_t *ent)
 	current_player = ent;
 	current_client = ent->client;
 
-    StatusBar_Update(ent);
+	if (strcmp(ent->classname,"bot") != 0)  {
+        StatusBar_Update(ent);
+    }
 
 	//
 	// If the origin or velocity have changed since ClientThink(),
