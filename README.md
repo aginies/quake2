@@ -61,7 +61,7 @@ Default repository ``plasma``.
 This version include:
 
 * add an observer mode (still buggy...)
-* display status of all Ammo (probably map this to a key could be usefull)
+* display status of all Ammo, your can use the command "showammo"
 * add ```playerlist``` command
 * add Jedi Force Push and Pull tractor! bind pull and push key, ie in your configuration file:
     * bind n "cmd push"

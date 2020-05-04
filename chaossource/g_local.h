@@ -613,6 +613,7 @@ extern	gitem_t	itemlist[];
 //
 void Cmd_Help_f (edict_t *ent);
 void Cmd_Score_f (edict_t *ent);
+void Cmd_ShowAmmo (edict_t *ent);
 
 //
 // g_items.c
@@ -884,6 +885,7 @@ struct gclient_s
 	pmove_state_t		old_pmove;	// for detecting out-of-pmove changes
 
 	qboolean	showscores;			// set layout stat
+	qboolean	showammo;			// show or not ammo
 //ZOID
 	qboolean	inmenu;				// in menu
 	pmenuhnd_t	*menu;				// current menu

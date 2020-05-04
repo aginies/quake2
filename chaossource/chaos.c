@@ -42,7 +42,8 @@ void Chaos_SetStats(edict_t *self) {
     edict_t *ent = self;
     short *stats = self->client->ps.stats;
 
-    // 25 already used
+    //  already used
+    // 1 2 4 6 7 9 11 25 27 30
     stats[10] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
     stats[29] = ent->client->pers.inventory[ITEM_INDEX(FindItem("explosive shells"))];
     stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))];
@@ -86,54 +87,24 @@ void StatusBar_UpdateAll(void) {
 }
 
 char *ammobar =
-"yt 40 xr -24 picn a_shells xr -74 num 3 10 "
-"yt 64 xr -24 picn a_eshells xr -74 num 3 29 "
-"yt 88 xr -24 picn a_slugs xr -74 num 3 12 "
-"yt 112 xr -24 picn a_buzz xr -74 num 3 27 "
-"yt 160 xr -24 picn a_grenades1 xr -74 num 3 26 "
-"yt 184 xr -24 picn a_fgrenades xr -74 num 3 15 "
-"yt 208 xr -24 picn a_pgrenades xr -74 num 3 16 "
-"yt 232 xr -24 picn a_lmines xr -74 num 3 17 "
-"yt 256 xr -24 picn a_xgrenades xr -74 num 3 18 "
-"yt 40 xl 0 picn a_arrows xl 24 num 3 19 "
-"yt 64 xl 0 picn a_parrows xl 24 num 3 20 "
-"yt 88 xl 0 picn a_earrows xl 24 num 3 21 "
+"yb -122 xr -24 picn a_lmines xr -74 num 3 17 "
+"yb -98 xr -24 picn a_grenades1 xr -74 num 3 26 "
+"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
+"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
+"yb -26 xr -24 picn a_xgrenades xr -74 num 3 18 "
+"yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
+"yt 108 xr -24 picn a_shells xr -74 num 3 10 "
+"yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
+"yt 180 xr -24 picn a_buzz xr -74 num 3 27 "
+"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
+"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
+"yb -26 xl 0 picn a_earrows xl 24 num 3 21 "
 "yt 136 xl 0 picn a_rockets xl 24 num 3 22 "
 "yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
 "yt 208 xl 0 picn a_cells xl 24 num 3 24 "
 ;
 //"yt 232 xl 0 picn a_nuke xl 24 num 3 27"
 //"yt 256 xl 0 picn a_vortex xl 24 num 3 28"
-
-char *bottombar =
-"yb -24 "
-
-// ammo
-"if 2 xv 100 anum xv 150 pic 2 endif "
-
-// armor
-"if 4 xv 200 rnum xv 250 pic 4 endif "
-
-// selected item
-"if 6 xv 296 pic 6 endif "
-
-"yb -50 "
-
-// timer
-"if 9 xv 246 num 2 10 xv 296 pic 9 endif "
-
-//  help / weapon icon
-"if 11 xv 148 pic 11 endif "
-
-// picked up item
-"if 7 xv 0 pic 7 xv 26 yb -42 stat_string 8 endif "
-
-// config string output (observing / safety msg)
-"if 30 yb -16 xv 8 stat_string 30 endif "
-
-// health
-"if 1 yb -24 xv 0 hnum xv 50 pic 0 endif "
-;
 
 char *chaos_statusbar =
 "yb -24 "
@@ -151,12 +122,12 @@ char *chaos_statusbar =
 "if 30 yb -16 xv 8 stat_string 30 endif "
 
 // selected item
-"if 6 xv  296 pic 6 endif "
+"if 6 xv 296 pic 6 endif "
 
 "yb -50 "
 
 // picked up item
-"if 7 xv  0 pic 7 xv  26 yb  -42 stat_string 8 yb  -50 endif "
+"if 7 xv 0 pic 7 xv 26 yb -42 stat_string 8 yb -50 endif "
 
 // timer
 "if 9 xv 246 num 2 10 xv 296 pic 9 endif "
@@ -166,7 +137,7 @@ char *chaos_statusbar =
 
 //  frags
 //"yt 136 xl 0 picn a_rockets xl 24 num 3 22 "
-"yt 304 xl 0 picn p_kamikaze xl 24 num 3 14 "
+"yt 40 xl 0 picn p_kamikaze xl 24 num 3 14 "
 
 //tech
 //"yt 120 if 26 xr -26 pic 26 endif "
@@ -181,15 +152,21 @@ int StatusBar_Update(edict_t *ent) {
 
     if(!ctf->value) 
     {
-        strlcat(statusbar, ammobar, sizeof(statusbar));
+	    if (!ent->client->showammo)
+	    {
+        	strlcat(statusbar, ammobar, sizeof(statusbar));
+	    }
         strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
     }
     else if(ctf->value) {
-        strlcat(statusbar, ammobar, sizeof(statusbar));
+	    if (!ent->client->showammo)
+	    {
+        	strlcat(statusbar, ammobar, sizeof(statusbar));
+	    }
         strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
 
-    gi.configstring (CS_STATUSBAR, ctf_statusbar);
+    gi.configstring (CS_STATUSBAR, statusbar);
 
     gi.WriteByte(0x0D);
     gi.WriteShort(5);

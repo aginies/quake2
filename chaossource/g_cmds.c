@@ -447,6 +447,23 @@ void Cmd_Use_f (edict_t *ent)
 	it->use (ent, it);
 }
 
+/*
+==================
+Cmd_ShowAmmo
+
+Enable/Disable show ammo
+==================
+*/
+
+void Cmd_ShowAmmo (edict_t *ent)
+{
+	if (ent->client->showammo)
+	{
+		ent->client->showammo = false;
+		return;
+	}
+	ent->client->showammo = true;
+}
 
 /*
 ==================
@@ -1236,6 +1253,8 @@ void ClientCommand (edict_t *ent)
         Jedi_Force_Kill (ent);
     else if (Q_stricmp(cmd, "playerlist") == 0)
         Cmd_PlayerList_f (ent);
+    else if (Q_stricmp(cmd, "showammo") == 0)
+        Cmd_ShowAmmo (ent);
 	else if (Q_stricmp (cmd, "give") == 0)
 		Cmd_Give_f (ent);
 	else if (Q_stricmp (cmd, "god") == 0)
