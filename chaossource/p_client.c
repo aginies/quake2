@@ -2219,7 +2219,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			else
 				gi.sound(ent, CHAN_VOICE, gi.soundindex("misc/radar.wav"), 1, ATTN_IDLE, 0);
 			ent->client->pers.inventory[ITEM_INDEX(it_cells)]--;
-			client->nextscannercell = level.time + 3;
+			client->nextscannercell = level.time - 1;
 		}
 	}
 //ANTI GRAVITY BELT
@@ -2234,7 +2234,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		else
 		{
 			ent->client->pers.inventory[ITEM_INDEX(it_cells)]--;
-			client->nextbeltcell = level.time + 3;
+			client->nextbeltcell = level.time - 1;
 		}
 	}
 // INVISIBLE
