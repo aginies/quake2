@@ -265,7 +265,7 @@ int Layout_Update(edict_t *ent) {
     gi.configstring (CS_STATUSBAR, statusbar);
 //    gi.WriteByte(svc_layout);
 //    gi.WriteString(string);
-    gi.unicast(ent, true);
+    gi.unicast(ent, false);
 
     return strlen(statusbar);
 }
