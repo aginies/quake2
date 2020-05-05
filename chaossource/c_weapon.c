@@ -4697,8 +4697,6 @@ void Nuke_Explode (edict_t *ent)
       VectorSubtract(ent->s.origin, target->s.origin, v);
       Distance = VectorLength(v);
 
-      gi.dprintf("DEBUG %s\n", Distance);
-
       T_ShockWave(ent, 2550, 5024);
 
     // NO way to avoid an effect from a nuke blast
