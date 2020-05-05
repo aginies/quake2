@@ -383,7 +383,8 @@ void G_RunFrame (void)
 		if (i > 0 && i <= maxclients->value)
 		{
 			ClientBeginServerFrame (ent);
-			if (!(Q_stricmp (ent->classname, "bot") == 0))
+            if (!(Q_stricmp (ent->classname, "bot") == 0))
+			//if ((Q_stricmp (ent->classname, "player") == 0))
 				continue;							//MATTHIAS
 		}
 	    //gi.dprintf ("DEBUG: ent->inuse %s\n", ent->classname);	

@@ -3,6 +3,7 @@
 #include "c_botnav.h"
 #include "stdlog.h"
 #include "gslog.h"
+#include "chaos.h"
 
 typedef struct
 {
@@ -654,7 +655,6 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 // move to chaos.c
 //char *dm_statusbar = "";
 
-
 /*QUAKED worldspawn (0 0 0) ?
 
 Only used for the world.
@@ -707,28 +707,9 @@ void SP_worldspawn (edict_t *ent)
 	gi.configstring (CS_MAXCLIENTS, va("%i", (int)(maxclients->value) ) );
 
 	// status bar program
-/*
-	if (ctf->value) 
-	{
-		gi.configstring (CS_STATUSBAR, ctf_statusbar);
-		//precaches
-		gi.imageindex("sbctf1");
-		gi.imageindex("sbctf2");
-		gi.imageindex("i_ctf1");
-		gi.imageindex("i_ctf2");
-		gi.imageindex("i_ctf1d");
-		gi.imageindex("i_ctf2d");
-		gi.imageindex("i_ctf1t");
-		gi.imageindex("i_ctf2t");
-		gi.imageindex("i_ctfj");
-	} 
-	else
-    {
-		gi.configstring (CS_STATUSBAR, dm_statusbar);
-    }
-*/
-
-	//---------------
+    //Chaos_SetStats(ent);
+    StatusBar_Update(ent);
+	//gi.configstring (CS_STATUSBAR, ammobar);
 
 
 	// help icon for statusbar

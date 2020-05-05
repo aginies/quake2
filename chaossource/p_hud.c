@@ -596,8 +596,11 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_HELPICON] = gi.imageindex (ent->client->pers.weapon->icon);
 	else
 		ent->client->ps.stats[STAT_HELPICON] = 0;
-
-    Chaos_SetStats(ent);
+    
+    if (strcmp(ent->classname,"player") == 0 && !level.intermissiontime)
+    {
+        Chaos_SetStats(ent);
+    }
 
 }
 

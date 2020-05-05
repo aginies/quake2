@@ -683,7 +683,9 @@ typedef enum
 #define	STAT_FRAGS				14
 #define	STAT_FLASHES			15		// cleared each frame, 1 = health, 2 = armor
 
-#define	MAX_STATS				32
+// NEED UPDATE ON THE QUAKE2 CLIENT!
+// OR THIS WILL SEG FAULT
+#define	MAX_STATS				128
 
 
 // dmflags->value flags

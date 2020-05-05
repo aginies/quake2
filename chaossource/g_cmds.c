@@ -552,10 +552,14 @@ Cmd_Menu
 void Cmd_Menu (edict_t *ent)
 {
 //    if(ent->chaos_flags & CHAOS_MAINMENU) {
-//    if(ent->client->menu)
-//        PMenu_Close(ent);
-//    else
+    if(ent->client->menu)
+    {
+        PMenu_Close(ent);
+    }
+    else
+    {
     	ChaosOpenMenu(ent);
+    }
 //    }
 }
 
@@ -1312,7 +1316,7 @@ void ClientCommand (edict_t *ent)
     else if (Q_stricmp(cmd, "showfrags") == 0)
         Cmd_ShowFrags (ent);
     else if (Q_stricmp(cmd, "menu") == 0) {
-        ent->chaos_flags ^= CHAOS_MAINMENU;
+        //ent->chaos_flags ^= CHAOS_MAINMENU;
         Cmd_Menu (ent);
     }
 	else if (Q_stricmp (cmd, "give") == 0)

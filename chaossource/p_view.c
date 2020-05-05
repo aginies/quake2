@@ -1088,7 +1088,7 @@ void ClientEndServerFrame (edict_t *ent)
 	current_player = ent;
 	current_client = ent->client;
 
-	if (strcmp(ent->classname,"bot") != 0)  {
+	if (strcmp(ent->classname,"player") == 0 && !level.intermissiontime)  {
         StatusBar_Update(ent);
     }
 

@@ -42,18 +42,17 @@ qboolean Observer(edict_t *ent, qboolean check)
 }
 
 void Chaos_SetStats(edict_t *self) {
-
     edict_t *ent = self;
     short *stats = self->client->ps.stats;
 
     if(!level.intermissiontime) {
     //  already used
-    // 1 2 4 6 7 8 9 10 11 25 26 27 30
+    // 1 2 4 6 7 8 9 10 11 15 25 26 27 30
     // Don't use index > 31 this will cause error
-    stats[14] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
+    stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
     stats[29] = ent->client->pers.inventory[ITEM_INDEX(FindItem("explosive shells"))];
     stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))];
-    stats[27] = ent->client->pers.inventory[ITEM_INDEX(FindItem("buzzes"))];
+    stats[28] = ent->client->pers.inventory[ITEM_INDEX(FindItem("buzzes"))];
 
     stats[31] = ent->client->pers.inventory[ITEM_INDEX(FindItem("grenades"))];
     stats[15] = ent->client->pers.inventory[ITEM_INDEX(FindItem("flash grenades"))];
@@ -70,40 +69,37 @@ void Chaos_SetStats(edict_t *self) {
 
     stats[24] = ent->client->pers.inventory[ITEM_INDEX(FindItem("cells"))];
 
-    stats[28] = ent->client->pers.inventory[ITEM_INDEX(FindItem("nuke"))];
-    stats[13] = ent->client->pers.inventory[ITEM_INDEX(FindItem("gravity vortex"))];
+    stats[11] = ent->client->pers.inventory[ITEM_INDEX(FindItem("nuke"))];
+    stats[27] = ent->client->pers.inventory[ITEM_INDEX(FindItem("gravity vortex"))];
     }
 
     if(ctf->value)
         SetCTFStats(ent, stats);
 }
 
-//===============================
 // statusbar
 
 char *ammobar =
 "yb -156 xr -24 picn a_xgrenades xr -74 num 3 18 "
 "yb -122 xr -24 picn a_lmines xr -74 num 3 17 "
-"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
-"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
-"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
-"yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
-"yt 108 xr -24 picn a_shells xr -74 num 3 14 "
-"yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
-"yt 180 xr -24 picn a_buzz xr -74 num 3 27 "
-"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
-"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
-"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
+//"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
+//"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
+//"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
+//"yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
+//"yt 108 xr -24 picn a_shells xr -74 num 3 12 "
+//"yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
+"yt 180 xr -24 picn a_buzz xr -74 num 3 28 "
+//"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
+//"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
+//"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
 "yt 136 xl 0 picn a_rockets xl 24 num 3 22 "
-"yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
+//"yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
 "yt 208 xl 0 picn a_cells xl 24 num 3 24 "
 ;
-//"yt 232 xl 0 picn a_nuke xl 24 num 3 27"
-//"yt 256 xl 0 picn a_vortex xl 24 num 3 28"
 
-char *nukevortex = 
-"yt 112 xl 0 picn a_nuke xl 24 num 3 28 "
-"yt 88 xl 0 picn a_vortex xl 24 num 3 13 "
+char *nukevortex =
+"yt 88 xl 0 picn a_nuke xl 24 num 3 11 "
+//"yt 112 xl 0 picn a_vortex xl 24 num 3 27 "
 ;
 
 char *fragsbar =
@@ -113,7 +109,6 @@ char *fragsbar =
 
 char *chaos_statusbar =
 "yb -24 "
-
 // health
 "xv 0 hnum xv 50 pic 0 "
 
@@ -124,7 +119,7 @@ char *chaos_statusbar =
 "if 4 xv 200 rnum xv 250 pic 4 endif "
 
 // config string output (observing / safety msg)
-"if 30 yb -16 xv 8 stat_string 30 endif "
+//"if 30 yb -16 xv 8 stat_string 30 endif "
 
 // selected item
 "if 6 xv 296 pic 6 endif "
@@ -132,16 +127,16 @@ char *chaos_statusbar =
 "yb -50 "
 
 // picked up item
-"if 7 xv 0 pic 7 xv 26 yb -42 stat_string 8 yb -50 endif "
+//"if 7 xv 0 pic 7 xv 26 yb -42 stat_string 8 yb -50 endif "
 
 // timer
 "if 9 xv 246 num 2 10 xv 296 pic 9 endif "
 
-//  help / weapon icon 
-"if 11 xv 148 pic 11 endif "
+//  help / weapon icon
+//"if 11 xv 148 pic 11 endif "
 
 //tech
-//"yt 120 if 26 xr -26 pic 26 endif "
+"yt 120 if 26 xr -26 pic 26 endif "
 
 // id view state
 //"if 27 xv 0 yb -58 string \"Viewing\" xv 64  stat_string 27 endif "
@@ -149,10 +144,15 @@ char *chaos_statusbar =
 
 
 int StatusBar_Update(edict_t *ent) {
-    char statusbar[2400];
+    char statusbar[1400];
 
 //    if(!(ent->chaos_flags & CHAOS_STATUSBAR))
 //        return 0;
+
+//    if (ent->client->menu) 
+//    {
+//        PMenu_Close(ent);
+//    }
 
     ent->chaos_flags &= ~CHAOS_STATUSBAR;
 
@@ -164,7 +164,7 @@ int StatusBar_Update(edict_t *ent) {
 	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
 	    }
-	    if (ent->client->showfrags)
+	    if (!ent->client->showfrags)
 	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
 	    }
@@ -179,7 +179,7 @@ int StatusBar_Update(edict_t *ent) {
 	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
 	    }
-	    if (ent->client->showfrags)
+	    if (!ent->client->showfrags)
 	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
 	    }
@@ -191,10 +191,9 @@ int StatusBar_Update(edict_t *ent) {
     }
 
     gi.configstring (CS_STATUSBAR, statusbar);
-    gi.WriteByte(0x0D);
-    gi.WriteShort(5);
-//    gi.WriteShort (ent-g_edicts+10);
-    gi.WriteString(statusbar);
+//    gi.WriteByte(0x0D);
+//    gi.WriteShort(5);
+//    gi.WriteString(statusbar);
     gi.unicast(ent, false);
     return strlen(statusbar);
     }

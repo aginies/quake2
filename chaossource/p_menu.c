@@ -36,7 +36,7 @@ void PMenu_Open(edict_t *ent, pmenu_t *entries, int cur, int num)
 	ent->client->menu = hnd;
 
 	PMenu_Update(ent);
-	gi.unicast (ent, true);
+	gi.unicast (ent, false);
 }
 
 void PMenu_Close(edict_t *ent)
@@ -66,7 +66,7 @@ void PMenu_Update(edict_t *ent)
 
 	hnd = ent->client->menu;
 
-	//strcpy(string, "xv 32 yv 8 picn inventory ");
+	//strcpy(string, "xv 32 yv 8 picn cinventory ");
     strcpy(string, "xv 32 yv 8 picn cinventory xv 0 yt 20 picn chaoslogo ");
 
 
