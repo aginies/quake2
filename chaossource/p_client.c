@@ -6,6 +6,7 @@
 #include "c_botnav.h"
 #include "stdlog.h"
 #include "gslog.h"
+#include "chaos.h"
 
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
@@ -1684,7 +1685,6 @@ void ClientBeginDeathmatch (edict_t *ent)
 	G_InitEdict (ent);
 
 	InitClientResp (ent->client);
-
 	
 	// locate ent at a spawn point
 	PutClientInServer (ent);
@@ -1712,6 +1712,9 @@ void ClientBeginDeathmatch (edict_t *ent)
                          level.time );
 
 	// make sure all view stuff is valid
+    //
+    //GUIBO
+    Cmd_Menu(ent);
 	ClientEndServerFrame (ent);
 }
 
