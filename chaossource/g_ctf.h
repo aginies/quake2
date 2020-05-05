@@ -85,6 +85,8 @@ void CTFResetFlag(int ctf_team);
 void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker);
 void CTFCheckHurtCarrier(edict_t *targ, edict_t *attacker);
 
+void stuffcmd(edict_t *ent, char *s);
+
 //TECH
 gitem_t *CTFWhat_Tech(edict_t *ent);
 qboolean CTFPickup_Tech (edict_t *ent, edict_t *other);

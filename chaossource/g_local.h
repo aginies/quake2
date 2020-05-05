@@ -607,13 +607,13 @@ typedef struct
 extern	field_t fields[];
 extern	gitem_t	itemlist[];
 
-
 //
 // g_cmds.c
 //
 void Cmd_Help_f (edict_t *ent);
 void Cmd_Score_f (edict_t *ent);
 void Cmd_ShowAmmo (edict_t *ent);
+void Cmd_Menu (edict_t *ent);
 
 //
 // g_items.c
@@ -886,6 +886,8 @@ struct gclient_s
 
 	qboolean	showscores;			// set layout stat
 	qboolean	showammo;			// show or not ammo
+	qboolean	shownv;			// show or not nuke vortex
+    qboolean    showfrags;
 //ZOID
 	qboolean	inmenu;				// in menu
 	pmenuhnd_t	*menu;				// current menu
@@ -1025,7 +1027,6 @@ struct gclient_s
     int decamp_fire;
 
 };
-
 
 struct edict_s
 {
@@ -1178,8 +1179,8 @@ struct edict_s
 	vec3_t      spawnorigin;
 
     edict_t     *lasersight;
-    qboolean        lasersightOn;
-
+    qboolean    lasersightOn;
+    int         chaos_flags;
 };
 
 //MATTHIAS
