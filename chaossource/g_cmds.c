@@ -1,6 +1,7 @@
 #include "g_local.h"
 #include "m_player.h"
 #include "c_base.h"
+#include "chaos.h"
 
 void ClientCommand2 (edict_t *ent);	//MATTHIAS
 
@@ -467,6 +468,42 @@ void Cmd_ShowAmmo (edict_t *ent)
 
 /*
 ==================
+Cmd_ShowNV
+
+Enable/Disable show Nuke and Vortex
+==================
+*/
+
+void Cmd_ShowNV (edict_t *ent)
+{
+	if (ent->client->shownv)
+	{
+		ent->client->shownv = false;
+		return;
+	}
+	ent->client->shownv = true;
+}
+
+/*
+==================
+Cmd_ShowFrags
+
+Enable/Disable show Nuke and Vortex
+==================
+*/
+
+void Cmd_ShowFrags (edict_t *ent)
+{
+	if (ent->client->showfrags)
+	{
+		ent->client->showfrags = false;
+		return;
+	}
+	ent->client->showfrags = true;
+}
+
+/*
+==================
 Cmd_Drop_f
 
 Drop an inventory item
@@ -509,25 +546,18 @@ void Cmd_Drop_f (edict_t *ent)
 
 /*
 =================
-Cmd_Test
+Cmd_Menu
 =================
 */
-void Cmd_Test (edict_t *ent)
+void Cmd_Menu (edict_t *ent)
 {
-	gclient_t	*cl;
-
-	cl = ent->client;
-	cl->showscores = false;
-	cl->showhelp = false;
-
-	ChaosOpenMenu(ent);
-	return;
-
-
-	///gi.WriteByte (svc_inventory);
-	//gi.unicast (ent, true);
+//    if(ent->chaos_flags & CHAOS_MAINMENU) {
+//    if(ent->client->menu)
+//        PMenu_Close(ent);
+//    else
+    	ChaosOpenMenu(ent);
+//    }
 }
-
 
 
 /*
@@ -1277,8 +1307,14 @@ void ClientCommand (edict_t *ent)
         Cmd_PlayerList_f (ent);
     else if (Q_stricmp(cmd, "showammo") == 0)
         Cmd_ShowAmmo (ent);
-    else if (Q_stricmp(cmd, "test") == 0)
-        Cmd_Test (ent);
+    else if (Q_stricmp(cmd, "shownv") == 0)
+        Cmd_ShowNV (ent);
+    else if (Q_stricmp(cmd, "showfrags") == 0)
+        Cmd_ShowFrags (ent);
+    else if (Q_stricmp(cmd, "menu") == 0) {
+        ent->chaos_flags ^= CHAOS_MAINMENU;
+        Cmd_Menu (ent);
+    }
 	else if (Q_stricmp (cmd, "give") == 0)
 		Cmd_Give_f (ent);
 	else if (Q_stricmp (cmd, "god") == 0)
