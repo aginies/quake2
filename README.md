@@ -60,6 +60,7 @@ Orignal version of Chaos. ``master`` repository
 Default repository ``plasma``.
 This version include:
 
+* add a menu
 * add an observer mode (still buggy...)
 * display status of all Ammo, your can use the command "showammo"
 * add ```playerlist``` command
