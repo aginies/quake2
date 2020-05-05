@@ -1088,9 +1088,26 @@ void ClientEndServerFrame (edict_t *ent)
 	current_player = ent;
 	current_client = ent->client;
 
-	if (strcmp(ent->classname,"player") == 0 && !level.intermissiontime)  {
-        StatusBar_Update(ent);
-    }
+    if(!ent->client)
+        return;
+
+    if(level.framenum - ent->client->resp.enterframe < 2)
+        return;
+
+//  if(level.framenum - ent->update_frame > ofp_maxframes->value)
+//      || (level.framenum - ent->update_frame) * 500000 /
+//            (int)(ofp_base->value + (float)countplayers() * ofp_perplayer->value) + 1 >
+//            (ent->update_size + ent->update_other) *
+//            MIN(MAX(ent->lclient->ping, ofp_minping->value), ofp_maxping->value)) i
+//  {
+        ent->update_size = StatusBar_Update(ent);
+        if(!ent->update_size)
+            ent->update_size = Layout_Update(ent);
+
+        ent->update_frame = level.framenum + 1;
+        ent->update_other = 0;
+//    }
+
 
 	//
 	// If the origin or velocity have changed since ClientThink(),

@@ -551,18 +551,16 @@ Cmd_Menu
 */
 void Cmd_Menu (edict_t *ent)
 {
-//    if(ent->chaos_flags & CHAOS_MAINMENU) {
     if(ent->client->menu)
     {
         PMenu_Close(ent);
     }
     else
     {
+        ent->chaos_flags |= CHAOS_MAINMENU;
     	ChaosOpenMenu(ent);
     }
-//    }
 }
-
 
 /*
 =================

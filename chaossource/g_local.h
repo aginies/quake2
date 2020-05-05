@@ -1180,7 +1180,14 @@ struct edict_s
 
     edict_t     *lasersight;
     qboolean    lasersightOn;
+    //GUIBO
     int         chaos_flags;
+    int update_size;
+    int update_other;
+    int update_frame;
+    int layout;
+    qboolean layout_update;
+
 };
 
 //MATTHIAS

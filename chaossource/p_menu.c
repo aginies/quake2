@@ -1,4 +1,5 @@
 #include "g_local.h"
+#include "chaos.h"
 
 void PMenu_Open(edict_t *ent, pmenu_t *entries, int cur, int num)
 {
@@ -13,6 +14,8 @@ void PMenu_Open(edict_t *ent, pmenu_t *entries, int cur, int num)
 		gi.dprintf("warning, ent already has a menu\n");
 		PMenu_Close(ent);
 	}
+
+    ent->chaos_flags = CHAOS_MAINMENU;
 
 	hnd = malloc(sizeof(*hnd));
 
@@ -47,6 +50,8 @@ void PMenu_Close(edict_t *ent)
 	free(ent->client->menu);
 	ent->client->menu = NULL;
 	ent->client->showscores = false;
+    gi.dprintf("DEBUG QUIT MENU \n");
+    ent->chaos_flags = CHAOS_FREE;
 }
 
 void PMenu_Update(edict_t *ent)

@@ -3,6 +3,7 @@
 
 #define CHAOS_STATUSBAR 1
 #define CHAOS_MAINMENU 2
+#define CHAOS_FREE 4
 
 qboolean Observer(edict_t *ent, qboolean check);
 

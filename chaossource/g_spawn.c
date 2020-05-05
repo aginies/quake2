@@ -708,7 +708,7 @@ void SP_worldspawn (edict_t *ent)
 
 	// status bar program
     //Chaos_SetStats(ent);
-    StatusBar_Update(ent);
+    //StatusBar_Update(ent);
 	//gi.configstring (CS_STATUSBAR, ammobar);
 
 

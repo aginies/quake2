@@ -82,18 +82,18 @@ void Chaos_SetStats(edict_t *self) {
 char *ammobar =
 "yb -156 xr -24 picn a_xgrenades xr -74 num 3 18 "
 "yb -122 xr -24 picn a_lmines xr -74 num 3 17 "
-//"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
-//"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
-//"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
-//"yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
-//"yt 108 xr -24 picn a_shells xr -74 num 3 12 "
-//"yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
+"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
+"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
+"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
+"yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
+"yt 108 xr -24 picn a_shells xr -74 num 3 12 "
+"yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
 "yt 180 xr -24 picn a_buzz xr -74 num 3 28 "
-//"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
-//"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
-//"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
+"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
+"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
+"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
 "yt 136 xl 0 picn a_rockets xl 24 num 3 22 "
-//"yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
+"yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
 "yt 208 xl 0 picn a_cells xl 24 num 3 24 "
 ;
 
@@ -146,15 +146,17 @@ char *chaos_statusbar =
 int StatusBar_Update(edict_t *ent) {
     char statusbar[1400];
 
-//    if(!(ent->chaos_flags & CHAOS_STATUSBAR))
-//        return 0;
-
-//    if (ent->client->menu) 
+    if((ent->chaos_flags == 2)) {
+//        gi.dprintf("DEBUG dans le menu %i !\n", ent->chaos_flags);   
+        return 0;
+    }
+//    else
 //    {
-//        PMenu_Close(ent);
+//        gi.dprintf("DEBUG PAS dans menu !\n");   
 //    }
 
-    ent->chaos_flags &= ~CHAOS_STATUSBAR;
+    ent->chaos_flags = CHAOS_STATUSBAR;
+//    gi.dprintf("DEBUG AFTER menu %i !\n", ent->chaos_flags);
 
     if (strcmp(ent->classname, "player") == 0)
     {
@@ -190,14 +192,60 @@ int StatusBar_Update(edict_t *ent) {
         strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
 
-    gi.configstring (CS_STATUSBAR, statusbar);
+
 //    gi.WriteByte(0x0D);
 //    gi.WriteShort(5);
 //    gi.WriteString(statusbar);
-    gi.unicast(ent, false);
+//    gi.unicast(ent, false);
     return strlen(statusbar);
     }
     return 0;
+}
+
+int Layout_Update(edict_t *ent) {
+    char statusbar[1400] = "";
+    
+    if (strcmp(ent->classname, "player") == 0)
+    {
+    if(!ctf->value) 
+    {
+	    if (!ent->client->showammo)
+	    {
+        	strlcat(statusbar, ammobar, sizeof(statusbar));
+	    }
+	    if (!ent->client->showfrags)
+	    {
+        	strlcat(statusbar, fragsbar, sizeof(statusbar));
+	    }
+	    if (ent->client->shownv)
+	    {
+        	strlcat(statusbar, nukevortex, sizeof(statusbar));
+	    }
+        strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
+    }
+    else if(ctf->value) {
+	    if (!ent->client->showammo)
+	    {
+        	strlcat(statusbar, ammobar, sizeof(statusbar));
+	    }
+	    if (!ent->client->showfrags)
+	    {
+        	strlcat(statusbar, fragsbar, sizeof(statusbar));
+	    }
+	    if (ent->client->shownv)
+	    {
+        	strlcat(statusbar, nukevortex, sizeof(statusbar));
+	    }
+        strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
+    }
+    }
+
+    gi.configstring (CS_STATUSBAR, statusbar);
+//    gi.WriteByte(svc_layout);
+//    gi.WriteString(string);
+    gi.unicast(ent, true);
+
+    return strlen(statusbar);
 }
 
 //
