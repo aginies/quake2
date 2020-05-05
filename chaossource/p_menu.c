@@ -66,7 +66,9 @@ void PMenu_Update(edict_t *ent)
 
 	hnd = ent->client->menu;
 
-	strcpy(string, "xv 32 yv 8 picn inventory ");
+	//strcpy(string, "xv 32 yv 8 picn inventory ");
+    strcpy(string, "xv 32 yv 8 picn cinventory xv 0 yt 20 picn chaoslogo ");
+
 
 	for (i = 0, p = hnd->entries; i < hnd->num; i++, p++) {
 		if (!p->text || !*(p->text))
