@@ -48,9 +48,9 @@ void Chaos_SetStats(edict_t *self) {
 
     if(!level.intermissiontime) {
     //  already used
-    // 1 2 4 6 7 9 11 25 26 27 30
+    // 1 2 4 6 7 8 9 10 11 25 26 27 30
     // Don't use index > 31 this will cause error
-    stats[10] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
+    stats[14] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
     stats[29] = ent->client->pers.inventory[ITEM_INDEX(FindItem("explosive shells"))];
     stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))];
     stats[27] = ent->client->pers.inventory[ITEM_INDEX(FindItem("buzzes"))];
@@ -88,7 +88,7 @@ char *ammobar =
 "yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
 "yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
 "yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
-"yt 108 xr -24 picn a_shells xr -74 num 3 10 "
+"yt 108 xr -24 picn a_shells xr -74 num 3 14 "
 "yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
 "yt 180 xr -24 picn a_buzz xr -74 num 3 27 "
 "yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
