@@ -960,7 +960,7 @@ void SP_worldspawn (edict_t *ent)
 	}
 
 	//PreCacheAll();
-	LoadMOTD();
+//	LoadMOTD();
 
 	Load_BotChat();
 
