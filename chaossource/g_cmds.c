@@ -486,6 +486,45 @@ void Cmd_ShowNV (edict_t *ent)
 
 /*
 ==================
+Cmd_ShowArrows
+
+Enable/Disable show everthing related 
+to Bow
+==================
+*/
+
+void Cmd_ShowArrows (edict_t *ent)
+{
+	if (ent->client->showarrows)
+	{
+		ent->client->showarrows = false;
+		return;
+	}
+	ent->client->showarrows = true;
+}
+
+/*
+==================
+Cmd_ShowGrenades
+
+Enable/Disable Grenades
+==================
+*/
+
+void Cmd_ShowGrenades (edict_t *ent)
+{
+	if (ent->client->showgrenades)
+	{
+		ent->client->showgrenades = false;
+		return;
+	}
+	ent->client->showgrenades = true;
+}
+
+
+
+/*
+==================
 Cmd_ShowFrags
 
 Enable/Disable show Nuke and Vortex
@@ -1311,12 +1350,14 @@ void ClientCommand (edict_t *ent)
         Cmd_ShowAmmo (ent);
     else if (Q_stricmp(cmd, "shownv") == 0)
         Cmd_ShowNV (ent);
+    else if (Q_stricmp(cmd, "showgrenades") == 0)
+        Cmd_ShowGrenades (ent);
+     else if (Q_stricmp(cmd, "showarrows") == 0)
+        Cmd_ShowArrows (ent);
     else if (Q_stricmp(cmd, "showfrags") == 0)
         Cmd_ShowFrags (ent);
-    else if (Q_stricmp(cmd, "menu") == 0) {
-        //ent->chaos_flags ^= CHAOS_MAINMENU;
+    else if (Q_stricmp(cmd, "menu") == 0)
         Cmd_Menu (ent);
-    }
 	else if (Q_stricmp (cmd, "give") == 0)
 		Cmd_Give_f (ent);
 	else if (Q_stricmp (cmd, "god") == 0)

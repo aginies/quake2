@@ -887,7 +887,9 @@ struct gclient_s
 	qboolean	showscores;			// set layout stat
 	qboolean	showammo;			// show or not ammo
 	qboolean	shownv;			// show or not nuke vortex
-    qboolean    showfrags;
+	qboolean	showgrenades;			// show or not grenades
+	qboolean	showarrows;			// show or not arrows
+    	qboolean    showfrags;
 //ZOID
 	qboolean	inmenu;				// in menu
 	pmenuhnd_t	*menu;				// current menu

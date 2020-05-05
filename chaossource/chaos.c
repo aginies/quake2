@@ -82,19 +82,25 @@ void Chaos_SetStats(edict_t *self) {
 char *ammobar =
 "yb -156 xr -24 picn a_xgrenades xr -74 num 3 18 "
 "yb -122 xr -24 picn a_lmines xr -74 num 3 17 "
-"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
-"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
-"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
 "yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
 "yt 108 xr -24 picn a_shells xr -74 num 3 12 "
 "yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
 "yt 180 xr -24 picn a_buzz xr -74 num 3 28 "
-"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
-"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
-"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
 "yt 136 xl 0 picn a_rockets xl 24 num 3 22 "
 "yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
 "yt 208 xl 0 picn a_cells xl 24 num 3 24 "
+;
+
+char *arraowsbar =
+"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
+"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
+"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
+;
+
+char *grenadesbar =
+"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
+"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
+"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
 ;
 
 char *nukevortex =
@@ -170,6 +176,14 @@ int StatusBar_Update(edict_t *ent) {
 	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
 	    }
+	    if (!ent->client->showarrows)
+	    {
+        	strlcat(statusbar, arraowsbar, sizeof(statusbar));
+	    }
+	    if (!ent->client->showgrenades)
+	    {
+        	strlcat(statusbar, grenadesbar, sizeof(statusbar));
+	    }
 	    if (ent->client->shownv)
 	    {
         	strlcat(statusbar, nukevortex, sizeof(statusbar));
@@ -220,6 +234,14 @@ int Layout_Update(edict_t *ent) {
 	    if (ent->client->shownv)
 	    {
         	strlcat(statusbar, nukevortex, sizeof(statusbar));
+	    }
+	    if (!ent->client->showarrows)
+	    {
+        	strlcat(statusbar, arraowsbar, sizeof(statusbar));
+	    }
+	    if (!ent->client->showgrenades)
+	    {
+        	strlcat(statusbar, grenadesbar, sizeof(statusbar));
 	    }
         strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
     }
@@ -295,6 +317,12 @@ pmenu_t interfacemenu[] = {
         { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "Nuke / Vortex",PMENU_ALIGN_LEFT, NULL, ShowNVMenu },
+        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Grenades",PMENU_ALIGN_LEFT, NULL, ShowGrenadesMenu },
+        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Montrer Munitions Arcs",PMENU_ALIGN_LEFT, NULL, ShowBowMenu },
         { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "Montrer Nombre Frag(s)",PMENU_ALIGN_LEFT, NULL, ShowFragsMenu },
@@ -431,6 +459,16 @@ void ShowAmmoMenu (edict_t *ent, pmenu_t *p)
 void ShowNVMenu (edict_t *ent, pmenu_t *p)
 {
     stuffcmd(ent, "shownv\n");
+}
+
+void ShowBowMenu (edict_t *ent, pmenu_t *p)
+{
+    stuffcmd(ent, "showarrows\n");
+}
+
+void ShowGrenadesMenu (edict_t *ent, pmenu_t *p)
+{
+    stuffcmd(ent, "showgrenades\n");
 }
 
 void ShowFragsMenu (edict_t *ent, pmenu_t *p)
