@@ -486,59 +486,59 @@ void Cmd_ShowNV (edict_t *ent)
 
 /*
 ==================
-Cmd_ShowArrows
+Cmd_ShowArrow
 
 Enable/Disable show everthing related 
 to Bow
 ==================
 */
 
-void Cmd_ShowArrows (edict_t *ent)
+void Cmd_ShowArrow (edict_t *ent)
 {
-	if (ent->client->showarrows)
+	if (ent->client->showarrow)
 	{
-		ent->client->showarrows = false;
+		ent->client->showarrow = false;
 		return;
 	}
-	ent->client->showarrows = true;
+	ent->client->showarrow = true;
 }
 
 /*
 ==================
-Cmd_ShowGrenades
+Cmd_ShowGrenade
 
-Enable/Disable Grenades
+Enable/Disable Grenade
 ==================
 */
 
-void Cmd_ShowGrenades (edict_t *ent)
+void Cmd_ShowGrenade (edict_t *ent)
 {
-	if (ent->client->showgrenades)
+	if (ent->client->showgrenade)
 	{
-		ent->client->showgrenades = false;
+		ent->client->showgrenade = false;
 		return;
 	}
-	ent->client->showgrenades = true;
+	ent->client->showgrenade = true;
 }
 
 
 
 /*
 ==================
-Cmd_ShowFrags
+Cmd_ShowFrag
 
-Enable/Disable show Nuke and Vortex
+Enable/Disable show Frag
 ==================
 */
 
-void Cmd_ShowFrags (edict_t *ent)
+void Cmd_ShowFrag (edict_t *ent)
 {
-	if (ent->client->showfrags)
+	if (ent->client->showfrag)
 	{
-		ent->client->showfrags = false;
+		ent->client->showfrag = false;
 		return;
 	}
-	ent->client->showfrags = true;
+	ent->client->showfrag = true;
 }
 
 /*
@@ -1350,12 +1350,12 @@ void ClientCommand (edict_t *ent)
         Cmd_ShowAmmo (ent);
     else if (Q_stricmp(cmd, "shownv") == 0)
         Cmd_ShowNV (ent);
-    else if (Q_stricmp(cmd, "showgrenades") == 0)
-        Cmd_ShowGrenades (ent);
-     else if (Q_stricmp(cmd, "showarrows") == 0)
-        Cmd_ShowArrows (ent);
-    else if (Q_stricmp(cmd, "showfrags") == 0)
-        Cmd_ShowFrags (ent);
+    else if (Q_stricmp(cmd, "showgrenade") == 0)
+        Cmd_ShowGrenade (ent);
+     else if (Q_stricmp(cmd, "showarrow") == 0)
+        Cmd_ShowArrow (ent);
+    else if (Q_stricmp(cmd, "showfrag") == 0)
+        Cmd_ShowFrag (ent);
     else if (Q_stricmp(cmd, "menu") == 0)
         Cmd_Menu (ent);
 	else if (Q_stricmp (cmd, "give") == 0)

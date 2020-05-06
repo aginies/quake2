@@ -50,7 +50,6 @@ void PMenu_Close(edict_t *ent)
 	free(ent->client->menu);
 	ent->client->menu = NULL;
 	ent->client->showscores = false;
-    gi.dprintf("DEBUG QUIT MENU \n");
     ent->chaos_flags = CHAOS_FREE;
 }
 
