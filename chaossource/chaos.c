@@ -260,12 +260,12 @@ int Layout_Update(edict_t *ent) {
 	    }
         strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
-    }
 
     gi.configstring (CS_STATUSBAR, statusbar);
 //    gi.WriteByte(svc_layout);
 //    gi.WriteString(string);
     gi.unicast(ent, false);
+    }
 
     return strlen(statusbar);
 }
