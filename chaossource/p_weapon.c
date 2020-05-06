@@ -337,7 +337,7 @@ void NoAmmoWeaponChange (edict_t *ent)
 			ent->client->newweapon = it_hyperblaster;
 			return;
 		}
-		if (ent->client->pers.inventory[ITEM_INDEX(it_plasma)]
+		if (ent->client->pers.inventory[ITEM_INDEX(it_cells)]
 			&&  ent->client->pers.inventory[ITEM_INDEX(it_plasma)])
 		{
 			ent->client->newweapon = it_plasma;
