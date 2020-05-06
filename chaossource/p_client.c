@@ -1961,10 +1961,12 @@ void ClientDisconnect (edict_t *ent)
 //ZOID
 
 	// send effect
-	gi.WriteByte (svc_muzzleflash);
-	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_LOGOUT);
-	gi.multicast (ent->s.origin, MULTICAST_PVS);
+    if(!IsObserver(ent)) {
+    	gi.WriteByte (svc_muzzleflash);
+    	gi.WriteShort (ent-g_edicts);
+    	gi.WriteByte (MZ_LOGOUT);
+    	gi.multicast (ent->s.origin, MULTICAST_PVS);
+    }
 
 	gi.unlinkentity (ent);
 	ent->s.modelindex = 0;
@@ -2472,6 +2474,12 @@ void ClientBeginServerFrame (edict_t *ent)
 
 	if (level.intermissiontime)
 		return;
+
+   if(use_startobserver->value) {
+        Observer(ent, false);
+        ent->chaos_flags |= CHAOS_OBSERVER;
+   }
+
 
 	client = ent->client;
 

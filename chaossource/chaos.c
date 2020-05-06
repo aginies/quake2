@@ -17,12 +17,13 @@ qboolean Observer(edict_t *ent, qboolean check)
         ent->client->resp.ctf_team = CTF_NOTEAM;
     }
 
+    ent->chaos_flags = CHAOS_OBSERVER;
+    ent->takedamage = DAMAGE_NO;
+
     gi.setmodel(ent, "");
     ent->movetype = MOVETYPE_NOCLIP;
     ent->client->ps.gunindex = 0;
     ent->solid = SOLID_NOT;
-    ///---------------
-    // from MoveClientToIntermission
     ent->client->ps.gunindex = 0;
     ent->client->ps.blend[3] = 0;
     ent->client->ps.rdflags &= ~RDF_UNDERWATER;
@@ -31,14 +32,20 @@ qboolean Observer(edict_t *ent, qboolean check)
 
     gi.linkentity(ent);
     gi.setmodel (ent, ent->model);
-
-//    char string[1400] = "";
-    //Com_sprintf(string, sizeof(string), "Press F8 to play again", 32, 0, NULL);
-//    gi.WriteByte(svc_layout);
-//    gi.WriteString(string);
+//    gi.configstring(CS_OBSERVING, "Observing.  FIRE to join.  0 for menu.");
+//    gi.unicast (ent, false);
 //   gi.unicast (ent, true);
 
+//    if((key == 0) || (key == 1)) {
+//      ChaosOpenMenu(ent);
+//      return true;
+//    }
+
     return true;
+}
+
+qboolean IsObserver(edict_t *ent) {
+    return ent->chaos_flags & CHAOS_OBSERVER;
 }
 
 void Chaos_SetStats(edict_t *self) {
@@ -82,19 +89,25 @@ void Chaos_SetStats(edict_t *self) {
 char *ammobar =
 "yb -156 xr -24 picn a_xgrenades xr -74 num 3 18 "
 "yb -122 xr -24 picn a_lmines xr -74 num 3 17 "
-"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
-"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
-"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
 "yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
 "yt 108 xr -24 picn a_shells xr -74 num 3 12 "
 "yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
 "yt 180 xr -24 picn a_buzz xr -74 num 3 28 "
-"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
-"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
-"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
 "yt 136 xl 0 picn a_rockets xl 24 num 3 22 "
 "yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
 "yt 208 xl 0 picn a_cells xl 24 num 3 24 "
+;
+
+char *arraowsbar =
+"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
+"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
+"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
+;
+
+char *grenadesbar =
+"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
+"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
+"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
 ;
 
 char *nukevortex =
@@ -146,7 +159,7 @@ char *chaos_statusbar =
 int StatusBar_Update(edict_t *ent) {
     char statusbar[1400];
 
-    if((ent->chaos_flags == 2)) {
+    if((ent->chaos_flags |= CHAOS_MAINMENU)) {
 //        gi.dprintf("DEBUG dans le menu %i !\n", ent->chaos_flags);   
         return 0;
     }
@@ -155,8 +168,6 @@ int StatusBar_Update(edict_t *ent) {
 //        gi.dprintf("DEBUG PAS dans menu !\n");   
 //    }
 
-    ent->chaos_flags = CHAOS_STATUSBAR;
-//    gi.dprintf("DEBUG AFTER menu %i !\n", ent->chaos_flags);
 
     if (strcmp(ent->classname, "player") == 0)
     {
@@ -166,9 +177,17 @@ int StatusBar_Update(edict_t *ent) {
 	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
 	    }
-	    if (!ent->client->showfrags)
+	    if (!ent->client->showfrag)
 	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
+	    }
+	    if (!ent->client->showarrow)
+	    {
+        	strlcat(statusbar, arraowsbar, sizeof(statusbar));
+	    }
+	    if (!ent->client->showgrenade)
+	    {
+        	strlcat(statusbar, grenadesbar, sizeof(statusbar));
 	    }
 	    if (ent->client->shownv)
 	    {
@@ -181,7 +200,7 @@ int StatusBar_Update(edict_t *ent) {
 	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
 	    }
-	    if (!ent->client->showfrags)
+	    if (!ent->client->showfrag)
 	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
 	    }
@@ -191,7 +210,6 @@ int StatusBar_Update(edict_t *ent) {
 	    }
         strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
-
 
 //    gi.WriteByte(0x0D);
 //    gi.WriteShort(5);
@@ -205,6 +223,8 @@ int StatusBar_Update(edict_t *ent) {
 int Layout_Update(edict_t *ent) {
     char statusbar[1400] = "";
     
+    ent->chaos_flags = CHAOS_STATUSBAR;
+
     if (strcmp(ent->classname, "player") == 0)
     {
     if(!ctf->value) 
@@ -213,13 +233,21 @@ int Layout_Update(edict_t *ent) {
 	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
 	    }
-	    if (!ent->client->showfrags)
+	    if (!ent->client->showfrag)
 	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
 	    }
 	    if (ent->client->shownv)
 	    {
         	strlcat(statusbar, nukevortex, sizeof(statusbar));
+	    }
+	    if (!ent->client->showarrow)
+	    {
+        	strlcat(statusbar, arraowsbar, sizeof(statusbar));
+	    }
+	    if (!ent->client->showgrenade)
+	    {
+        	strlcat(statusbar, grenadesbar, sizeof(statusbar));
 	    }
         strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
     }
@@ -228,7 +256,7 @@ int Layout_Update(edict_t *ent) {
 	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
 	    }
-	    if (!ent->client->showfrags)
+	    if (!ent->client->showfrag)
 	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
 	    }
@@ -238,13 +266,10 @@ int Layout_Update(edict_t *ent) {
 	    }
         strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
-    }
 
     gi.configstring (CS_STATUSBAR, statusbar);
-//    gi.WriteByte(svc_layout);
-//    gi.WriteString(string);
-    gi.unicast(ent, true);
-
+    gi.unicast(ent, false);
+    }
     return strlen(statusbar);
 }
 
@@ -297,7 +322,13 @@ pmenu_t interfacemenu[] = {
         { "Nuke / Vortex",PMENU_ALIGN_LEFT, NULL, ShowNVMenu },
         { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Montrer Nombre Frag(s)",PMENU_ALIGN_LEFT, NULL, ShowFragsMenu },
+        { "Grenades",PMENU_ALIGN_LEFT, NULL, ShowGrenadeMenu },
+        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Montrer Munitions Arcs",PMENU_ALIGN_LEFT, NULL, ShowBowMenu },
+        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Montrer Nombre Frag(s)",PMENU_ALIGN_LEFT, NULL, ShowFragMenu },
         { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
@@ -316,7 +347,7 @@ pmenu_t helpmenu[] = {
         { "*shownv",PMENU_ALIGN_LEFT, NULL, NULL },
         { "Status Nuke et Vortex",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*showfrags",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "*showfrag",PMENU_ALIGN_LEFT, NULL, NULL },
         { "Nombre de Frag(s)",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "*pull",PMENU_ALIGN_LEFT, NULL, NULL },
@@ -433,8 +464,18 @@ void ShowNVMenu (edict_t *ent, pmenu_t *p)
     stuffcmd(ent, "shownv\n");
 }
 
-void ShowFragsMenu (edict_t *ent, pmenu_t *p)
+void ShowBowMenu (edict_t *ent, pmenu_t *p)
 {
-    stuffcmd(ent, "showfrags\n");
+    stuffcmd(ent, "showarrow\n");
+}
+
+void ShowGrenadeMenu (edict_t *ent, pmenu_t *p)
+{
+    stuffcmd(ent, "showgrenade\n");
+}
+
+void ShowFragMenu (edict_t *ent, pmenu_t *p)
+{
+    stuffcmd(ent, "showfrag\n");
 }
 
