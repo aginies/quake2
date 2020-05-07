@@ -1814,7 +1814,7 @@ void ClientCommand2 (edict_t *ent)
 			{
 				cprintf2 (ent, PRINT_HIGH, "Anti gravity belt ON\n");
 				ent->client->beltactive = 1;
-				ent->client->nextbeltcell = level.time + 2;
+				ent->client->nextbeltcell = level.time;
 			}
 		}
 	}
