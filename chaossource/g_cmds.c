@@ -450,99 +450,6 @@ void Cmd_Use_f (edict_t *ent)
 
 /*
 ==================
-Cmd_ShowAmmo
-
-Enable/Disable show ammo
-==================
-*/
-
-void Cmd_ShowAmmo (edict_t *ent)
-{
-	if (ent->client->showammo)
-	{
-		ent->client->showammo = false;
-		return;
-	}
-	ent->client->showammo = true;
-}
-
-/*
-==================
-Cmd_ShowNV
-
-Enable/Disable show Nuke and Vortex
-==================
-*/
-
-void Cmd_ShowNV (edict_t *ent)
-{
-	if (ent->client->shownv)
-	{
-		ent->client->shownv = false;
-		return;
-	}
-	ent->client->shownv = true;
-}
-
-/*
-==================
-Cmd_ShowArrow
-
-Enable/Disable show everthing related 
-to Bow
-==================
-*/
-
-void Cmd_ShowArrow (edict_t *ent)
-{
-	if (ent->client->showarrow)
-	{
-		ent->client->showarrow = false;
-		return;
-	}
-	ent->client->showarrow = true;
-}
-
-/*
-==================
-Cmd_ShowGrenade
-
-Enable/Disable Grenade
-==================
-*/
-
-void Cmd_ShowGrenade (edict_t *ent)
-{
-	if (ent->client->showgrenade)
-	{
-		ent->client->showgrenade = false;
-		return;
-	}
-	ent->client->showgrenade = true;
-}
-
-
-
-/*
-==================
-Cmd_ShowFrag
-
-Enable/Disable show Frag
-==================
-*/
-
-void Cmd_ShowFrag (edict_t *ent)
-{
-	if (ent->client->showfrag)
-	{
-		ent->client->showfrag = false;
-		return;
-	}
-	ent->client->showfrag = true;
-}
-
-/*
-==================
 Cmd_Drop_f
 
 Drop an inventory item
@@ -1346,16 +1253,6 @@ void ClientCommand (edict_t *ent)
         Jedi_Force_Kill (ent);
     else if (Q_stricmp(cmd, "playerlist") == 0)
         Cmd_PlayerList_f (ent);
-    else if (Q_stricmp(cmd, "showammo") == 0)
-        Cmd_ShowAmmo (ent);
-    else if (Q_stricmp(cmd, "shownv") == 0)
-        Cmd_ShowNV (ent);
-    else if (Q_stricmp(cmd, "showgrenade") == 0)
-        Cmd_ShowGrenade (ent);
-     else if (Q_stricmp(cmd, "showarrow") == 0)
-        Cmd_ShowArrow (ent);
-    else if (Q_stricmp(cmd, "showfrag") == 0)
-        Cmd_ShowFrag (ent);
     else if (Q_stricmp(cmd, "menu") == 0)
         Cmd_Menu (ent);
 	else if (Q_stricmp (cmd, "give") == 0)

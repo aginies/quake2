@@ -26,11 +26,6 @@ void MenuBots(edict_t *ent, pmenu_t *p);
 void KillBotsCmd (edict_t *ent, pmenu_t *p);
 void AddBotsCmd (edict_t *ent, pmenu_t *p);
 void AddBotsCmd2 (edict_t *ent, pmenu_t *p);
-void ShowAmmoMenu (edict_t *ent, pmenu_t *p);
-void ShowNVMenu (edict_t *ent, pmenu_t *p);
-void ShowBowMenu (edict_t *ent, pmenu_t *p);
-void ShowGrenadeMenu (edict_t *ent, pmenu_t *p);
-void ShowFragMenu (edict_t *ent, pmenu_t *p);
 
 
 int Layout_Update(edict_t *ent);
