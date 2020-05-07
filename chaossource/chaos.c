@@ -173,41 +173,20 @@ int StatusBar_Update(edict_t *ent) {
     {
     if(!ctf->value) 
     {
-	    if (!ent->client->showammo)
-	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
-	    }
-	    if (!ent->client->showfrag)
-	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
-	    }
-	    if (!ent->client->showarrow)
-	    {
         	strlcat(statusbar, arraowsbar, sizeof(statusbar));
-	    }
-	    if (!ent->client->showgrenade)
-	    {
         	strlcat(statusbar, grenadesbar, sizeof(statusbar));
-	    }
-	    if (ent->client->shownv)
-	    {
         	strlcat(statusbar, nukevortex, sizeof(statusbar));
-	    }
         strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
     }
     else if(ctf->value) {
 	    if (!ent->client->showammo)
-	    {
         	strlcat(statusbar, ammobar, sizeof(statusbar));
-	    }
-	    if (!ent->client->showfrag)
-	    {
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
-	    }
-	    if (ent->client->shownv)
-	    {
+        	strlcat(statusbar, arraowsbar, sizeof(statusbar));
+        	strlcat(statusbar, grenadesbar, sizeof(statusbar));
         	strlcat(statusbar, nukevortex, sizeof(statusbar));
-	    }
         strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
 
@@ -291,14 +270,15 @@ void ChaosCredits(edict_t *ent, pmenu_t *p)
 }
 
 pmenu_t interfacemenu[] = {
-        { "Interface",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Interface",PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "L'interface montre",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "automatiquement les",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Munitions des armes",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "disponibles.",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "*Automatiquement",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "les Munitions des",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "armes disponibles.",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
