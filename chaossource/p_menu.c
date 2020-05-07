@@ -62,6 +62,7 @@ void PMenu_Update(edict_t *ent)
 	pmenuhnd_t *hnd;
 	char *t;
 	qboolean alt = false;
+	qboolean item = false;
 
 	if (!ent->client->menu) {
 		gi.dprintf("warning:  ent has no menu\n");
@@ -81,7 +82,10 @@ void PMenu_Update(edict_t *ent)
 		if (*t == '*') {
 			alt = true;
 			t++;
-		}
+		} else if (*t == '+') {
+            item = true;
+            t++;
+        }
 		sprintf(string + strlen(string), "yv %d ", 32 + i * 8);
 		if (p->align == PMENU_ALIGN_CENTER)
 			x = 196/2 - strlen(t)*4 + 64;
@@ -97,9 +101,12 @@ void PMenu_Update(edict_t *ent)
 			sprintf(string + strlen(string), "string2 \"\x0d%s\" ", t);
 		else if (alt)
 			sprintf(string + strlen(string), "string2 \"%s\" ", t);
+		else if (item)
+			sprintf(string + strlen(string), "string2 \"\x2a %s\" ", t);
 		else
 			sprintf(string + strlen(string), "string \"%s\" ", t);
 		alt = false;
+        item = false;
 	}
 
 	gi.WriteByte (svc_layout);

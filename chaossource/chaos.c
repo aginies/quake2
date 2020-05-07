@@ -53,10 +53,15 @@ void Chaos_SetStats(edict_t *self) {
     short *stats = self->client->ps.stats;
 
     if(!level.intermissiontime) {
-    //  already used
+    // Index already used for various reasons, will pickup some not mandatory
+    // reassigning the stats[NUMBER]
     // 1 2 4 6 7 8 9 10 11 15 25 26 27 30
-    // Don't use index > 31 this will cause error
-//    stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
+    // Don't use index > 31 this will cause error this needs a change in the quake2 client
+    // and in the mods, so not very compatible.... 
+    // q_shared.h:#define	MAX_STATS				32
+    // q_shared.h:	short		stats[MAX_STATS];
+    //
+    //stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
     stats[29] = ent->client->pers.inventory[ITEM_INDEX(FindItem("explosive shells"))];
     stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))];
     stats[28] = ent->client->pers.inventory[ITEM_INDEX(FindItem("buzzes"))];
@@ -140,7 +145,7 @@ char *chaos_statusbar =
 "yb -50 "
 
 // picked up item
-//"if 7 xv 0 pic 7 xv 26 yb -42 stat_string 8 yb -50 endif "
+"if 7 xv 0 pic 7 xv 26 yb -42 stat_string 8 yb -50 endif "
 
 // timer
 "if 9 xv 246 num 2 10 xv 296 pic 9 endif "
@@ -154,7 +159,6 @@ char *chaos_statusbar =
 // id view state
 //"if 27 xv 0 yb -58 string \"Viewing\" xv 64  stat_string 27 endif "
 ;
-
 
 int StatusBar_Update(edict_t *ent) {
     char statusbar[1400];
@@ -181,11 +185,6 @@ int StatusBar_Update(edict_t *ent) {
         strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
     }
     else if(ctf->value) {
-        	strlcat(statusbar, ammobar, sizeof(statusbar));
-        	strlcat(statusbar, fragsbar, sizeof(statusbar));
-        	strlcat(statusbar, arraowsbar, sizeof(statusbar));
-        	strlcat(statusbar, grenadesbar, sizeof(statusbar));
-        	strlcat(statusbar, nukevortex, sizeof(statusbar));
         strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
 
@@ -215,11 +214,6 @@ int Layout_Update(edict_t *ent) {
 	    strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
 	  }
 	else if(ctf->value) {
-	  strlcat(statusbar, ammobar, sizeof(statusbar));
-	  strlcat(statusbar, fragsbar, sizeof(statusbar));
-	  strlcat(statusbar, nukevortex, sizeof(statusbar));
-	  strlcat(statusbar, arraowsbar, sizeof(statusbar));
-	  strlcat(statusbar, grenadesbar, sizeof(statusbar));
 	  strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
 
@@ -245,7 +239,7 @@ pmenu_t ccreditsmenu[] = {
         { "*Programming",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Flash (flash@telefragged.com)",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "*Current devel",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Current devel > 1.14b4",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Guibo (guibo@guibo.com)",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { "*Level Design",PMENU_ALIGN_CENTER, NULL, NULL },
@@ -275,9 +269,13 @@ pmenu_t interfacemenu[] = {
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "L'interface montre",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "*Automatiquement",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*  Dynamiquement",PMENU_ALIGN_CENTER, NULL, NULL },
         { "les Munitions des",PMENU_ALIGN_LEFT, NULL, NULL },
         { "armes disponibles.",PMENU_ALIGN_LEFT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Si il n'y a plus de ",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "munitions son status",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "disparait.",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
@@ -297,36 +295,56 @@ pmenu_t helpmenu[] = {
         { "*fkill",PMENU_ALIGN_LEFT, NULL, NULL },
         { "DarK Vador Force!",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*observer",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Camera libre",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "F7 F8 quitter camera",PMENU_ALIGN_RIGHT, NULL, NULL },
+//        { "*observer",PMENU_ALIGN_LEFT, NULL, NULL },
+//        { "Camera libre",PMENU_ALIGN_LEFT, NULL, NULL },
+//        { "F7 F8 quitter camera",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "*Dans votre Configuration",PMENU_ALIGN_LEFT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "bind MOUSE2 ''push''",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "bind MOUSE3 ''pull''",PMENU_ALIGN_LEFT, NULL, NULL },
         { "bind MOUSE4 ''fkill''",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "bind MOUSE5 ''pull''",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "bind F12 ''showammo''",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "bind F12 ''menu''",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "Retourner Menu Principal",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
 };
+
+pmenu_t helpservermenu[] = {
+        { "*Parametres serveur",PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*fast_respawn [SECONDE]",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "permet de respawn les armes",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "dans le délaie de X secondes",PMENU_ALIGN_LEFT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Dans votre ligne de commande:",PMENU_ALIGN_LEFT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "+set fast_respawn 4",PMENU_ALIGN_LEFT, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Retourner Menu Principal",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+};
+
 
 
 pmenu_t mainmenu[] = {
         { "*Chaos Deathmatch",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Devel Version 1.16",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "* ! VERSION XP !",PMENU_ALIGN_CENTER, NULL, NULL },
+//        { "* ! VERSION XP !",PMENU_ALIGN_CENTER, NULL, NULL },
         { " ! Reportez moi les Bugs !",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "Afficher ce menu: menu",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "*Bots",PMENU_ALIGN_LEFT, NULL,MenuBots },
+        { "+Bots",PMENU_ALIGN_LEFT, NULL,MenuBots },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*Interface",PMENU_ALIGN_LEFT, NULL, MenuInterface },
+        { "+Interface",PMENU_ALIGN_LEFT, NULL, MenuInterface },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*Aide",PMENU_ALIGN_LEFT, NULL, MenuHelp },
+        { "+Aide",PMENU_ALIGN_LEFT, NULL, MenuHelp },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*Credits",PMENU_ALIGN_LEFT, NULL, ChaosCredits },
+        { "+Aide Serveur",PMENU_ALIGN_LEFT, NULL, MenuServerHelp },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "+Credits",PMENU_ALIGN_LEFT, NULL, ChaosCredits },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { "[^] et [$] pour le curseur", PMENU_ALIGN_LEFT, NULL, NULL },
@@ -345,10 +363,11 @@ pmenu_t botsmenu[] = {
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Ajouter un Bot (niveau 1)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd },
-        { "Ajouter un Bot (niveau 2)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd2 },
+        { "+Ajouter un Bot (niveau 1)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd },
+        { "+Ajouter un Bot (niveau 2)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd2 },
+        { "+Ajouter un Bot (niveau 3)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd3 },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Retirer Tous les bots",PMENU_ALIGN_LEFT, NULL, KillBotsCmd },
+        { "+Retirer Tous les bots",PMENU_ALIGN_LEFT, NULL, KillBotsCmd },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
@@ -374,6 +393,12 @@ void MenuHelp(edict_t *ent, pmenu_t *p)
         PMenu_Open(ent, helpmenu, -1, sizeof(helpmenu) / sizeof(pmenu_t));
 }
 
+void MenuServerHelp(edict_t *ent, pmenu_t *p)
+{
+        PMenu_Close(ent);
+        PMenu_Open(ent, helpservermenu, -1, sizeof(helpservermenu) / sizeof(pmenu_t));
+}
+
 void MenuBots(edict_t *ent, pmenu_t *p)
 {
         PMenu_Close(ent);
@@ -392,5 +417,9 @@ void AddBotsCmd (edict_t *ent, pmenu_t *p)
 void AddBotsCmd2 (edict_t *ent, pmenu_t *p)
 {
     stuffcmd(ent, "rcon sv addbots 1 2\n");
+}
+void AddBotsCmd3 (edict_t *ent, pmenu_t *p)
+{
+    stuffcmd(ent, "rcon sv addbots 1 3\n");
 }
 

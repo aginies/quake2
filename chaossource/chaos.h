@@ -22,10 +22,12 @@ void ChaosOpenMenu(edict_t *ent);
 void ChaosCredits(edict_t *ent, pmenu_t *p);
 void MenuInterface(edict_t *ent, pmenu_t *p);
 void MenuHelp(edict_t *ent, pmenu_t *p);
+void MenuServerHelp(edict_t *ent, pmenu_t *p);
 void MenuBots(edict_t *ent, pmenu_t *p);
 void KillBotsCmd (edict_t *ent, pmenu_t *p);
 void AddBotsCmd (edict_t *ent, pmenu_t *p);
 void AddBotsCmd2 (edict_t *ent, pmenu_t *p);
+void AddBotsCmd3 (edict_t *ent, pmenu_t *p);
 
 
 int Layout_Update(edict_t *ent);

@@ -1,8 +1,14 @@
 These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
-* add a menu (WIP)
+* do not respawn sword if start_sword > 0, spawn a railgun instead
 
-* add an observer mode
+* dynamically show ammo of all weapons if you have such. hide if you don't have 
+  anymmore
+
+* add a menu wit many help (need to be finished): to get the Menu just
+  type "menu" in the console
+
+* add an observer mode (BUGGY!)
 
 * display status of all Ammo, you can use the commande "showammo"
 

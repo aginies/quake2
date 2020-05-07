@@ -308,10 +308,18 @@ void DoRespawn (edict_t *ent)
 		else if (strcmp(ent->classname, "weapon_sword") == 0
 			|| strcmp(ent->classname, "weapon_chainsaw") == 0)
 		{
-			if (random() <= 0.5)
+			if (random() <= 0.4)
 			{
-				item = it_sword;
-				ent->classname = "weapon_sword";
+                if (start_sword->value > 0)
+                {
+                    item = it_railgun;
+                    ent->classname = "weapon_railgun";
+                }
+                else
+                {
+    				item = it_sword;
+	    			ent->classname = "weapon_sword";
+                }
 			}
 			else
 			{
@@ -416,9 +424,9 @@ void DoRespawn (edict_t *ent)
 
 			newit = 1;
 		}
-	//MATTHIAS - Weapon banning
+	//MATTHIAS - Weapon banning or start
 
-		if (!Q_stricmp(ent->classname, "weapon_sword") && ban_sword->value > 0)
+		if (!Q_stricmp(ent->classname, "weapon_sword") == 0 && ban_sword->value > 0)
 		{
 			if (ban_chainsaw->value > 0) //banned,too
 			{
@@ -433,7 +441,12 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_chainsaw") == 0 && ban_chainsaw->value > 0)
 		{
-			if (ban_sword->value > 0) //banned,too
+            if (start_sword->value > 0) {
+                item = it_railgun;
+                ent->classname = "weapon_railgun";
+                return;
+            }
+            else if (ban_sword->value > 0) //banned,too
 			{
 				G_FreeEdict (ent);
 				return;
@@ -2645,8 +2658,15 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	{
 		if ( random() <= 0.5)
 		{
-			item = it_sword;
-			ent->classname = "weapon_sword";
+            if (start_sword->value > 0) {
+                item = it_railgun;
+                ent->classname = "weapon_railgun";
+            } 
+            else
+            {
+    			item = it_sword;
+	    		ent->classname = "weapon_sword";
+            }
 		}
 		else
 		{
