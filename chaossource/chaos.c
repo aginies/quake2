@@ -56,7 +56,7 @@ void Chaos_SetStats(edict_t *self) {
     //  already used
     // 1 2 4 6 7 8 9 10 11 15 25 26 27 30
     // Don't use index > 31 this will cause error
-    stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
+//    stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))];
     stats[29] = ent->client->pers.inventory[ITEM_INDEX(FindItem("explosive shells"))];
     stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))];
     stats[28] = ent->client->pers.inventory[ITEM_INDEX(FindItem("buzzes"))];
@@ -85,34 +85,34 @@ void Chaos_SetStats(edict_t *self) {
 }
 
 // statusbar
+//"if 12 yt 108 xr -24 picn a_shells xr -74 num 3 12 endif "
 
 char *ammobar =
-"yb -156 xr -24 picn a_xgrenades xr -74 num 3 18 "
-"yb -122 xr -24 picn a_lmines xr -74 num 3 17 "
-"yt 84 xr -24 picn a_eshells xr -74 num 3 29 "
-"yt 108 xr -24 picn a_shells xr -74 num 3 12 "
-"yt 156 xr -24 picn a_slugs xr -74 num 3 12 "
-"yt 180 xr -24 picn a_buzz xr -74 num 3 28 "
-"yt 136 xl 0 picn a_rockets xl 24 num 3 22 "
-"yt 160 xl 0 picn a_grockets xl 24 num 3 23 "
-"yt 208 xl 0 picn a_cells xl 24 num 3 24 "
+"if 18 yb -156 xr -24 picn a_xgrenades xr -74 num 3 18 endif "
+"if 17 yb -122 xr -24 picn a_lmines xr -74 num 3 17 endif "
+"if 29 yt 84 xr -24 picn a_eshells xr -74 num 3 29 endif "
+"if 12 yt 156 xr -24 picn a_slugs xr -74 num 3 12 endif "
+"if 28 yt 180 xr -24 picn a_buzz xr -74 num 3 28 endif "
+"if 22 yt 136 xl 0 picn a_rockets xl 24 num 3 22 endif "
+"if 23 yt 160 xl 0 picn a_grockets xl 24 num 3 23 endif "
+"if 24 yt 208 xl 0 picn a_cells xl 24 num 3 24 endif "
 ;
 
 char *arraowsbar =
-"yb -74 xl 0 picn a_arrows xl 24 num 3 19 "
-"yb -50 xl 0 picn a_parrows xl 24 num 3 20 "
-"yb -98 xl 0 picn a_earrows xl 24 num 3 21 "
+"if 19 yb -74 xl 0 picn a_arrows xl 24 num 3 19 endif "
+"if 20 yb -50 xl 0 picn a_parrows xl 24 num 3 20 endif "
+"if 21 yb -98 xl 0 picn a_earrows xl 24 num 3 21 endif "
 ;
 
 char *grenadesbar =
-"yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 "
-"yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 "
-"yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 "
+"if 31 yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 endif "
+"if 15 yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 endif "
+"if 16 yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 endif "
 ;
 
 char *nukevortex =
-"yt 88 xl 0 picn a_nuke xl 24 num 3 11 "
-//"yt 112 xl 0 picn a_vortex xl 24 num 3 27 "
+"if 11 yt 88 xl 0 picn a_nuke xl 24 num 3 11 endif "
+"if 27 yt 112 xl 0 picn a_vortex xl 24 num 3 27 endif "
 ;
 
 char *fragsbar =
@@ -226,50 +226,28 @@ int Layout_Update(edict_t *ent) {
     ent->chaos_flags = CHAOS_STATUSBAR;
 
     if (strcmp(ent->classname, "player") == 0)
-    {
-    if(!ctf->value) 
-    {
-	    if (!ent->client->showammo)
-	    {
-        	strlcat(statusbar, ammobar, sizeof(statusbar));
-	    }
-	    if (!ent->client->showfrag)
-	    {
-        	strlcat(statusbar, fragsbar, sizeof(statusbar));
-	    }
-	    if (ent->client->shownv)
-	    {
-        	strlcat(statusbar, nukevortex, sizeof(statusbar));
-	    }
-	    if (!ent->client->showarrow)
-	    {
-        	strlcat(statusbar, arraowsbar, sizeof(statusbar));
-	    }
-	    if (!ent->client->showgrenade)
-	    {
-        	strlcat(statusbar, grenadesbar, sizeof(statusbar));
-	    }
-        strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
-    }
-    else if(ctf->value) {
-	    if (!ent->client->showammo)
-	    {
-        	strlcat(statusbar, ammobar, sizeof(statusbar));
-	    }
-	    if (!ent->client->showfrag)
-	    {
-        	strlcat(statusbar, fragsbar, sizeof(statusbar));
-	    }
-	    if (ent->client->shownv)
-	    {
-        	strlcat(statusbar, nukevortex, sizeof(statusbar));
-	    }
-        strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
+      {
+	if(!ctf->value) 
+	  {
+	    strlcat(statusbar, ammobar, sizeof(statusbar));
+	    strlcat(statusbar, fragsbar, sizeof(statusbar));
+	    strlcat(statusbar, nukevortex, sizeof(statusbar));
+	    strlcat(statusbar, arraowsbar, sizeof(statusbar));
+	    strlcat(statusbar, grenadesbar, sizeof(statusbar));
+	    strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
+	  }
+	else if(ctf->value) {
+	  strlcat(statusbar, ammobar, sizeof(statusbar));
+	  strlcat(statusbar, fragsbar, sizeof(statusbar));
+	  strlcat(statusbar, nukevortex, sizeof(statusbar));
+	  strlcat(statusbar, arraowsbar, sizeof(statusbar));
+	  strlcat(statusbar, grenadesbar, sizeof(statusbar));
+	  strlcat(statusbar, ctf_statusbar, sizeof(statusbar));
     }
 
     gi.configstring (CS_STATUSBAR, statusbar);
     gi.unicast(ent, false);
-    }
+      }
     return strlen(statusbar);
 }
 
@@ -316,20 +294,11 @@ pmenu_t interfacemenu[] = {
         { "Interface",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Status Munitions",PMENU_ALIGN_LEFT, NULL, ShowAmmoMenu },
-        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
-        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Nuke / Vortex",PMENU_ALIGN_LEFT, NULL, ShowNVMenu },
-        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
-        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Grenades",PMENU_ALIGN_LEFT, NULL, ShowGrenadeMenu },
-        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
-        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Montrer Munitions Arcs",PMENU_ALIGN_LEFT, NULL, ShowBowMenu },
-        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
-        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Montrer Nombre Frag(s)",PMENU_ALIGN_LEFT, NULL, ShowFragMenu },
-        { "[ENTER] Pour changer",PMENU_ALIGN_RIGHT, NULL, NULL },
+        { "L'interface montre",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "automatiquement les",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Munitions des armes",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "disponibles.",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
@@ -341,14 +310,6 @@ pmenu_t interfacemenu[] = {
 pmenu_t helpmenu[] = {
         { "*Commande de Console",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*showammo",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Status Munitions",PMENU_ALIGN_LEFT, NULL, NULL },
-        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*shownv",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Status Nuke et Vortex",PMENU_ALIGN_LEFT, NULL, NULL },
-        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*showfrag",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Nombre de Frag(s)",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "*pull",PMENU_ALIGN_LEFT, NULL, NULL },
         { "Force pour Pousser ",PMENU_ALIGN_LEFT, NULL, NULL },
@@ -452,30 +413,5 @@ void AddBotsCmd (edict_t *ent, pmenu_t *p)
 void AddBotsCmd2 (edict_t *ent, pmenu_t *p)
 {
     stuffcmd(ent, "rcon sv addbots 1 2\n");
-}
-
-void ShowAmmoMenu (edict_t *ent, pmenu_t *p)
-{
-    stuffcmd(ent, "showammo\n");
-}
-
-void ShowNVMenu (edict_t *ent, pmenu_t *p)
-{
-    stuffcmd(ent, "shownv\n");
-}
-
-void ShowBowMenu (edict_t *ent, pmenu_t *p)
-{
-    stuffcmd(ent, "showarrow\n");
-}
-
-void ShowGrenadeMenu (edict_t *ent, pmenu_t *p)
-{
-    stuffcmd(ent, "showgrenade\n");
-}
-
-void ShowFragMenu (edict_t *ent, pmenu_t *p)
-{
-    stuffcmd(ent, "showfrag\n");
 }
 
