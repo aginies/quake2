@@ -60,13 +60,15 @@ Orignal version of Chaos. ``master`` repository
 Default repository ``plasma``.
 This version include:
 
-* add a menu
+* do not respawn sword if start_sword > 0, spawn a railgun instead
+* dynamically show ammo of all weapons if you have such. hide if you don't have anymmore
+* add a menu wit many help (need to be finished): to get the Menu just type "menu" in the console
 * add an observer mode (still buggy...)
-* display status of all Ammo, your can use the command "showammo"
 * add ```playerlist``` command
-* add Jedi Force Push and Pull tractor! bind pull and push key, ie in your configuration file:
-    * bind n "cmd push"
-    * bind h "cmd pull"
+* add Jedi Force Push and Pull tractor and Darth Vader force ! bind pull and push key, ie in your configuration file:
+    * bind MOUSE4 "cmd push"
+    * bind MOUSE2 "cmd pull"
+    * bind MOUSE3 "cmd fkill"
 * new effect while get explosion (taken from WOD mod):
     * items are moving if near the explosion
     * shockware effect
