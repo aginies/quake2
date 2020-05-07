@@ -181,7 +181,6 @@ int StatusBar_Update(edict_t *ent) {
         strlcat(statusbar, chaos_statusbar, sizeof(statusbar));
     }
     else if(ctf->value) {
-	    if (!ent->client->showammo)
         	strlcat(statusbar, ammobar, sizeof(statusbar));
         	strlcat(statusbar, fragsbar, sizeof(statusbar));
         	strlcat(statusbar, arraowsbar, sizeof(statusbar));
