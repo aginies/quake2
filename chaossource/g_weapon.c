@@ -1107,7 +1107,7 @@ void plasma_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 
    if (other->takedamage)
    {
-       T_Damage(other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_ENERGY+10, MOD_PLASMA_RIFLE);
+       T_Damage(other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_ENERGY+5, MOD_PLASMA_RIFLE);
    }
  
    //explosion sound

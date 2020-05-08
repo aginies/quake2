@@ -871,7 +871,7 @@ void Jedi_Force_Push (edict_t *ent)
   vec3_t  forward;
   vec3_t  end;
   vec3_t  extent;
-  vec_t       strength;
+  vec_t   strength;
   trace_t tr;
   int i;
 
@@ -882,8 +882,9 @@ void Jedi_Force_Push (edict_t *ent)
   if (ent->client->pers.weapon == it_sword || ent->client->pers.weapon == it_chainsaw)
     {
       VectorCopy (ent->s.origin, start);
-      start[2] += ent->viewheight; // + 2;
+      start[2] += ent->viewheight;
       AngleVectors (ent->client->v_angle, forward, NULL, NULL);
+      VectorMA(start, kPushPullRange, forward, end);
       tr = gi.trace (start, NULL, NULL, end, ent, MASK_SHOT);
       if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
 	{
@@ -899,6 +900,10 @@ void Jedi_Force_Push (edict_t *ent)
 
 	  // Have the pusher emit a sound.
 	  gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcethrow01.wav"), 1, ATTN_NORM, 0);
+	  if (tr.ent->takedamage)
+	    {
+	      T_Damage(tr.ent, ent, ent, ent->velocity, tr.endpos, NULL, 1, 1, 1, MOD_JEDI);
+	    }
 
 	  // Calculate how much power to give to the push.
 	  VectorSubtract (tr.endpos, start, extent);
@@ -911,7 +916,7 @@ void Jedi_Force_Push (edict_t *ent)
     }
   else
     {
-      cprintf2 (ent, PRINT_HIGH, " You can only used Jedi firce with a Sword or a Chainsaw !\n");
+      cprintf2 (ent, PRINT_HIGH, " You can only use Jedi force with a Sword or a Chainsaw !\n");
     }
 }
 
@@ -930,6 +935,7 @@ void Jedi_Force_Attract (edict_t *ent)
   vec_t   strength;
   int i;
 
+
   // No pulling when you're dead.
   if (ent->deadflag)
     return;
@@ -939,8 +945,10 @@ void Jedi_Force_Attract (edict_t *ent)
 
       VectorCopy(ent->s.origin, start);
       //start[2] += ent->viewheight - 8;
-      start[2] += ent->viewheight + 5;
+      start[2] += ent->viewheight;
       AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+      VectorClear (ent->client->v_angle);
+
       VectorMA(start, kPushPullRange, forward, end);
       tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
       if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
@@ -957,6 +965,10 @@ void Jedi_Force_Attract (edict_t *ent)
 	  //
 	  // Have the puller emit a sound.
 	  gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcepull01.wav"), 1, ATTN_NORM, 0);
+	  if (tr.ent->takedamage)
+	    {
+	      T_Damage(tr.ent, ent, ent, ent->velocity, tr.endpos, NULL, 1, 1, 1, MOD_JEDI);
+	    }
 
 	  // Calculate how much power to give to the push.
 	  VectorSubtract (tr.endpos, start, extent);
@@ -994,7 +1006,7 @@ void Jedi_Force_Kill (edict_t *ent)
     {
 
       VectorCopy(ent->s.origin, start);
-      start[2] += ent->viewheight - 8;
+      start[2] += ent->viewheight;
       AngleVectors(ent->client->v_angle, forward, NULL, NULL);
       VectorMA(start, kPushPullRange, forward, end);
       tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
@@ -1014,7 +1026,7 @@ void Jedi_Force_Kill (edict_t *ent)
 	    {
 	      // Have the Jedi emit a sound.
 	      gi.sound (ent, CHAN_WEAPON, gi.soundindex ("misc/forcegrip01.wav"), 1, ATTN_NORM, 0);
-	      T_Damage(tr.ent, ent, ent, ent->velocity, tr.endpos, NULL, 1, 1, 5, MOD_JEDI);
+	      T_Damage(tr.ent, ent, ent, ent->velocity, tr.endpos, NULL, 3, 1, 2, MOD_JEDI);
 	    }
 	}
     }
