@@ -1862,7 +1862,7 @@ void Weapon_Crossbow_Fire (edict_t *ent)
 	vec3_t	forward, right;
 	int		damage;
 
-	damage = 40 + (int)(random() * 20.0);
+	damage = 50 + (int)(random() * 20.0);
 
 	if (is_quad)
 	{
@@ -2018,7 +2018,7 @@ void Weapon_PoisonCrossbow_Fire (edict_t *ent)
 	vec3_t	forward, right;
 	int		damage;
 
-	damage = 20 + (int)(random() * 20.0);
+	damage = 30 + (int)(random() * 20.0);
 
 	if (is_quad)
 	{
@@ -4681,7 +4681,7 @@ void Nuke_Explode (edict_t *ent)
 	continue;
 
 
-      BlindTimeAdd = 10;
+      BlindTimeAdd = 15;
       target->client->BlindTime = BlindTimeAdd * 1.5 ;
       target->client->BlindBase = blindtime->value;
 
@@ -4697,22 +4697,22 @@ void Nuke_Explode (edict_t *ent)
       VectorSubtract(ent->s.origin, target->s.origin, v);
       Distance = VectorLength(v);
 
-      T_ShockWave(ent, 2550, 5024);
+      T_ShockWave(ent, 5500, 5024);
 
     // NO way to avoid an effect from a nuke blast
-      if ( Distance < 4000 )
+      if ( Distance < 5000 )
       {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 300, 1, 4000, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 300, NULL, 300, MOD_NUKE);
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 3000, 1, 4000, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 3000, NULL, 3000, MOD_NUKE);
       } else if (Distance >= 3000 && Distance <=5000)
       {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 200, 1, 200, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 200, NULL, 2000, MOD_NUKE);
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 2000, 1, 2000, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 2000, NULL, 2000, MOD_NUKE);
 
       } else if (Distance >= 5000 && Distance <= 7000)
       {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 50, 1, 60, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 50, NULL, 60, MOD_NUKE);
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 500, 1, 600, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 500, NULL, 600, MOD_NUKE);
       }
     }
     

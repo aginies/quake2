@@ -889,8 +889,7 @@ void Jedi_Force_Push (edict_t *ent)
       if (tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)))
 	{
 	  // Show some effect while using the force !
-	  for (i = 0; i < 5; i++) {
-
+	  for (i = 0; i < 10; i++) {
 	    gi.WriteByte (svc_temp_entity);
 	    gi.WriteByte (TE_BUBBLETRAIL);
 	    gi.WritePosition (start);
@@ -1014,7 +1013,6 @@ void Jedi_Force_Kill (edict_t *ent)
 	{
 	  // Show some effect while using the force !
 	  for (i = 0; i < 10; i++) {
-
 	    gi.WriteByte (svc_temp_entity);
 	    gi.WriteByte (TE_BUBBLETRAIL);
 	    gi.WritePosition (start);
