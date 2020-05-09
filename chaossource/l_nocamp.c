@@ -88,7 +88,7 @@ void NoCamp_ClientThink(edict_t *ent, usercmd_t *ucmd) {
 	sec = camp_warn->value - client->decamp_count / 2 + 2;
 	if(sec >= 0 && sec <= camp_warn->value && client->decamp_count > 3)
         gi.dprintf("!!!! %s is doing Camping !!!!\n", ent->client->pers.netname);
-        gi.dprintf(" Move your ass %s! (you still have %d seconds to comply)\n", ent->client->pers.netname, sec);
+        cprintf2(ent, PRINT_HIGH, " Move your ass %s! (you still have %d seconds to comply)!\n", ent->client->pers.netname, sec);
 
 	if(client->decamp_count > camp_warn->value * 2 + 5) {
 		//centerprintf(ent, "Killed for camping.");
