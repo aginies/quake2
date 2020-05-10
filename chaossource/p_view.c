@@ -1228,9 +1228,12 @@ void ClientEndServerFrame (edict_t *ent)
 			!(level.framenum & SCANNER_UPDATE_FREQ))
 		{
 	//ZOID
+    //DEBUG
+    /*
 			if (ent->client->menu) {
 				PMenu_Update(ent);
 			} else
+        */
 				DeathmatchScoreboardMessage (ent, ent->enemy);
 			gi.unicast (ent, false);
 		}

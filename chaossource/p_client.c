@@ -1685,6 +1685,8 @@ void ClientBeginDeathmatch (edict_t *ent)
 	G_InitEdict (ent);
 
 	InitClientResp (ent->client);
+    //DEBUG
+    Lithium_ClientBegin(ent);
 	
 	// locate ent at a spawn point
 	PutClientInServer (ent);

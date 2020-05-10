@@ -2,6 +2,58 @@
 #include "stdlog.h"
 #include "chaos.h"
 
+void pvar(edict_t *ent, char *name, int *ptr, char *edit) {
+    pvar_t *pvar = (pvar_t *)gi.TagMalloc(sizeof(pvar_t), TAG_LEVEL);
+
+    pvar->name = name;
+    pvar->value = ptr;
+    pvar->old = *ptr;
+    pvar->edit = edit;
+
+    if(ent->pvar) {
+        pvar_t *next = ent->pvar;
+        while(next) {
+            if(next->next) {
+                next = next->next;
+                continue;
+            }
+            next->next = pvar;
+            break;
+        }
+    }
+    else
+        ent->pvar = pvar;
+}
+
+
+pvar_t *pvar_find(edict_t *ent, char *name) {
+    pvar_t *pvar = ent->pvar;
+    while(pvar) {
+        if(!strcmp(name, pvar->name))
+            return pvar;
+        pvar = pvar->next;
+    }
+    return pvar;
+}
+
+
+void Lithium_LayoutOn(edict_t *ent, int flag) {
+    ent->layout |= flag;
+    ent->layout_update = true;
+    ent->client->showscores = false;
+    ent->client->showinventory = false;
+}
+
+void Lithium_LayoutOff(edict_t *ent, int flag) {
+    if(!(ent->layout & flag)) {
+//        ent->client->showscores = ent->layout ? 1 : 0;
+        return;
+    }
+    ent->layout &= ~flag;
+    ent->client->showscores = ent->layout ? 1 : 0;
+    if(ent->layout)
+        ent->layout_update = true;
+}
 
 
 qboolean Observer(edict_t *ent, qboolean check) 
@@ -47,6 +99,32 @@ qboolean Observer(edict_t *ent, qboolean check)
 qboolean IsObserver(edict_t *ent) {
     return ent->chaos_flags & CHAOS_OBSERVER;
 }
+
+void Lithium_ClientBegin(edict_t *ent) {
+    char *info;
+    int flags;
+
+    ent->chaos_flags = 0;
+    ent->layout = 0;
+//    ent->hud = def_hud->value;
+    ent->update_frame = 0;
+    ent->update_size = 0;
+    ent->update_other = 0;
+    ent->menu = NULL;
+    ent->pvar = NULL;
+    ent->admin = 0;
+
+    ent->chaos_flags |= LITHIUM_STATUSBAR;
+
+    pvar(ent, "hud", (void *)&ent->hud, "None:Normal:Lithium:Ammo");
+    pvar(ent, "admin_code", (void *)&ent->admin_code, "#####");
+
+    info = Info_ValueForKey(ent->client->pers.userinfo, "hud");
+    if(strlen(info))
+        ent->hud = atoi(info);
+}
+
+
 
 void Chaos_SetStats(edict_t *self) {
     edict_t *ent = self;
@@ -220,9 +298,8 @@ int StatusBar_Update(edict_t *ent) {
     return 0;
 }
 
-int Layout_Update(edict_t *ent) {
+int Layout_Updatea(edict_t *ent) {
     char statusbar[1400] = "";
-    
     ent->chaos_flags = CHAOS_STATUSBAR;
 
     if (strcmp(ent->classname, "player") == 0)
@@ -271,6 +348,26 @@ int Layout_Update(edict_t *ent) {
     gi.unicast(ent, false);
     }
     return strlen(statusbar);
+}
+
+int Layout_Update(edict_t *ent) {
+    char string[1024] = "";
+    int size;
+
+    ent->layout_update = false;
+
+    if(ent->layout & LAYOUT_MENU) {
+        return Menu_Update(ent);
+    }
+    else {
+        ent->layout = LITHIUM_STATUSBAR;
+        Layout_Updatea(ent);
+    }
+
+//    gi.WriteByte(svc_layout);
+//    gi.WriteString(string);
+//    gi.unicast(ent, true);
+    return strlen(string);
 }
 
 //
@@ -477,5 +574,27 @@ void ShowGrenadeMenu (edict_t *ent, pmenu_t *p)
 void ShowFragMenu (edict_t *ent, pmenu_t *p)
 {
     stuffcmd(ent, "showfrag\n");
+}
+
+
+void Lithium_Menu(edict_t *ent) {
+    gi.dprintf("DEBUG HERE \n");
+    Menu_Create(ent, 4, 16);
+    Menu_Title(ent, "Main Menu");
+    Menu_AddLine(ent, MENU_FUNC, 0, "Information", "DATA");
+    Menu_AddLine(ent, MENU_TEXT, 17, "Use [ and ] keys to pick", "m");
+    Menu_AddLine(ent, MENU_TEXT, 18, "Press Enter to select", "m");
+    Menu_CancelFunc(ent, Lithium_Info);
+}
+
+void Lithium_Info(edict_t *ent) {
+    Menu_Create(ent, 4, 15);
+    Menu_Title(ent, "Information");
+    Menu_AddLine(ent, MENU_PVAR, 4, "HUD layout", "hud");
+    Menu_AddLine(ent, MENU_FUNC, 5, "Author Info", "DATA");
+    Menu_AddLine(ent, MENU_TEXT, 6, "Use [ and ] keys to pick", "m");
+    Menu_AddLine(ent, MENU_TEXT, 7, "Press Enter to select", "m");
+    Menu_AddLine(ent, MENU_TEXT, 8, "Press Backspace to go back", "m");
+    Menu_CancelFunc(ent, Lithium_Menu);
 }
 

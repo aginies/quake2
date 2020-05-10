@@ -90,16 +90,18 @@ GAME_OBJS = \
 	$(BUILDDIR)/gslog.o \
 	$(BUILDDIR)/p_client.o \
 	$(BUILDDIR)/p_hud.o \
-	$(BUILDDIR)/p_menu.o \
 	$(BUILDDIR)/p_view.o \
 	$(BUILDDIR)/m_move.o \
 	$(BUILDDIR)/chaos.o \
 	$(BUILDDIR)/l_nocamp.o \
+	$(BUILDDIR)/l_menu.o \
 	$(BUILDDIR)/strl.o \
 	$(BUILDDIR)/c_effects.o \
 	$(BUILDDIR)/p_weapon.o \
 	$(BUILDDIR)/q_shared.o \
 	$(BUILDDIR)/stdlog.o
+
+#	$(BUILDDIR)/p_menu.o \
 
 $(BUILDDIR)/game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 	$(CC) $(SHLIBLDFLAGS) $(CFLAGS) -o $@ $(GAME_OBJS)
@@ -108,6 +110,9 @@ $(BUILDDIR)/c_base.o : c_base.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/l_nocamp.o : l_nocamp.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/l_menu.o : l_menu.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/chaos.o : chaos.c

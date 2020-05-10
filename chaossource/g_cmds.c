@@ -56,7 +56,8 @@ void SelectNextItem (edict_t *ent, int itflags)
 	cl = ent->client;
 
 //Matthias
-	if (cl->menu)
+//DEBUG
+/*	if (cl->menu)
 	{
 		PMenu_Next(ent);
 		return;
@@ -66,6 +67,7 @@ void SelectNextItem (edict_t *ent, int itflags)
 		CamNext(ent);
 		return;
 	}
+    */
 
 	// scan  for the next valid one
 	for (i=1 ; i<=MAX_ITEMS ; i++)
@@ -95,6 +97,8 @@ void SelectPrevItem (edict_t *ent, int itflags)
 	cl = ent->client;
 
 //Matthias
+//DEBUG
+/*
 	if (cl->menu) 
 	{
 		PMenu_Prev(ent);
@@ -105,7 +109,7 @@ void SelectPrevItem (edict_t *ent, int itflags)
 		CamPrev(ent);
 		return;
 	}
-
+*/
 	// scan  for the next valid one
 	for (i=1 ; i<=MAX_ITEMS ; i++)
 	{
@@ -590,6 +594,8 @@ Cmd_Menu
 */
 void Cmd_Menu (edict_t *ent)
 {
+    //DEBUG
+    /*
     if(ent->client->menu)
     {
         PMenu_Close(ent);
@@ -598,6 +604,19 @@ void Cmd_Menu (edict_t *ent)
     {
         ent->chaos_flags |= CHAOS_MAINMENU;
     	ChaosOpenMenu(ent);
+    }
+    */
+    if(ent->menu) {
+        Menu_Destroy(ent);
+        ent->layout = NULL;
+    }
+    else
+    {
+//    ent->layout = LAYOUT_MENU;
+//    ent->chaos_flags = LITHIUM_MAINMENU;
+//    Lithium_LayoutOn(ent, LAYOUT_MENU);
+//    Menu_ClientFrame(ent);
+    Lithium_Menu(ent);
     }
 }
 
@@ -617,10 +636,13 @@ void Cmd_Inven_f (edict_t *ent)
 	cl->showhelp = false;
 
 //ZOID
+//DEBUG
+/*
 	if (ent->client->menu) {
 		PMenu_Close(ent);
 		return;
 	}
+    */
 //ZOID
 
 	if (cl->showinventory)
@@ -658,10 +680,13 @@ void Cmd_InvUse_f (edict_t *ent)
 	gitem_t		*it;
 
 //ZOID
+//DEBUG
+/*
 	if (ent->client->menu) {
 		PMenu_Select(ent);
 		return;
 	}
+    */
 //ZOID
 
 	ValidateSelectedItem (ent);
@@ -884,8 +909,8 @@ void Cmd_PutAway_f (edict_t *ent)
 	ent->client->showhelp = false;
 	ent->client->showinventory = false;
 //ZOID
-	if (ent->client->menu)
-		PMenu_Close(ent);
+//	if (ent->client->menu)
+//		PMenu_Close(ent);
 //ZOID
 }
 
@@ -1356,8 +1381,12 @@ void ClientCommand (edict_t *ent)
         Cmd_ShowArrow (ent);
     else if (Q_stricmp(cmd, "showfrag") == 0)
         Cmd_ShowFrag (ent);
-    else if (Q_stricmp(cmd, "menu") == 0)
-        Cmd_Menu (ent);
+    else if (Q_stricmp(cmd, "menu") == 0) {
+        if(ent->menu)
+            Menu_Destroy(ent);
+        else
+            Cmd_Menu (ent);
+    }
 	else if (Q_stricmp (cmd, "give") == 0)
 		Cmd_Give_f (ent);
 	else if (Q_stricmp (cmd, "god") == 0)

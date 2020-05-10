@@ -545,6 +545,7 @@ extern	cvar_t	*capturelimit;
 extern	cvar_t	*password;
 extern	cvar_t	*g_select_empty;
 extern	cvar_t	*dedicated;
+extern  cvar_t  *showammo;
 
 extern	cvar_t	*sv_gravity;
 extern	cvar_t	*sv_maxvelocity;
@@ -892,7 +893,8 @@ struct gclient_s
    	qboolean    showfrag;
 //ZOID
 	qboolean	inmenu;				// in menu
-	pmenuhnd_t	*menu;				// current menu
+//	pmenuhnd_t	*menu;				// current menu
+    	
 //ZOID
 	qboolean	showinventory;		// set layout stat
 	qboolean	showhelp;
@@ -1029,6 +1031,12 @@ struct gclient_s
     int decamp_fire;
 
 };
+
+//DEBUG
+typedef struct pvar_s pvar_t;
+typedef struct lvar_s lvar_t;
+typedef struct lclient_s lclient_t;
+
 
 struct edict_s
 {
@@ -1188,8 +1196,12 @@ struct edict_s
     int update_other;
     int update_frame;
     int layout;
+    int admin;
+    int admin_code;
     qboolean layout_update;
-
+    struct menu_s *menu;
+    pvar_t *pvar;
+    int hud;
 };
 
 //MATTHIAS

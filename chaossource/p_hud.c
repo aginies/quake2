@@ -327,8 +327,11 @@ void Cmd_Score_f (edict_t *ent)
 	ent->client->showinventory = false;
 	ent->client->showhelp = false;
 //ZOID
+//DEBUG
+/*
 	if (ent->client->menu)
 		PMenu_Close(ent);
+        */
 //ZOID
 
 	if (!deathmatch->value && !coop->value)

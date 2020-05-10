@@ -143,7 +143,8 @@ void PMenu_Prev(edict_t *ent)
 	pmenuhnd_t *hnd;
 	int i;
 	pmenu_t *p;
-
+//DEBUG
+/*
 	if (!ent->client->menu) {
 		gi.dprintf("warning:  ent has no menu\n");
 		return;
@@ -170,6 +171,7 @@ void PMenu_Prev(edict_t *ent)
 
 	PMenu_Update(ent);
 	gi.unicast (ent, true);
+    */
 }
 
 void PMenu_Select(edict_t *ent)
@@ -177,6 +179,8 @@ void PMenu_Select(edict_t *ent)
 	pmenuhnd_t *hnd;
 	pmenu_t *p;
 
+//DEBUG
+/*
 	if (!ent->client->menu) {
 		gi.dprintf("warning:  ent has no menu\n");
 		return;
@@ -191,4 +195,8 @@ void PMenu_Select(edict_t *ent)
 
 	if (p->SelectFunc)
 		p->SelectFunc(ent, p);
+    */
 }
+
+
+
