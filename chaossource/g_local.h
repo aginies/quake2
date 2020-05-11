@@ -66,6 +66,8 @@
 
 #define BODY_QUEUE_SIZE		8
 
+void EjectShell (edict_t *self, vec3_t start, int toggle);
+
 
 typedef enum
 {
@@ -81,7 +83,10 @@ typedef enum
 	WEAPON_DROPPING,
 	WEAPON_FIRING,
 	WEAPON_STARTFIRE,
-	WEAPON_ENDFIRE
+	WEAPON_ENDFIRE,
+    WEAPON_END_MAG,
+    WEAPON_RELOADING,
+
 } weaponstate_t;
 
 typedef enum
@@ -184,7 +189,7 @@ typedef enum
 #define WEAP_BUZZSAW            27
 #define WEAP_PLASMA             28
 #define WEAP_NUKE               29
-
+#define WEAP_DUAL               30
 
 
 // edict->movetype values
@@ -517,6 +522,7 @@ extern	int	body_armor_index;
 #define MOD_CLUSTER         54
 #define MOD_JEDI            55
 #define MOD_ESSHOT_SPLASH  56
+#define MOD_DUAL			57
 
 #define MOD_FRIENDLY_FIRE	0x8000000
 
@@ -561,6 +567,8 @@ extern	cvar_t	*bob_roll;
 
 extern	cvar_t	*sv_cheats;
 extern	cvar_t	*maxclients;
+
+extern  cvar_t  *sv_shelloff;
 
 qboolean	is_quad;     //MATTHIAS
 byte		is_silenced;
@@ -753,6 +761,11 @@ void	ServerCommand (void);
 void ClientEndServerFrame (edict_t *ent);
 
 //
+// p_weapon.c
+//
+void Cmd_Reload_f (edict_t *ent);
+
+//
 // p_hud.c
 //
 void MoveClientToIntermission (edict_t *client);
@@ -840,6 +853,7 @@ typedef struct
 	int			max_nuke;
 	int			max_lturret;
 	int			max_rturret;
+
 
 	gitem_t		*weapon;
 	gitem_t		*lastweapon;
@@ -1022,6 +1036,11 @@ struct gclient_s
     vec3_t decamp_vec;
     int decamp_count;
     int decamp_fire;
+
+    int     dual_max;
+    int     dual_rds;
+    int     fast_reload;
+    int     reload_attempts;
 
 };
 
