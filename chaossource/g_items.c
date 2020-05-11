@@ -13,6 +13,7 @@ qboolean	Jet_Active( edict_t *ent );
 void		AddItemToList(edict_t *ent);	//MATTHIAS
 
 void Weapon_AK42 (edict_t *ent);
+void Weapon_Dual (edict_t *ent);
 void Weapon_Shotgun (edict_t *ent);
 void Weapon_SuperShotgun (edict_t *ent);
 void Weapon_Machinegun (edict_t *ent);
@@ -1785,7 +1786,8 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 
 	if (weapon && !oldcount)
 	{
-		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+//		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("MK23 Dual") ) )
 			other->client->newweapon = ent->item;
 	}
 
@@ -3654,6 +3656,31 @@ always owned, never in the world
 /* precache */
 	},
 
+/* weapon_Dual (.3 .3 1) (-16 -16 -16) (16 16 16)
+always owned, never in the world
+*/
+    {
+        "weapon_dual",
+        Pickup_Weapon,
+        Use_Weapon,
+        Drop_Weapon,
+        Weapon_Dual,
+        "misc/w_pkup.wav",
+        "models/weapons/g_dual/tris.md2", EF_ROTATE,
+        "models/weapons/v_dual/tris.md2",
+        "w_akimbo",
+        "MK23 Dual",
+        0,
+        0,
+        NULL,
+        IT_WEAPON,
+        WEAP_DUAL,
+        NULL,
+        0,
+        "weapons/mk23fire.wav weapons/mk23in.wav weapons/mk23out.wav weapons/mk23slap.wav weapons/mk23slide.wav"
+    },
+
+
 /*QUAKED weapon_sword (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
@@ -5439,6 +5466,7 @@ void SetItemNames (void)
 	it_proxymines = FindItem("proximity mines");
 
 	it_ak42	= FindItem("AK42 Assault Pistol");
+	it_dual	= FindItem("MK23 Dual");
 	it_sword	= FindItem("bastard sword");
 	it_chainsaw	= FindItem("chainsaw");
 	it_shotgun	= FindItem("shotgun");

@@ -122,6 +122,8 @@ void InitGame (void)
 	coop = gi.cvar ("coop", "0", CVAR_LATCH);
 	skill = gi.cvar ("skill", "1", CVAR_LATCH);
 	maxentities = gi.cvar ("maxentities", "1024", CVAR_LATCH);
+    sv_shelloff = gi.cvar ("shelloff", "1", CVAR_LATCH);
+
 
 	//MATTHIAS
 	numbots		= 0;	

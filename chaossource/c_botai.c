@@ -55,7 +55,8 @@ edict_t *Bot_FindBestItem(edict_t *ent)
 	}
 
 	// we need a better weapon so search one
-	if (ent->client->pers.weapon == it_ak42 || 
+//	if (ent->client->pers.weapon == it_ak42 || 
+	if (ent->client->pers.weapon == it_dual || 
 		ent->client->pers.weapon == it_grenades || 
 		ent->client->pers.weapon == it_flashgrenades || 
 		ent->client->pers.weapon == it_poisongrenades || 

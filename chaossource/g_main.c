@@ -50,6 +50,9 @@ cvar_t	*sv_cheats;
 //Plasma
 cvar_t *plasma_alpha;
 
+cvar_t  *sv_shelloff;
+
+
 
 void SpawnEntities (char *mapname, char *entities, char *spawnpoint);
 void ClientThink (edict_t *ent, usercmd_t *cmd);

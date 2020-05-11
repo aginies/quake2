@@ -4,6 +4,7 @@
 #include "m_player.h"
 #include "c_base.h"
 #include "c_botai.h"
+#include "chaos.h"
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
 
@@ -147,7 +148,8 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 
 	if (other->client->pers.weapon != ent->item && 
 		(other->client->pers.inventory[index] == 1) &&
-		( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+//		( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+		( !deathmatch->value || other->client->pers.weapon == FindItem("MK23 Dual") ) )
 		other->client->newweapon = ent->item;
 
 	if (strcmp(other->classname,"bot") == 0)
@@ -211,7 +213,8 @@ qboolean Pickup_NoAmmoWeapon (edict_t *ent, edict_t *other)
 
 	if (other->client->pers.weapon != ent->item && 
 		(other->client->pers.inventory[index] == 1) &&
-		( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+//		( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+		( !deathmatch->value || other->client->pers.weapon == FindItem("MK23 Dual") ) )
 		other->client->newweapon = ent->item;
 
 	if (strcmp(other->classname,"bot") == 0)
@@ -385,7 +388,8 @@ void NoAmmoWeaponChange (edict_t *ent)
 			ent->client->newweapon = it_sword;
 			return;
 		}
-		ent->client->newweapon = FindItem ("AK42 Assault Pistol");
+//		ent->client->newweapon = FindItem ("AK42 Assault Pistol");
+		ent->client->newweapon = FindItem ("MK23 Dual");
 	}
 }
 
@@ -516,6 +520,39 @@ void Drop_Weapon (edict_t *ent, gitem_t *item)
 
 	Drop_Item (ent, item);
 }
+
+
+#define DUALMAG 24
+#define DUAL_SPREAD     300
+
+int AdjustSpread( edict_t * ent, int spread )
+{
+
+        int running = 225; // minimum speed for running
+        int walking = 10; // minimum speed for walking
+        float factor[] = {.7, 1, 2, 6};
+        int stage = 0;
+
+        float xyspeed = (ent->velocity[0]*ent->velocity[0] + ent->velocity[1]*ent->velocity[1]);
+
+        if (ent->client->ps.pmove.pm_flags & PMF_DUCKED) // crouching
+                return( spread * .65);
+
+        // running
+        if ( xyspeed > running*running )
+                stage = 3;
+        // walking
+        else if ( xyspeed >= walking*walking )
+                stage = 2;
+        // standing
+        else
+                stage = 1;
+
+        return (int)(spread * factor[stage]);
+//        by default fire is accurate
+//        return 1;
+}
+
 
 
 /*
@@ -1021,7 +1058,8 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	if (hyper)
 		fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
 	else
-		fire_bullet (ent, start, forward, damage, 40, 0, 0, MOD_AK42);
+		fire_bullet (ent, start, forward, damage, 50, 0, 0, MOD_DUAL);
+		//fire_bullet (ent, start, forward, damage, 40, 0, 0, MOD_AK42);
 
 	// send muzzle flash
 	if (hyper)
@@ -1088,6 +1126,296 @@ void Weapon_AK42 (edict_t *ent)
 	static int	fire_frames[]	= {5, 0};
 
 	Weapon_Generic (ent, 4, 8, 52, 55, pause_frames, fire_frames, Weapon_AK42_Fire);
+}
+
+// used for setting up the positions of the guns in shell ejection
+void Old_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
+{
+        vec3_t  _distance;
+
+        VectorCopy (distance, _distance);
+        if (client->pers.hand == LEFT_HANDED)
+                        _distance[1] = -1;      // changed from = to *=
+// Fireblade 2/28/99
+// zucc reversed, this is only used for setting up shell ejection and
+// since those look good this shouldn't be changed
+        else if (client->pers.hand == CENTER_HANDED)
+                        _distance[1] = 0;
+        G_ProjectSource (point, _distance, forward, right, result);
+}
+
+
+void Cmd_Reload_f (edict_t *ent)
+{
+
+//      int rds_left;           //+BD - Variable to handle rounds left
+        //+BD - If the player is dead, don't bother
+        gi.dprintf("DEBUG RELOAD \n");
+
+        if(ent->deadflag == DEAD_DEAD)
+        {
+                //gi.centerprintf(ent, "I know you're a hard ass,\nBUT YOU'RE FUCKING DEAD!!\n");
+                return;
+        }
+
+        if(ent->client->weaponstate == WEAPON_ACTIVATING
+            || ent->client->weaponstate == WEAPON_DROPPING
+            || ent->client->weaponstate == WEAPON_FIRING )
+        {
+        gi.dprintf("DEBUG RELOAD return \n");
+                return;
+        }
+
+        gi.dprintf("DEBUG %s \n", ent->client->weaponstate);
+        if (!ent->client->fast_reload)
+            ent->client->reload_attempts--;
+        if ( ent->client->reload_attempts < 0 )
+            ent->client->reload_attempts = 0;
+
+        //First, grab the current magazine max count...
+//        ent->client->curr_weap == DUAL_NUM;
+        
+        // don't let them start fast reloading until far enough into the firing sequence
+        // this gives them a chance to break off from reloading to fire the weapon - zuc
+        gi.dprintf("DEBUG before ent->client->ps.gunframe >=  48 \n");
+        if ( ent->client->ps.gunframe >=  48 )
+        {
+            ent->client->fast_reload = 1;
+        }
+        else
+        {
+            ent->client->reload_attempts++;
+        }
+        gi.dprintf("DEBUG after  ent->client->ps.gunframe >=  48 \n");
+//        if (!(ent->client->pers.inventory[ent->client->ammo_index] >= 2))
+//            return;
+        //FIREBLADE 7/11/1999 - stop reloading when weapon already full
+//        if (ent->client->dual_rds == ent->client->dual_max)
+//            return;
+
+        ent->client->weaponstate = WEAPON_RELOADING;
+
+//        sv_shelloff->value = 12;
+        ent->client->dual_rds = 12;
+        gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
+        ent->client->weaponstate = WEAPON_READY;
+//        ent->client->dual_rds ent->client->dual_max
+
+}
+
+void Dual_Fire(edict_t *ent)
+{
+        int     i;
+        vec3_t          start;
+        vec3_t          forward, right;
+        vec3_t          angles;
+        int             damage = 10;
+        int             kick = 10;
+        vec3_t          offset;
+        int             spread = DUAL_SPREAD;
+        int             height;
+
+        height = 8;
+        if (is_quad)
+            damage *= 4;
+
+        spread = AdjustSpread( ent, spread );
+        // infinite ammo
+        ent->client->dual_rds = 12;
+        gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+
+        if (ent->client->dual_rds < 1)
+        {
+                ent->client->ps.gunframe = 68;
+                gi.dprintf("DEBUG ent->client->dual_rds < 1 \n");
+                gi.dprintf("DEBUG ent->client->ps.gunframe %i \n", ent->client->ps.gunframe);
+                if (level.time >= ent->pain_debounce_time)
+                {
+                        gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"),1, ATTN_NORM, 0);
+                        ent->pain_debounce_time = level.time + 1;
+                }
+
+                gi.dprintf("DEBUG NO AMMO  \n");
+                //NoAmmoWeaponChange (ent);
+                vec3_t result;
+                Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
+                EjectShell(ent, result, 2);
+
+                ent->client->dual_rds = 12;
+                gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
+                ent->client->weaponstate = WEAPON_READY;
+                gi.dprintf("DEBUG after ent->client->dual_rds %s \n", ent->client->dual_rds);
+        }
+
+        //If the user isn't pressing the attack button, advance the frame and go away....
+        if ( ent->client->ps.gunframe == 8 )
+        {
+                gi.dprintf("DEBUG ent->client->ps.gunframe == 8 \n");
+                //gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/mk23fire.wav"), 1, ATTN_NORM, 0);
+                ent->client->ps.gunframe++;
+                VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
+                AngleVectors (angles, forward, right, NULL);
+                VectorSet(offset, 0, 8, ent->viewheight-height);
+                P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+
+                // Still have some ammo
+                if ( ent->client->dual_rds > 1 )
+                {
+                        fire_bullet (ent, start, forward, damage, kick, spread, spread,MOD_DUAL);
+                        gi.dprintf("DEBUG ent->client->dual_rds > 1 after firebullet \n");
+                        gi.dprintf("DEBUG sv_shelloff->value %i\n", sv_shelloff->value);
+                        if (!sv_shelloff->value)
+                        {
+                                gi.dprintf("DEBUG !sv_shelloff->value \n");
+                                vec3_t result;
+                                Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
+                                EjectShell(ent, result, 2);
+                        }
+
+                        // still have ammo
+                        //if ( ent->client->dual_rds > ent->client->mk23_max + 1 )
+                        if ( ent->client->dual_rds > 13 )
+                        {
+                                ent->client->dual_rds -= 2;
+                        }
+                        //else if ( ent->client->dual_rds > ent->client->mk23_max ) // 13 rounds left
+                        else if ( ent->client->dual_rds > 12 ) // 13 rounds left
+                        {
+                                ent->client->dual_rds -= 2;
+//                                ent->client->mk23_rds--;
+                        }
+                        // still have ammo
+                        else
+                        {
+                                ent->client->dual_rds -= 2;
+//                                ent->client->mk23_rds -= 2;
+                        }
+                        // Play the sound of fire !
+                        gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/mk23fire.wav"), 1, ATTN_NORM, 0);
+
+                        // No more Ammo
+                        if (ent->client->dual_rds == 0)
+                        {
+                            ent->client->ps.gunframe=68;
+                            ent->client->weaponstate = WEAPON_END_MAG;
+                            gi.dprintf("DEBUG dual_rds  %i WEAPON_END_MAG \n", ent->client->dual_rds);
+                                vec3_t result;
+                                Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
+                                EjectShell(ent, result, 2);
+
+                ent->client->dual_rds = 12;
+                gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
+                ent->client->weaponstate = WEAPON_READY;
+                gi.dprintf("DEBUG after ent->client->dual_rds %s \n", ent->client->dual_rds);
+
+                        }
+                }
+                else
+                    // No more Ammo
+                {
+                        ent->client->dual_rds = 0;
+//                        ent->client->mk23_rds = 0;
+                        gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/noammo.wav"),1, ATTN_NORM, 0);
+                        //ent->pain_debounce_time = level.time + 1;
+                        ent->client->ps.gunframe=68;
+                        ent->client->weaponstate = WEAPON_END_MAG;
+                        gi.dprintf("DEBUG 2 dual_rds  %i WEAPON_END_MAG \n", ent->client->dual_rds);
+                        return ;
+
+
+                }
+
+                gi.dprintf("DEBUG somewhere else...  %i \n", ent->client->dual_rds);
+                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+                gi.dprintf("DEBUG ps.gunframe: %i \n", ent->client->ps.gunframe);
+                return;
+        }
+
+        if ( ent->client->ps.gunframe == 9 )
+        {
+                gi.dprintf("DEBUG ent->client->ps.gunframe == 9 \n");
+                ent->client->ps.gunframe += 2;
+                return;
+        }
+
+
+        /*if (!(ent->client->buttons & BUTTON_ATTACK))
+        {
+        ent->client->ps.gunframe++;
+        return;
+}*/
+        ent->client->ps.gunframe++;
+        //Oops! Out of ammo!
+        if (ent->client->dual_rds < 1)
+        {
+                gi.dprintf("DEBUG ent->client->dual_rds < 1\n");
+                ent->client->ps.gunframe = 12;
+                gi.dprintf("DEBUG ent->client->ps.gunframe == 12 \n");
+                if (level.time >= ent->pain_debounce_time)
+                {
+                        gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"),1, ATTN_NORM, 0);
+                        ent->pain_debounce_time = level.time + 1;
+                }
+                //NoAmmoWeaponChange (ent);
+                gi.dprintf("DEBUG 2 somewhere else...  %i \n", ent->client->dual_rds);
+                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+                gi.dprintf("DEBUG ps.gunframe: %i \n", ent->client->ps.gunframe);
+                return;
+        }
+
+
+        //Calculate the kick angles
+        for (i=1 ; i<3 ; i++)
+        {
+                ent->client->kick_origin[i] = crandom() * 0.25;
+                ent->client->kick_angles[i] = crandom() * 0.5;
+        }
+        ent->client->kick_origin[0] = crandom() * 0.35;
+
+        // get start / end positions
+        VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
+        AngleVectors (angles, forward, right, NULL);
+        // first set up for left firing
+        VectorSet(offset, 0, -20, ent->viewheight-height);
+        P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+
+        if (!sv_shelloff->value)
+        {
+                gi.dprintf("DEBUG !sv_shelloff->value \n");
+                vec3_t result;
+                Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
+                EjectShell(ent, result, 1);
+                return;
+        }
+
+        //If no reload, fire normally.
+        fire_bullet (ent, start, forward, damage, kick, spread, spread,MOD_DUAL);
+        gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/mk23fire.wav"), 1, ATTN_NORM, 0);
+
+
+        //gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/mk23fire.wav"), 1, ATTN_NORM, 0);
+        //Display the yellow muzzleflash light effect
+        gi.WriteByte (svc_muzzleflash);
+        gi.WriteShort (ent-g_edicts);
+        //If not silenced, play a shot sound for everyone else
+        gi.WriteByte (MZ_MACHINEGUN | is_silenced);
+        gi.multicast (ent->s.origin, MULTICAST_PVS);
+        PlayerNoise(ent, start, PNOISE_WEAPON);
+
+}
+
+
+void Weapon_Dual (edict_t *ent)
+{
+  //Idle animation entry points - These make the fidgeting look more random
+  static int      pause_frames[]  = {13, 22, 32};
+  //The frames at which the weapon will fire
+  static int      fire_frames[]   = {7,8,9, 0};
+
+  //The call is made...
+  //Weapon_Generic (ent, 4, 8, 52, 55, pause_frames, fire_frames, Weapon_AK42_Fire);
+  Weapon_Generic (ent, 6, 10, 32, 40, pause_frames, fire_frames, Dual_Fire);
 }
 
 

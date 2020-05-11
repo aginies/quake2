@@ -113,6 +113,8 @@ void ShowGun(edict_t *ent)	//vwep
 	    nIndex = 16;
 	else if (strcmp(pszIcon, "a_nuke") == 0)
 	    nIndex = 17;
+	else if (strcmp(pszIcon, "w_akimbo") == 0)
+	    nIndex = 18;
 	else
 		nIndex = 0;
 
@@ -744,7 +746,8 @@ void FakeDeath(edict_t *self)
 
 		self->client->ps.pmove.pm_type = PM_DEAD;
 
-		if (self->client->pers.weapon != it_ak42)
+//		if (self->client->pers.weapon != it_ak42)
+		if (self->client->pers.weapon != it_dual)
 		  TossClientWeapon(self);
 
 		CTFDeadDropFlag(self);
@@ -842,7 +845,8 @@ void FakeDeath(edict_t *self)
 		self->s.frame = FRAME_stand01;
 		self->client->anim_end = FRAME_stand40;
 
-		self->client->pers.weapon = it_ak42;
+//		self->client->pers.weapon = it_ak42;
+		self->client->pers.weapon = it_dual;
 		self->client->newweapon = self->client->pers.weapon;
 		ChangeWeapon(self);
 		ShowGun(self);	//vwep

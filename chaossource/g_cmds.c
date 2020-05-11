@@ -199,6 +199,8 @@ void Cmd_Give_f (edict_t *ent)
 			return;
 	}
 
+    ent->client->dual_rds = ent->client->dual_max;
+
 	if (give_all || Q_stricmp(name, "ammo") == 0)
 	{
 		for (i=0 ; i<game.num_items ; i++)
@@ -1273,6 +1275,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_Notarget_f (ent);
 	else if (Q_stricmp (cmd, "noclip") == 0)
 		Cmd_Noclip_f (ent);
+	else if (Q_stricmp (cmd, "reload") == 0)
+        Cmd_Reload_f (ent);
 	else if (Q_stricmp (cmd, "inven") == 0)
 		Cmd_Inven_f (ent);
 	else if (Q_stricmp (cmd, "invnext") == 0)

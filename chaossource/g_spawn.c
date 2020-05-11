@@ -725,7 +725,8 @@ void SP_worldspawn (edict_t *ent)
 
 	snd_fry = gi.soundindex ("player/fry.wav");	// standing in lava / slime
 
-	PrecacheItem (FindItem ("AK42 Assault Pistol"));
+//	PrecacheItem (FindItem ("AK42 Assault Pistol"));
+	PrecacheItem (FindItem ("MK23 Dual"));
 
 	gi.soundindex ("player/lava1.wav");
 	gi.soundindex ("player/lava2.wav");

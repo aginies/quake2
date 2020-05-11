@@ -29,6 +29,11 @@ void AddBotsCmd (edict_t *ent, pmenu_t *p);
 void AddBotsCmd2 (edict_t *ent, pmenu_t *p);
 void AddBotsCmd3 (edict_t *ent, pmenu_t *p);
 
+void ShellTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf);
+void ShellDie(edict_t *self);
+void EjectShell (edict_t *self, vec3_t start, int toggle );
+
+
 
 int Layout_Update(edict_t *ent);
 

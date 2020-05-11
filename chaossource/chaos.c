@@ -4,6 +4,189 @@
 
 
 
+int shells = 10000;
+
+void ShellTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+    if (random() < 0.5)
+        gi.sound (self, CHAN_WEAPON, gi.soundindex ("weapons/tink1.wav"), 1, ATTN_STATIC, 0);
+    else
+        gi.sound (self, CHAN_WEAPON, gi.soundindex ("weapons/tink2.wav"), 1, ATTN_STATIC, 0);
+}
+
+
+void ShellDie(edict_t *self)
+{
+    G_FreeEdict(self);
+    --shells;
+}
+
+void EjectShell (edict_t *self, vec3_t start, int toggle )
+{
+    edict_t *shell;
+    vec3_t  forward, right, up;
+    float           r;
+
+    if (sv_shelloff->value)
+        return;
+
+    gi.dprintf("DEBUG EjectShell !\n");
+
+    shell = G_Spawn();
+    ++shells;
+
+    AngleVectors (self->client->v_angle, forward, right, up);
+
+        // zucc spent a fair amount of time hacking these until they look ok,
+        // several of them could be improved however.
+
+
+    VectorMA (start, ((toggle==1)?-4:4), right, start);
+    VectorMA (start, 6, forward, start);
+    VectorMA (start, -9, up, start);
+
+
+    if ( (forward[2] >= -1) && (forward[2] < -0.99) ) {
+        VectorMA (start, 5, forward, start);
+        VectorMA (start, -0.5, up, start); }
+
+    else if ( (forward[2] >= -0.99) && (forward[2] < -0.98) ) {
+        VectorMA (start, 5, forward, start);
+        VectorMA (start, -.1, up, start); }
+    else if ( (forward[2] >= -0.98) && (forward[2] < -0.97) ) {
+        VectorMA (start, 5.1, forward, start);
+        VectorMA (start, 0.3, up, start); }
+    else if ( (forward[2] >= -0.97) && (forward[2] < -0.96) ) {
+        VectorMA (start, 5.2, forward, start);
+        VectorMA (start, 0.7, up, start); }
+    else if ( (forward[2] >= -0.96) && (forward[2] < -0.95) ) {
+        VectorMA (start, 5.2, forward, start);
+        VectorMA (start, 1.1, up, start); }
+   else if ( (forward[2] >= -0.95) && (forward[2] < -0.94) ) {
+        VectorMA (start, 5.3, forward, start);
+        VectorMA (start, 1.5, up, start); }
+    else if ( (forward[2] >= -0.94) && (forward[2] < -0.93) ) {
+        VectorMA (start, 5.4, forward, start);
+        VectorMA (start, 1.9, up, start); }
+    else if ( (forward[2] >= -0.93) && (forward[2] < -0.92) ) {
+        VectorMA (start, 5.5, forward, start);
+        VectorMA (start, 2.3, up, start); }
+    else if ( (forward[2] >= -0.92) && (forward[2] < -0.91) ) {
+        VectorMA (start, 5.6, forward, start);
+        VectorMA (start, 2.7, up, start); }
+    else if ( (forward[2] >= -0.91) && (forward[2] < -0.9) ) {
+        VectorMA (start, 5.7, forward, start);
+        VectorMA (start, 3.1, up, start); }
+
+    else if ( (forward[2] >= -0.9) && (forward[2] < -0.85) ) {
+        VectorMA (start, 5.8, forward, start);
+        VectorMA (start, 3.5, up, start); }
+    else if ( (forward[2] >= -0.85) && (forward[2] < -0.8) ) {
+        VectorMA (start, 6, forward, start);
+        VectorMA (start, 4, up, start); }
+    else if ( (forward[2] >= -0.8) && (forward[2] < -0.6) ) {
+        VectorMA (start, 6.5, forward, start);
+        VectorMA (start, 4.5, up , start); }
+    else if ( (forward[2] >= -0.6) && (forward[2] < -0.4) ) {
+        VectorMA (start, 8, forward, start);
+        VectorMA (start, 5.5, up , start); }
+    else if ( (forward[2] >= -0.4) && (forward[2] < -0.2) ) {
+        VectorMA (start, 9.5, forward, start);
+        VectorMA (start, 6, up , start); }
+    else if ( (forward[2] >= -0.2) && (forward[2] < 0) ) {
+        VectorMA (start, 11, forward, start);
+       VectorMA (start, 6.5, up , start); }
+    else if ( (forward[2] >= 0) && (forward[2] < 0.2) ) {
+        VectorMA (start, 12, forward, start);
+        VectorMA (start, 7, up, start); }
+    else if ( (forward[2] >= 0.2) && (forward[2] < 0.4) ) {
+        VectorMA (start, 14, forward, start);
+        VectorMA (start, 6.5, up, start); }
+    else if ( (forward[2] >= 0.4) && (forward[2] < 0.6) ) {
+        VectorMA (start, 16, forward, start);
+        VectorMA (start, 6, up, start); }
+    else if ( (forward[2] >= 0.6) && (forward[2] < 0.8) ) {
+        VectorMA (start, 18, forward, start);
+        VectorMA (start, 5, up, start); }
+    else if ( (forward[2] >= 0.8) && (forward[2] < 0.85) ) {
+        VectorMA (start, 18, forward, start);
+        VectorMA (start, 4, up, start); }
+    else if ( (forward[2] >= 0.85) && (forward[2] < 0.9) ) {
+        VectorMA (start, 18, forward, start);
+        VectorMA (start, 2.5, up, start); }
+
+    else if ( (forward[2] >= 0.9) && (forward[2] < 0.91) ) {
+        VectorMA (start, 18.2, forward, start);
+        VectorMA (start, 2.2, up, start); }
+    else if ( (forward[2] >= 0.91) && (forward[2] < 0.92) ) {
+        VectorMA (start, 18.4, forward, start);
+        VectorMA (start, 1.9, up, start); }
+    else if ( (forward[2] >= 0.92) && (forward[2] < 0.93) ) {
+        VectorMA (start, 18.6, forward, start);
+        VectorMA (start, 1.6, up, start); }
+    else if ( (forward[2] >= 0.93) && (forward[2] < 0.94) ) {
+        VectorMA (start, 18.8, forward, start);
+        VectorMA (start, 1.3, up, start); }
+    else if ( (forward[2] >= 0.94) && (forward[2] < 0.95) ) {
+        VectorMA (start, 19, forward, start);
+        VectorMA (start, 1, up, start); }
+   else if ( (forward[2] >= 0.95) && (forward[2] < 0.96) ) {
+        VectorMA (start, 19.2, forward, start);
+        VectorMA (start, 0.7, up, start); }
+    else if ( (forward[2] >= 0.96) && (forward[2] < 0.97) ) {
+        VectorMA (start, 19.4, forward, start);
+        VectorMA (start, 0.4, up, start); }
+    else if ( (forward[2] >= 0.97) && (forward[2] < 0.98) ) {
+        VectorMA (start, 19.6, forward, start);
+        VectorMA (start, -0.2, up, start); }
+    else if ( (forward[2] >= 0.98) && (forward[2] < 0.99) ) {
+        VectorMA (start, 19.8, forward, start);
+        VectorMA (start, -0.6, up, start); }
+
+    else if ( (forward[2] >= 0.99) && (forward[2] <= 1) ) {
+        VectorMA (start, 20, forward, start);
+        VectorMA (start, -1, up , start); }
+
+    VectorCopy (start , shell->s.origin);
+
+    VectorMA (shell->velocity, (toggle==1?-1:1)*(35 + random() * 60), right, shell->velocity);
+
+    VectorMA (shell->avelocity, 500, right, shell->avelocity);
+
+    shell->movetype = MOVETYPE_BOUNCE;
+    shell->solid = SOLID_BBOX;
+
+    r = random();
+    if (r < 0.1)
+        shell->s.frame = 0;
+    else if (r < 0.2)
+        shell->s.frame = 1;
+    else if (r < 0.3)
+        shell->s.frame = 2;
+    else if (r < 0.5)
+        shell->s.frame = 3;
+    else if (r < 0.6)
+        shell->s.frame = 4;
+    else if (r < 0.7)
+        shell->s.frame = 5;
+    else if (r < 0.8)
+      shell->s.frame = 6;
+    else if (r < 0.9)
+        shell->s.frame = 7;
+    else
+        shell->s.frame = 8;
+
+    shell->owner = self;
+    shell->touch = ShellTouch;
+    shell->nextthink = level.time + 1.2 - (shells * .05);
+    shell->think = ShellDie;
+    shell->classname = "shell";
+
+    gi.linkentity (shell);
+}
+
+
+
 qboolean Observer(edict_t *ent, qboolean check) 
 {
     if (check && ent->deadflag != DEAD_DEAD && ent->health < ent->max_health) {
