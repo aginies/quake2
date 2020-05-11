@@ -4565,23 +4565,78 @@ void Nuke_Free (edict_t *ent)
 
 void Cata_Explode (edict_t *ent)
 {
-  ent->s.frame+=2;
-  if(ent->s.frame > 12)
-    ent->s.frame = 0;
+
+  edict_t     *target = NULL;
+  float       Distance, BlindTimeAdd;
+  vec3_t      v;
+
+  if (ent->s.skinnum < 7)
+        ent->s.skinnum++;
+  ent->s.frame++;
+
+  T_ShockWave(ent, 500, 500);
+  while ((target = findradius(target, ent->s.origin, 2000)) != NULL)
+    {
+      if (!target->client)
+	continue;
+      if (!CanDamage (target, ent))
+	continue;
+      if (target->client->camera)
+	continue;
+      if (target->client->invincible_framenum > level.framenum) // invulnerable
+	continue;
+      if (target->flags & FL_GODMODE) // god
+	continue;
+
+      BlindTimeAdd = 15;
+      target->client->BlindTime = BlindTimeAdd * 1.5 ;
+      target->client->BlindBase = blindtime->value;
+      target->client->v_dmg_pitch = 100 * crandom();
+      target->client->v_dmg_roll = 100 * crandom();
+      target->client->damage_blend[0] = 1;
+      target->client->damage_blend[1] = 1;
+      target->client->damage_blend[2] = 1;
+      target->client->damage_alpha = 0.8;
+      target->client->v_dmg_time = level.time + 5;
+
+    // Calculate the distance from the Nuke to the victim.
+      VectorSubtract(ent->s.origin, target->s.origin, v);
+      Distance = VectorLength(v);
+
+
+    // NO way to avoid an effect from a nuke blast
+      if ( Distance < 400 )
+      {
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 3000, 1, 3000, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 200, NULL, 200, MOD_NUKE);
+          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast you were pulverised after taken 3000 of Damage ! Run Faster !\n");
+      } else if (Distance >= 400 && Distance <=1000)
+      {
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 50, 1, 50, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 10, NULL, 10, MOD_NUKE);
+          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! up to 60 of Damage ! Run Faster !\n");
+
+      } else if (Distance >= 1000 && Distance <= 4000)
+      {
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 10, 1, 10, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 5, NULL, 5, MOD_NUKE);
+          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast ! Taking some of Damage ! Run Faster !\n");
+      }
+    }
+
+
   ent->nextthink = level.time + FRAMETIME;
   ent->delay = ent->delay - FRAMETIME;
   if(ent->delay <= 0)
     G_FreeEdict (ent);
-
 }
 
 void Nuke_Explode (edict_t *ent)
 {
-  vec3_t      origin, v;
-  edict_t     *nuke, *stuff, *target = NULL;
+  vec3_t      origin;
+  edict_t     *nuke, *stuff;
   vec3_t      nuke_angs;
   vec3_t      forward, right, up;
-  float       Distance, BlindTimeAdd;
   int         n, i;
   
   //gi.dprintf("DEBUG IN Nuke_Explode");
@@ -4592,7 +4647,7 @@ void Nuke_Explode (edict_t *ent)
   nukestate = NUKE_ACTIVE;
     
   // Big explosion effect:
-  for(n = 0; n < 128; n+=32)
+  for(n = 0; n < 32; n+=2)
     {
       VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
       origin[0] = origin[0] + 16*crandom();
@@ -4609,7 +4664,7 @@ void Nuke_Explode (edict_t *ent)
     origin[2] = origin[2] + 64;
 
   // send explosion in all angles
-  for (i = 0; i < 128; i++)
+  for (i = 0; i < 64; i++)
     {
       stuff = G_Spawn();
       VectorCopy (ent->s.origin, stuff->s.origin);
@@ -4622,8 +4677,9 @@ void Nuke_Explode (edict_t *ent)
 //    stuff->solid = SOLID_NONE;
       VectorClear (stuff->mins);
       VectorClear (stuff->maxs);
-      stuff->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
-      stuff->s.sound = gi.soundindex ("weapons/bfg__l1a.wav");
+      stuff->s.modelindex = gi.modelindex("models/objects/r_explode/tris_hb.md2");
+      //stuff->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
+      stuff->s.sound = gi.soundindex ("weapons/nuke.wav");
       stuff->owner = ent->owner;
       VectorSet (stuff->mins, -3, -3, -3);
       VectorSet (stuff->maxs, 3, 3, 3);
@@ -4631,14 +4687,14 @@ void Nuke_Explode (edict_t *ent)
       stuff->s.effects |= EF_PLASMA;
       stuff->nextthink = level.time + 1;
       stuff->think = Cata_Explode;
-      stuff->delay = 4;
+      stuff->delay = 3;
       //stuff->think = G_FreeEdict;
       stuff->classname = "stuff";
       gi.linkentity(stuff);
     }
 
   // explosion around
-  for (n = 0; n < 100; n++)
+  for (n = 0; n < 50; n++)
     {
       nuke_angs[0] = 0;
       nuke_angs[1] = n * 32;
@@ -4652,70 +4708,21 @@ void Nuke_Explode (edict_t *ent)
       nuke->clipmask = MASK_SHOT;
       nuke->solid = SOLID_TRIGGER;
 	
-      nuke->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
+      stuff->s.modelindex = gi.modelindex("models/objects/r_explode/tris_hb.md2");
+//      nuke->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
       nuke->s.frame = random()*4;
       nuke->s.effects |= EF_PLASMA;
-      nuke->s.sound = gi.soundindex ("weapons/bfg__l1a.wav");
 	
       VectorSet (nuke->mins, -3, -3, -3);
       VectorSet (nuke->maxs, 3, 3, 3);
       nuke->owner = ent->owner;
-      nuke->delay = 2;
+      nuke->delay = 3;
       nuke->think = Cata_Explode;
       nuke->nextthink = level.time + FRAMETIME;
       nuke->classname = "nuke";
       gi.linkentity(nuke);
     }
 
-  while ((target = findradius(target, ent->s.origin, 7000)) != NULL)
-    {
-      if (!target->client)
-	continue;
-      if (!CanDamage (target, ent))
-	continue;
-      if (target->client->camera)
-	continue;
-      if (target->client->invincible_framenum > level.framenum) // invulnerable
-	continue;
-      if (target->flags & FL_GODMODE) // god
-	continue;
-
-
-      BlindTimeAdd = 15;
-      target->client->BlindTime = BlindTimeAdd * 1.5 ;
-      target->client->BlindBase = blindtime->value;
-
-      target->client->v_dmg_pitch = 100 * crandom();
-      target->client->v_dmg_roll = 100 * crandom();
-      target->client->damage_blend[0] = 1;
-      target->client->damage_blend[1] = 1;
-      target->client->damage_blend[2] = 1;
-      target->client->damage_alpha = 0.8;
-      target->client->v_dmg_time = level.time + 5;
-
-    // Calculate the distance from the Nuke to the victim.
-      VectorSubtract(ent->s.origin, target->s.origin, v);
-      Distance = VectorLength(v);
-
-      T_ShockWave(ent, 5500, 5024);
-
-    // NO way to avoid an effect from a nuke blast
-      if ( Distance < 5000 )
-      {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 3000, 1, 4000, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 3000, NULL, 3000, MOD_NUKE);
-      } else if (Distance >= 3000 && Distance <=5000)
-      {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 2000, 1, 2000, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 2000, NULL, 2000, MOD_NUKE);
-
-      } else if (Distance >= 5000 && Distance <= 7000)
-      {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 500, 1, 600, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 500, NULL, 600, MOD_NUKE);
-      }
-    }
-    
   Nuke_Free(ent);
   return ;
 }
@@ -4807,7 +4814,8 @@ void weapon_nuke_fire (edict_t *ent, qboolean held)
   P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
   VectorScale (forward, -2, ent->client->kick_origin);
-  gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/vortex/throw.wav"), 1, ATTN_IDLE, 0);
+  //gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/nuke.wav"), 1, ATTN_IDLE, 0);
+  gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/nuke_l.wav"), 1, ATTN_IDLE, 0);
   fire_nuke(ent, start, forward, damage, speed, 2.5, radius);
   //gi.dprintf("DEBUG after firenuke\n");
 

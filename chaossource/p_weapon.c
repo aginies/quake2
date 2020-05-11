@@ -1222,52 +1222,52 @@ void Dual_Fire(edict_t *ent)
         spread = AdjustSpread( ent, spread );
         // infinite ammo
         ent->client->dual_rds = 12;
-        gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+//        gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
 
         if (ent->client->dual_rds < 1)
         {
                 ent->client->ps.gunframe = 68;
-                gi.dprintf("DEBUG ent->client->dual_rds < 1 \n");
-                gi.dprintf("DEBUG ent->client->ps.gunframe %i \n", ent->client->ps.gunframe);
+//                gi.dprintf("DEBUG ent->client->dual_rds < 1 \n");
+//                gi.dprintf("DEBUG ent->client->ps.gunframe %i \n", ent->client->ps.gunframe);
                 if (level.time >= ent->pain_debounce_time)
                 {
                         gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"),1, ATTN_NORM, 0);
                         ent->pain_debounce_time = level.time + 1;
                 }
 
-                gi.dprintf("DEBUG NO AMMO  \n");
+  //              gi.dprintf("DEBUG NO AMMO  \n");
                 //NoAmmoWeaponChange (ent);
                 vec3_t result;
                 Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
                 EjectShell(ent, result, 2);
 
                 ent->client->dual_rds = 12;
-                gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
+//                gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
                 ent->client->weaponstate = WEAPON_READY;
-                gi.dprintf("DEBUG after ent->client->dual_rds %s \n", ent->client->dual_rds);
+//                gi.dprintf("DEBUG after ent->client->dual_rds %s \n", ent->client->dual_rds);
         }
 
         //If the user isn't pressing the attack button, advance the frame and go away....
         if ( ent->client->ps.gunframe == 8 )
         {
-                gi.dprintf("DEBUG ent->client->ps.gunframe == 8 \n");
+  //              gi.dprintf("DEBUG ent->client->ps.gunframe == 8 \n");
                 //gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/mk23fire.wav"), 1, ATTN_NORM, 0);
                 ent->client->ps.gunframe++;
                 VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
                 AngleVectors (angles, forward, right, NULL);
                 VectorSet(offset, 0, 8, ent->viewheight-height);
                 P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
-                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+//                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
 
                 // Still have some ammo
                 if ( ent->client->dual_rds > 1 )
                 {
                         fire_bullet (ent, start, forward, damage, kick, spread, spread,MOD_DUAL);
-                        gi.dprintf("DEBUG ent->client->dual_rds > 1 after firebullet \n");
-                        gi.dprintf("DEBUG sv_shelloff->value %i\n", sv_shelloff->value);
+//                        gi.dprintf("DEBUG ent->client->dual_rds > 1 after firebullet \n");
+//                        gi.dprintf("DEBUG sv_shelloff->value %i\n", sv_shelloff->value);
                         if (!sv_shelloff->value)
                         {
-                                gi.dprintf("DEBUG !sv_shelloff->value \n");
+//                                gi.dprintf("DEBUG !sv_shelloff->value \n");
                                 vec3_t result;
                                 Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
                                 EjectShell(ent, result, 2);
@@ -1299,15 +1299,15 @@ void Dual_Fire(edict_t *ent)
                         {
                             ent->client->ps.gunframe=68;
                             ent->client->weaponstate = WEAPON_END_MAG;
-                            gi.dprintf("DEBUG dual_rds  %i WEAPON_END_MAG \n", ent->client->dual_rds);
+//                            gi.dprintf("DEBUG dual_rds  %i WEAPON_END_MAG \n", ent->client->dual_rds);
                                 vec3_t result;
                                 Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
                                 EjectShell(ent, result, 2);
 
                 ent->client->dual_rds = 12;
-                gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
+//                gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
                 ent->client->weaponstate = WEAPON_READY;
-                gi.dprintf("DEBUG after ent->client->dual_rds %s \n", ent->client->dual_rds);
+//                gi.dprintf("DEBUG after ent->client->dual_rds %s \n", ent->client->dual_rds);
 
                         }
                 }
@@ -1320,21 +1320,21 @@ void Dual_Fire(edict_t *ent)
                         //ent->pain_debounce_time = level.time + 1;
                         ent->client->ps.gunframe=68;
                         ent->client->weaponstate = WEAPON_END_MAG;
-                        gi.dprintf("DEBUG 2 dual_rds  %i WEAPON_END_MAG \n", ent->client->dual_rds);
+//                        gi.dprintf("DEBUG 2 dual_rds  %i WEAPON_END_MAG \n", ent->client->dual_rds);
                         return ;
 
 
                 }
 
-                gi.dprintf("DEBUG somewhere else...  %i \n", ent->client->dual_rds);
-                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
-                gi.dprintf("DEBUG ps.gunframe: %i \n", ent->client->ps.gunframe);
+//                gi.dprintf("DEBUG somewhere else...  %i \n", ent->client->dual_rds);
+//                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+//                gi.dprintf("DEBUG ps.gunframe: %i \n", ent->client->ps.gunframe);
                 return;
         }
 
         if ( ent->client->ps.gunframe == 9 )
         {
-                gi.dprintf("DEBUG ent->client->ps.gunframe == 9 \n");
+//                gi.dprintf("DEBUG ent->client->ps.gunframe == 9 \n");
                 ent->client->ps.gunframe += 2;
                 return;
         }
@@ -1349,18 +1349,18 @@ void Dual_Fire(edict_t *ent)
         //Oops! Out of ammo!
         if (ent->client->dual_rds < 1)
         {
-                gi.dprintf("DEBUG ent->client->dual_rds < 1\n");
+//                gi.dprintf("DEBUG ent->client->dual_rds < 1\n");
                 ent->client->ps.gunframe = 12;
-                gi.dprintf("DEBUG ent->client->ps.gunframe == 12 \n");
+//                gi.dprintf("DEBUG ent->client->ps.gunframe == 12 \n");
                 if (level.time >= ent->pain_debounce_time)
                 {
                         gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"),1, ATTN_NORM, 0);
                         ent->pain_debounce_time = level.time + 1;
                 }
                 //NoAmmoWeaponChange (ent);
-                gi.dprintf("DEBUG 2 somewhere else...  %i \n", ent->client->dual_rds);
-                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
-                gi.dprintf("DEBUG ps.gunframe: %i \n", ent->client->ps.gunframe);
+//                gi.dprintf("DEBUG 2 somewhere else...  %i \n", ent->client->dual_rds);
+//                gi.dprintf("DEBUG dual_rds  %i \n", ent->client->dual_rds);
+//                gi.dprintf("DEBUG ps.gunframe: %i \n", ent->client->ps.gunframe);
                 return;
         }
 
@@ -1382,7 +1382,7 @@ void Dual_Fire(edict_t *ent)
 
         if (!sv_shelloff->value)
         {
-                gi.dprintf("DEBUG !sv_shelloff->value \n");
+  //              gi.dprintf("DEBUG !sv_shelloff->value \n");
                 vec3_t result;
                 Old_ProjectSource (ent->client, ent->s.origin, offset, forward, right, result);
                 EjectShell(ent, result, 1);
