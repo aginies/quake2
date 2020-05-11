@@ -60,6 +60,7 @@ Orignal version of Chaos. ``master`` repository
 Default repository ``plasma``.
 This version include:
 
+* add Dual MK23 as default gun (from Action mod)
 * do not respawn sword if start_sword > 0, spawn a railgun instead
 * dynamically show ammo of all weapons if you have such. hide if you don't have anymmore
 * add a menu wit many help (need to be finished): to get the Menu just type "menu" in the console
