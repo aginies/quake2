@@ -4574,7 +4574,7 @@ void Cata_Explode (edict_t *ent)
         ent->s.skinnum++;
   ent->s.frame++;
 
-  T_ShockWave(ent, 500, 500);
+ // T_ShockWave(ent, 300, 500);
   while ((target = findradius(target, ent->s.origin, 2000)) != NULL)
     {
       if (!target->client)
@@ -4588,7 +4588,7 @@ void Cata_Explode (edict_t *ent)
       if (target->flags & FL_GODMODE) // god
 	continue;
 
-      BlindTimeAdd = 15;
+      BlindTimeAdd = 10;
       target->client->BlindTime = BlindTimeAdd * 1.5 ;
       target->client->BlindBase = blindtime->value;
       target->client->v_dmg_pitch = 100 * crandom();
@@ -4610,16 +4610,16 @@ void Cata_Explode (edict_t *ent)
           T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 3000, 1, 3000, MOD_NUKE);
           T_RadiusDamage (ent, ent->owner, 200, NULL, 200, MOD_NUKE);
           cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast you were pulverised after taken 3000 of Damage ! Run Faster !\n");
-      } else if (Distance >= 400 && Distance <=1000)
+      } else if (Distance >= 400 && Distance <=700)
       {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 50, 1, 50, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 10, NULL, 10, MOD_NUKE);
+         T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 5, 1, 5, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 5, NULL, 5, MOD_NUKE);
           cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! up to 60 of Damage ! Run Faster !\n");
 
-      } else if (Distance >= 1000 && Distance <= 4000)
+      } else if (Distance >= 700 && Distance <= 3000)
       {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 10, 1, 10, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 5, NULL, 5, MOD_NUKE);
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 1, 1, 1, MOD_NUKE);
+          T_RadiusDamage (ent, ent->owner, 1, NULL, 1, MOD_NUKE);
           cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast ! Taking some of Damage ! Run Faster !\n");
       }
     }
@@ -4647,7 +4647,7 @@ void Nuke_Explode (edict_t *ent)
   nukestate = NUKE_ACTIVE;
     
   // Big explosion effect:
-  for(n = 0; n < 32; n+=2)
+  for(n = 0; n < 32; n++)
     {
       VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
       origin[0] = origin[0] + 16*crandom();
@@ -4684,11 +4684,14 @@ void Nuke_Explode (edict_t *ent)
       VectorSet (stuff->mins, -3, -3, -3);
       VectorSet (stuff->maxs, 3, 3, 3);
       stuff->s.frame = random()*2;
-      stuff->s.effects |= EF_PLASMA;
-      stuff->nextthink = level.time + 1;
+      stuff->s.effects |= EF_BLASTER;
+      stuff->s.effects |= EF_GRENADE;
+      stuff->s.effects |= EF_ROCKET;
+      stuff->s.effects |= EF_GREENGIB;
+
+      stuff->nextthink = level.time; //- 1;
       stuff->think = Cata_Explode;
-      stuff->delay = 3;
-      //stuff->think = G_FreeEdict;
+      stuff->delay = 4.5;
       stuff->classname = "stuff";
       gi.linkentity(stuff);
     }
@@ -4711,14 +4714,16 @@ void Nuke_Explode (edict_t *ent)
       stuff->s.modelindex = gi.modelindex("models/objects/r_explode/tris_hb.md2");
 //      nuke->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
       nuke->s.frame = random()*4;
-      nuke->s.effects |= EF_PLASMA;
-	
+      nuke->s.effects |= EF_GRENADE;
+      nuke->s.effects |= EF_GREENGIB;
+      nuke->s.effects |= EF_ROCKET;
+
       VectorSet (nuke->mins, -3, -3, -3);
       VectorSet (nuke->maxs, 3, 3, 3);
       nuke->owner = ent->owner;
-      nuke->delay = 3;
+      nuke->delay = 4.5;
       nuke->think = Cata_Explode;
-      nuke->nextthink = level.time + FRAMETIME;
+      nuke->nextthink = level.time; // - FRAMETIME;
       nuke->classname = "nuke";
       gi.linkentity(nuke);
     }
