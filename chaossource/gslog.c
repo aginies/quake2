@@ -261,6 +261,7 @@ void sl_WriteStdLogDeath( game_import_t     *gi,
 			case MOD_SWORD:
 			case MOD_CHAINSAW:
 			case MOD_AK42:
+			case MOD_DUAL:
                         default:
                         {
                             /* Kill - weapon */

@@ -492,8 +492,10 @@ float Bot_Fire_Freq(edict_t *ent)
 	it_lturret = FindItem("automatic defence turret");	//bugfix
     it_nuke = FindItem("nuke"); //bugfix
 
-	if (ent->client->pers.weapon == it_ak42)
-		return AK42_FREQ;
+//	if (ent->client->pers.weapon == it_ak42)
+//		return AK42_FREQ;
+	if (ent->client->pers.weapon == it_dual)
+		return DUAL_FREQ;
 	else if (ent->client->pers.weapon == it_supershotgun
 		|| ent->client->pers.weapon == it_esupershotgun)
 		return SUPERSHOTGUN_FREQ;
@@ -744,7 +746,8 @@ void Bot_BestMidWeapon(edict_t *self)
 	}
 
 	// found nothing so use ak42
-	self->client->newweapon = it_ak42;
+	//self->client->newweapon = it_ak42;
+	self->client->newweapon = it_dual;
 }
 
 void Bot_BestCloseWeapon(edict_t *self)
@@ -946,7 +949,8 @@ void Bot_BestCloseWeapon(edict_t *self)
 	}
 
 	// found nothing so use ak42
-	self->client->newweapon = it_ak42;
+	//self->client->newweapon = it_ak42;
+	self->client->newweapon = it_dual;
 }
 
 void Bot_BestFarWeapon(edict_t *self)
@@ -1171,7 +1175,8 @@ void Bot_BestFarWeapon(edict_t *self)
 	}
 
 	// found nothing so use ak42
-	self->client->newweapon = it_ak42;
+	//self->client->newweapon = it_ak42;
+	self->client->newweapon = it_dual;
 }
 
 qboolean Bot_CanPickupAmmo(edict_t *ent, edict_t *eitem)

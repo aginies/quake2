@@ -435,7 +435,9 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			case MOD_AK42:
 				message = "was shot by";
 				break;
-
+			case MOD_DUAL:
+				message = "was dual shot by";
+				break;
 			}
 			if (message)
 			{
@@ -624,7 +626,8 @@ void TossClientWeapon (edict_t *self)
 	item = self->client->pers.weapon;
 	if (! self->client->pers.inventory[self->client->ammo_index] )
 		item = NULL;
-	if (item && (strcmp (item->pickup_name, "AK42 Assault Pistol") == 0))
+//	if (item && (strcmp (item->pickup_name, "AK42 Assault Pistol") == 0))
+	if (item && (strcmp (item->pickup_name, "MK23 Dual") == 0))
 		item = NULL;
 
 	// FWP Fix for fakedeath ammo cheat...if fakedeath, and ammo > default ammo for weapon, toss and
@@ -865,7 +868,8 @@ void InitClientPersistant (gclient_t *client)
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
-	item = FindItem("AK42 Assault Pistol");
+	//item = FindItem("AK42 Assault Pistol");
+	item = FindItem("MK23 Dual");
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 1;
 
@@ -1557,6 +1561,10 @@ void PutClientInServer (edict_t *ent)
 	ent->watertype = 0;
 	ent->flags &= ~FL_NO_KNOCKBACK;
 	ent->svflags &= ~SVF_DEADMONSTER;
+
+    // GUIBO
+    client->reload_attempts = 0;
+    client->dual_rds = 12;
 
 	VectorCopy (mins, ent->mins);
 	VectorCopy (maxs, ent->maxs);

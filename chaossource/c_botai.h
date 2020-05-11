@@ -1,5 +1,6 @@
 
 #define	AK42_FREQ				0.6
+#define	DUAL_FREQ				0.6
 #define	SHOTGUN_FREQ			1
 #define	SUPERSHOTGUN_FREQ		1
 #define	CROSSBOW_FREQ			1
