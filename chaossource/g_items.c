@@ -392,10 +392,15 @@ void DoRespawn (edict_t *ent)
 		{
             // try to get power weapon very rare
 			rn = random();
-			if ( rn <= 0.1)
+			if (rn <= 0.1)
 			{
-				item = it_vortex;
-				ent->classname = "ammo_vortex";
+                if (ban_vortex->value != 1) {
+    				item = it_vortex;
+	    			ent->classname = "ammo_vortex";
+                } else {
+                    item = it_nuke;
+                    ent->classname = "ammo_nuke";
+                }
 			}
 			else if ((rn >= 0.1) && (rn <= 0.2))
 			{

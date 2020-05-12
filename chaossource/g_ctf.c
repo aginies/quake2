@@ -2278,7 +2278,7 @@ void CTFShowScores(edict_t *ent, pmenu_t *p)
 
 pmenu_t creditsmenu[] = {
 	{ "*Quake II",						PMENU_ALIGN_CENTER, NULL, NULL },
-	{ "*Chaos Deathmatch v1.16",				PMENU_ALIGN_CENTER, NULL, NULL },
+	{ "*Chaos Deathmatch v1.16.1",				PMENU_ALIGN_CENTER, NULL, NULL },
 	{ NULL,								PMENU_ALIGN_CENTER, NULL, NULL },
 	{ "*Programming",					PMENU_ALIGN_CENTER, NULL, NULL }, 
 	{ "Flash (flash@telefragged.com)",	PMENU_ALIGN_CENTER, NULL, NULL },

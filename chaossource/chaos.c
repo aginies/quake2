@@ -512,7 +512,7 @@ pmenu_t helpservermenu[] = {
 
 pmenu_t mainmenu[] = {
         { "*Chaos Deathmatch",PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Devel Version 1.16",PMENU_ALIGN_RIGHT, NULL, NULL },
+        { "Devel Version 1.16.1",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
 //        { "* ! VERSION XP !",PMENU_ALIGN_CENTER, NULL, NULL },
         { " ! Reportez moi les Bugs !",PMENU_ALIGN_CENTER, NULL, NULL },

@@ -97,7 +97,7 @@ void InitGame (void)
 	sl_Logging( &gi, "chaos" );	// StdLog - Mark Davies (Only required to set patch name)
 
 	gi.dprintf ("====          InitGame          ====\n");
-    gi.dprintf ("==== Chaos Deathmatch v1.16  ====\n");
+    gi.dprintf ("==== Chaos Deathmatch v1.16.1  ====\n");
 
 	gun_x = gi.cvar ("gun_x", "0", 0);
 	gun_y = gi.cvar ("gun_y", "0", 0);

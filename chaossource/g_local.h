@@ -13,7 +13,7 @@
 //ZOID
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Chaos Deathmatch v1.16"
+#define	GAMEVERSION	"Chaos Deathmatch v1.16.1"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
