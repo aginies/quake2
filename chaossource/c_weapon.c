@@ -4578,7 +4578,7 @@ void Cata_Explode (edict_t *ent)
 
   ent->s.frame++;
 
- // T_ShockWave(ent, 300, 500);
+  T_ShockWave(ent, 300, 500);
   while ((target = findradius(target, ent->s.origin, 2000)) != NULL)
     {
       if (!target->client)

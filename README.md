@@ -60,28 +60,29 @@ Orignal version of Chaos. ``master`` repository
 Default repository ``plasma``.
 This version include:
 
-* add Dual MK23 as default gun (from Action mod)
+* new nuke explosiion using r_explode/tris.md2 from Rampage mod (https://www.moddb.com/mods/rampage-mod)
+* add Dual MK23 as default gun (from Action mod https://www.moddb.com/mods/action-quake-ii)
 * do not respawn sword if start_sword > 0, spawn a railgun instead
 * dynamically show ammo of all weapons if you have such. hide if you don't have anymmore
-* add a menu wit many help (need to be finished): to get the Menu just type "menu" in the console
+* add a menu with many help: to get the Menu just type "menu" in the console
 * add an observer mode (still buggy...)
 * add ```playerlist``` command
 * add Jedi Force Push and Pull tractor and Darth Vader force ! bind pull and push key, ie in your configuration file:
     * bind MOUSE4 "cmd push"
     * bind MOUSE2 "cmd pull"
     * bind MOUSE3 "cmd fkill"
-* new effect while get explosion (taken from WOD mod):
+* new effect while get explosion (taken from WOD mod ):
     * items are moving if near the explosion
     * shockware effect
     * some debris
 * cleanup windows DLL build warning (needs some more works...)
-* fix a bug of not being able to use plasma is less than 50 cells.
+* fix a bug of not being able to use Plasma is less than 50 cells.
 * get bot less acurate with railgun
-* No camp mode (from lithium mod)
+* No camp mode from Lithium mod (https://quake2lithium.github.io/)
     * use_nocamp (default 0)
     * camp_threshold (default 250)
-    * camp_time (default 12)
-    * camp_warn (default 10)
+    * camp_time (default 10)
+    * camp_warn (default 8)
 * Re-balance damage:
     * increase damage of chainsaw / Sword
     * decrase damage and life of turrets
@@ -93,7 +94,7 @@ This version include:
 * fix ban sword
 * add nuke weapon
 * add laser guided rocket launcher (based on WOD mod)
-* add a plasma gun (based on marsilainen mod)
+* add a plasma gun from Marsilainen mod (https://www.moddb.com/mods/plasma-rifle-mod-for-quake-2)
 * use some other skins for bot (Chaos color and some others)
 * add 'bot' to botname to quickly find them in the list of players
 * Fix vortex and chainsaw ban

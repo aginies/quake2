@@ -1,7 +1,10 @@
 These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
 
-* add Dual MK23 as default weapon (from Action mod)
+* new nuke explosiion using r_explode/tris.md2 from Rampage mod (https://www.moddb.com/mods/rampage-mod)
+  and new nuke effect (radiation effect)
+
+* add Dual MK23 as default gun (from Action mod https://www.moddb.com/mods/action-quake-ii)
 
 * do not respawn sword if start_sword > 0, spawn a railgun instead
 
@@ -35,7 +38,7 @@ These are bugs and new feature fixed/implemented in Chaotic Dreams
 
 * get bot less acurate with railgun
 
-* no camp mode (from lithium mod)
+* no camp mode from Lithium mod ((https://quake2lithium.github.io/)
     * use_nocamp (default 0)
     * camp_threshold (default 250)
     * camp_time (default 10)
@@ -64,9 +67,7 @@ These are bugs and new feature fixed/implemented in Chaotic Dreams
 
 * add laser guided rocket launcher (based on WOD mod)
 
-* add a plasma gun (based on marsilainen mod)
-
-* increase number of MAX bot to 15
+* add a plasma gun from Marsilainen mod (https://www.moddb.com/mods/plasma-rifle-mod-for-quake-2)
 
 * use some other skins for bot (Chaos color and some others)
 
