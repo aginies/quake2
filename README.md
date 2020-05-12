@@ -8,7 +8,6 @@ The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org
 
 ![](images/chaos.jpg)
 
-![](images/nuke.gif)
 ![](images/ammo_status.jpg)
 
 [![Video](https://i.ytimg.com/vi/Yjb_YpavBUE/hqdefault.jpg)](https://www.youtube.com/watch?v=Yjb_YpavBUE)
