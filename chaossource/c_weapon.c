@@ -4002,7 +4002,7 @@ int Valid_Target( edict_t *ent, edict_t *blip )
 	 * The Vortex or the nuke doesn't care who launched it or who is one what team,
 	 * it just eats everything in it's path
 	 */
-	if(Q_stricmp(ent->classname, "vortex") || Q_stricmp(ent->classname, "nuke")) /*== 0)*/
+	if(Q_stricmp(ent->classname, "vortex")) // || Q_stricmp(ent->classname, "nuke")) /*== 0)*/
 	  /*
 	{
 	  if (blip->item || blip->client)
