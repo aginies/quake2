@@ -224,36 +224,37 @@ void DoRespawn (edict_t *ent)
 			|| strcmp(ent->classname, "item_grapple") == 0)
 		{
 			rn = random();
-			if (rn < 0.1)
+			if (rn < 0.2)
 			{
 				item = FindItem("Quad Damage");
 				ent->classname = "item_quad";
 			}
-			else if (rn >= 0.1 && rn < 0.2)
-			{
-				item = FindItem("Silencer");
-				ent->classname = "item_silencer";
-			}
-			else if (rn >= 0.2 && rn < 0.3)
+//			else if (rn >= 0.2 && rn < 0.45)
+//			{
+//				item = FindItem("Silencer");
+//				ent->classname = "item_silencer";
+//			}
+			else if (rn >= 0.2 && rn < 0.45)
 			{
 				item = FindItem("Adrenaline");
 				ent->classname = "item_adrenaline";
 			}
-			else if (rn >= 0.3 && rn < 0.5)
+			else if (rn >= 0.45 && rn < 0.75)
 			{
 				item = FindItem("Invisibility");
 				ent->classname = "item_invisibility";
 			}
-			else if (rn >= 0.5 && rn < 0.75)
+//			else if (rn >= 0.75 && rn < 1)
+			else
 			{
 				item = FindItem("Jetpack");
 				ent->classname = "item_jet";
 			}
-			else
-			{
-				item = it_grapple;
-				ent->classname = "item_grapple";
-			}
+//			else
+//			{
+//				item = it_grapple;
+//				ent->classname = "item_grapple";
+//			}
 			newit = 1;
 		}
 		else if (strcmp(ent->classname, "ammo_grenades") == 0
