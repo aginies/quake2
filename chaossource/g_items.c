@@ -224,32 +224,31 @@ void DoRespawn (edict_t *ent)
 			|| strcmp(ent->classname, "item_grapple") == 0)
 		{
 			rn = random();
-			if (rn < 0.2)
+			if (rn < 0.1)
 			{
 				item = FindItem("Quad Damage");
 				ent->classname = "item_quad";
 			}
-//			else if (rn >= 0.1 && rn < 0.2)
-//			{
-//				item = FindItem("Silencer");
-//				ent->classname = "item_silencer";
+			else if (rn >= 0.1 && rn < 0.2)
+			{
+				item = FindItem("Silencer");
+				ent->classname = "item_silencer";
 			}
-			else if (rn >= 0.2 && rn < 0.45)
+			else if (rn >= 0.2 && rn < 0.3)
 			{
 				item = FindItem("Adrenaline");
 				ent->classname = "item_adrenaline";
 			}
-			else if (rn >= 0.45 && rn < 0.7)
+			else if (rn >= 0.3 && rn < 0.5)
 			{
 				item = FindItem("Invisibility");
 				ent->classname = "item_invisibility";
 			}
-			else if (rn >= 0.75 && rn < 1)
+			else if (rn >= 0.5 && rn < 0.75)
 			{
 				item = FindItem("Jetpack");
 				ent->classname = "item_jet";
 			}
-            // will never occur :)
 			else
 			{
 				item = it_grapple;
@@ -310,17 +309,17 @@ void DoRespawn (edict_t *ent)
 		else if (strcmp(ent->classname, "weapon_sword") == 0
 			|| strcmp(ent->classname, "weapon_chainsaw") == 0)
 		{
-			if (random() <= 0.4)
-			{
+            if (random() <= 0.4)
+            {
                 if (start_sword->value > 0)
                 {
                     item = it_railgun;
                     ent->classname = "weapon_railgun";
                 }
                 else
-                {
-    				item = it_sword;
-	    			ent->classname = "weapon_sword";
+    			{
+	    			item = it_sword;
+		    		ent->classname = "weapon_sword";
                 }
 			}
 			else
@@ -377,13 +376,12 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_airfist") == 0)
 		{
-            {
-                item = it_airfist;
-                ent->classname = "weapon_airfist";
-            }
+			{
+				item = it_airfist;
+				ent->classname = "weapon_airfist";
+			}
 			newit = 1;
 		}
-
 		else if (strcmp(ent->classname, "weapon_bfg") == 0
 			|| strcmp(ent->classname, "weapon_plasma") == 0
 			|| strcmp(ent->classname, "ammo_nuke") == 0
@@ -391,34 +389,35 @@ void DoRespawn (edict_t *ent)
 			|| strcmp(ent->classname, "ammo_laserturret") == 0
 			|| strcmp(ent->classname, "ammo_rocketturret") == 0)
 		{
-            // try to get power weapon very rare
+         // try to get power weapon very rare
+
 			rn = random();
-			if (rn <= 0.1)
+			if ( rn <= 0.15)
 			{
-                if (ban_vortex->value != 1) {
-    				item = it_vortex;
-	    			ent->classname = "ammo_vortex";
+               if (ban_vortex->value != 1) {
+                    item = it_vortex;
+                    ent->classname = "ammo_vortex";
                 } else {
                     item = it_nuke;
                     ent->classname = "ammo_nuke";
                 }
 			}
-			else if ((rn >= 0.1) && (rn <= 0.2))
+			else if ((rn >= 0.15) && (rn <= 0.25))
 			{
 				item = it_nuke;
 				ent->classname = "ammo_nuke";
 			}
-			else if ((ban_rocketlauncher->value == 0) && (rn > 0.3) && (rn <= 0.4))
+            else if ((ban_rocketturret->value == 0) && (rn > 0.25) && (rn <= 0.35))
 			{
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
 			}
-			else if ((ban_rocketlauncher->value == 0) && (rn > 0.4) && (rn <= 0.5))
-			{
-				item = it_lturret;
-				ent->classname = "ammo_laserturret";
-			}
-			else if ((rn > 0.5) && (rn <= 0.75))
+            else if ((ban_defenceturret->value == 0) && (rn > 0.35) && (rn <= 0.45))
+            {
+                item = it_lturret;
+                ent->classname = "ammo_laserturret";
+            }
+			else if ((rn > 0.45) && (rn <= 0.75))
 			{
 				item = it_plasma;
 				ent->classname = "weapon_plasma";
@@ -431,7 +430,7 @@ void DoRespawn (edict_t *ent)
 
 			newit = 1;
 		}
-	//MATTHIAS - Weapon banning or start
+	//MATTHIAS - Weapon banning
 
 		if (!Q_stricmp(ent->classname, "weapon_sword") == 0 && ban_sword->value > 0)
 		{
@@ -448,7 +447,8 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_chainsaw") == 0 && ban_chainsaw->value > 0)
 		{
-            if (start_sword->value > 0) {
+           if (start_sword->value > 0) 
+           {
                 item = it_railgun;
                 ent->classname = "weapon_railgun";
                 return;
@@ -547,17 +547,17 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_bfg") == 0 && ban_bfg->value > 0)
 		{
-			rn = random();
+            rn = random();
 			if (ban_vortex->value == 0)
 			{
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
 			}
             else if ((ban_nuke->value == 0) && (rn > 0.5))
-			{
-				item = it_nuke;
-				ent->classname = "ammo_nuke";
-			}
+            {
+                item = it_nuke;
+                ent->classname = "ammo_nuke";
+            }
 			else if (ban_defenceturret->value == 0)
 			{
 				item = it_lturret;
@@ -568,7 +568,7 @@ void DoRespawn (edict_t *ent)
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
 			}
-			else if ((ban_plasma->value == 0) && (rn <= 0.5))
+			else if ((ban_plasma->value == 0)  && (rn <= 0.5))
 			{
 				item = it_plasma;
 				ent->classname = "weapon_plasma";
@@ -581,7 +581,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_vortex") == 0 && ban_vortex->value > 0)
 		{
-			rn = random();
+            rn = random();
 			if ((ban_bfg->value == 0) && (rn >= 0.3))
 			{
 				item = it_bfg;
@@ -597,12 +597,12 @@ void DoRespawn (edict_t *ent)
 				item = it_rturret;
 				ent->classname = "ammo_rocketturret";
 			}
-            else if ((ban_nuke->value == 0) && (rn > 0.7)) 
-			{
-				item = it_nuke;
-				ent->classname = "ammo_nuke";
-			}
-			else if ((ban_plasma->value == 0)  && (rn < 0.3))
+            else if ((ban_nuke->value == 0) && (rn > 0.7))
+            {
+                 item = it_nuke;
+                 ent->classname = "ammo_nuke";
+            }
+			else if ((ban_plasma->value == 0) && (rn < 0.3))
 			{
 				item = it_plasma;
 				ent->classname = "weapon_plasma";
@@ -654,11 +654,11 @@ void DoRespawn (edict_t *ent)
 				item = it_vortex;
 				ent->classname = "ammo_vortex";
 			}
-			else if (ban_nuke->value == 0)
-			{
-				item = it_nuke;
-				ent->classname = "ammo_nuke";
-			}
+            else if (ban_nuke->value == 0)
+            {
+                 item = it_nuke;
+                 ent->classname = "ammo_nuke";
+            }
 			else if (ban_rocketturret->value == 0)
 			{
 				item = it_rturret;
@@ -682,11 +682,11 @@ void DoRespawn (edict_t *ent)
 				item = it_lturret;
 				ent->classname = "ammo_laserturret";
 			}
-			else if (ban_nuke->value == 0)
-			{
-				item = it_nuke;
-				ent->classname = "ammo_nuke";
-			}
+            else if (ban_nuke->value == 0)
+            {
+                item = it_nuke;
+                ent->classname = "ammo_nuke";
+            }
 			else if (ban_vortex->value == 0)
 			{
 				item = it_vortex;
@@ -1190,7 +1190,7 @@ void DoRespawn (edict_t *ent)
 	ent->s.event = EV_ITEM_RESPAWN;
 }
 
-int FasterRespawn(float delay) 
+int FasterRespawn(float delay)
 {
     int faster;
 
@@ -1792,8 +1792,8 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 
 	if (weapon && !oldcount)
 	{
-//		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
-		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("MK23 Dual") ) )
+		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("MK23 Dual") ) )
 			other->client->newweapon = ent->item;
 	}
 
@@ -2571,36 +2571,36 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		|| strcmp(ent->classname, "item_grapple") == 0)
 	{
 		rn = random();
-		if (rn < 0.1)
+		if (rn < 0.2)
 		{
 			item = FindItem("Quad Damage");
 			ent->classname = "item_quad";
 		}
-		else if (rn >= 0.1 && rn < 0.2)
-		{
-			item = FindItem("Silencer");
-			ent->classname = "item_silencer";
-		}
-		else if (rn >= 0.2 && rn < 0.3)
+//		else if (rn >= 0.1 && rn < 0.2)
+//		{
+//			item = FindItem("Silencer");
+//			ent->classname = "item_silencer";
+//		}
+		else if (rn >= 0.2 && rn < 0.45)
 		{
 			item = FindItem("Adrenaline");
 			ent->classname = "item_adrenaline";
 		}
-		else if (rn >= 0.3 && rn < 0.5)
+		else if (rn >= 0.45 && rn < 0.70)
 		{
 			item = FindItem("Invisibility");
 			ent->classname = "item_invisibility";
 		}
-		else if (rn >= 0.5 && rn < 0.75)
+		else
 		{
 			item = FindItem("Jetpack");
 			ent->classname = "item_jet";
 		}
-		else
-		{
-			item = it_grapple;
-			ent->classname = "item_grapple";
-		}
+//		else
+//		{
+//			item = it_grapple;
+//			ent->classname = "item_grapple";
+//		}
 	}
 	else if (strcmp(ent->classname, "ammo_bullets") == 0)
 	{
@@ -2665,17 +2665,15 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	else if (strcmp(ent->classname, "weapon_shotgun") == 0)
 	{
 		if ( random() <= 0.5)
-		{
             if (start_sword->value > 0) {
                 item = it_railgun;
                 ent->classname = "weapon_railgun";
-            } 
+            }
             else
             {
-    			item = it_sword;
-	    		ent->classname = "weapon_sword";
+                item = it_sword;
+                ent->classname = "weapon_sword";
             }
-		}
 		else
 		{
 			item = it_chainsaw;
@@ -3685,7 +3683,6 @@ always owned, never in the world
         0,
         "weapons/mk23fire.wav weapons/mk23in.wav weapons/mk23out.wav weapons/mk23slap.wav weapons/mk23slide.wav"
     },
-
 
 /*QUAKED weapon_sword (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
@@ -5472,7 +5469,7 @@ void SetItemNames (void)
 	it_proxymines = FindItem("proximity mines");
 
 	it_ak42	= FindItem("AK42 Assault Pistol");
-	it_dual	= FindItem("MK23 Dual");
+    it_dual = FindItem("MK23 Dual");
 	it_sword	= FindItem("bastard sword");
 	it_chainsaw	= FindItem("chainsaw");
 	it_shotgun	= FindItem("shotgun");
