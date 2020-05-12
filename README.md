@@ -12,18 +12,19 @@ The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org
 
 [![Video](https://i9.ytimg.com/vi/DuxaoykNHQA/mq2.jpg?sqp=CI6f6_UF&rs=AOn4CLDDWp9OSVidV-QIFZKPRnlCeR7wug)](https://youtu.be/DuxaoykNHQA)
 
-You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory.
+You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory. Please delete the ``pak files`` and use the one gziped in this repo (unzip it).
+
 You can find more original source at [files.chaoticdreams.org](https://files.chaoticdreams.org/Chaos/ChaosDM/)
 
 Please use this mod with a recent release of quake2 projects, especially the server side, ie:
 
-**yquake2**:
-* [yamagi.org](https://www.yamagi.org/quake2/)
-* [yquake2 source code](https://github.com/yquake2/yquake2)
-
 **Q2Pro**:
 * [q2pro](https://skuller.net/q2pro/)
 * [q2pro source code](https://github.com/skullernet/q2pro)
+
+**yquake2**:
+* [yamagi.org](https://www.yamagi.org/quake2/)
+* [yquake2 source code](https://github.com/yquake2/yquake2)
 
 
 # Usage
@@ -53,10 +54,11 @@ Orignal version of Chaos. ``master`` repository
 
 ## chaos_bin/devel/
 
-Default repository ``plasma``.
+Default repository ``1.16``.
 This version include:
 
-* new nuke explosiion using r_explode/tris.md2 from Rampage mod (https://www.moddb.com/mods/rampage-mod)
+* adjust respawn of items
+* new nuke explosion using r_explode/tris.md2 from Rampage mod (https://www.moddb.com/mods/rampage-mod)
 * add Dual MK23 as default gun (from Action mod https://www.moddb.com/mods/action-quake-ii)
 * do not respawn sword if start_sword > 0, spawn a railgun instead
 * dynamically show ammo of all weapons if you have such. hide if you don't have anymmore
