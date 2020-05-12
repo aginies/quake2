@@ -4570,8 +4570,12 @@ void Cata_Explode (edict_t *ent)
   float       Distance, BlindTimeAdd;
   vec3_t      v;
 
+  // get some redundancy in the effect 
   if (ent->s.skinnum < 7)
         ent->s.skinnum++;
+  else if (ent->s.skinnum == 7)
+        ent->s.skinnum = 1;
+
   ent->s.frame++;
 
  // T_ShockWave(ent, 300, 500);
@@ -4614,13 +4618,13 @@ void Cata_Explode (edict_t *ent)
       {
          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 5, 1, 5, MOD_NUKE);
           T_RadiusDamage (ent, ent->owner, 5, NULL, 5, MOD_NUKE);
-          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! up to 60 of Damage ! Run Faster !\n");
+          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! Radiation around ! Run Faster !\n");
 
       } else if (Distance >= 700 && Distance <= 3000)
       {
           T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 1, 1, 1, MOD_NUKE);
           T_RadiusDamage (ent, ent->owner, 1, NULL, 1, MOD_NUKE);
-          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast ! Taking some of Damage ! Run Faster !\n");
+          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! Radiation around ! Run Faster !\n");
       }
     }
 
@@ -4638,8 +4642,7 @@ void Nuke_Explode (edict_t *ent)
   vec3_t      nuke_angs;
   vec3_t      forward, right, up;
   int         n, i;
-  
-  //gi.dprintf("DEBUG IN Nuke_Explode");
+  float rn;
   
   if (ent->owner && ent->owner->client)
     PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
@@ -4647,7 +4650,7 @@ void Nuke_Explode (edict_t *ent)
   nukestate = NUKE_ACTIVE;
     
   // Big explosion effect:
-  for(n = 0; n < 32; n++)
+  for(n = 0; n < 16; n++)
     {
       VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
       origin[0] = origin[0] + 16*crandom();
@@ -4655,7 +4658,6 @@ void Nuke_Explode (edict_t *ent)
       origin[2] = origin[2] + n;
       gi.WriteByte (svc_temp_entity);
       gi.WriteByte (TE_GRENADE_EXPLOSION);
-//      gi.WriteByte (TE_EXPLOSION1);
       gi.WritePosition (origin);
       gi.multicast (origin, MULTICAST_PVS);
     }
@@ -4664,41 +4666,49 @@ void Nuke_Explode (edict_t *ent)
     origin[2] = origin[2] + 64;
 
   // send explosion in all angles
-  for (i = 0; i < 64; i++)
+  for (i = 0; i < 56; i++)
     {
+      rn = random();
       stuff = G_Spawn();
       VectorCopy (ent->s.origin, stuff->s.origin);
       stuff->velocity[0] += crandom () * 400;
       stuff->velocity[1] += crandom () * 200;
       stuff->velocity[2] += crandom () * 400;
+      VectorMA (stuff->velocity, 550, forward, stuff->velocity);
       stuff->movetype = MOVETYPE_FLYMISSILE;
       stuff->clipmask = MASK_SHOT;
       stuff->solid = SOLID_TRIGGER;
-//    stuff->solid = SOLID_NONE;
       VectorClear (stuff->mins);
       VectorClear (stuff->maxs);
       stuff->s.modelindex = gi.modelindex("models/objects/r_explode/tris_hb.md2");
-      //stuff->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
       stuff->s.sound = gi.soundindex ("weapons/nuke.wav");
       stuff->owner = ent->owner;
       VectorSet (stuff->mins, -3, -3, -3);
       VectorSet (stuff->maxs, 3, 3, 3);
       stuff->s.frame = random()*2;
-      stuff->s.effects |= EF_BLASTER;
-      stuff->s.effects |= EF_GRENADE;
-      stuff->s.effects |= EF_ROCKET;
-      stuff->s.effects |= EF_GREENGIB;
+
+    if (rn < 0.1)
+        stuff->s.effects |= EF_FLAG1;
+    else if (rn >= 0.1 || i < 0.2)
+        stuff->s.effects |= EF_FLAG2;
+    else if (rn >= 0.2 || i < 0.7)
+        stuff->s.effects |= EF_GRENADE;
+    else if (rn >= 0.7 || i < 0.8)
+        stuff->s.effects |= EF_BLASTER;
+    else //(rn >= 0.8 || i < 0.9)
+        stuff->s.effects |= EF_GREENGIB;
 
       stuff->nextthink = level.time; //- 1;
       stuff->think = Cata_Explode;
-      stuff->delay = 4.5;
+      stuff->delay = 6;
       stuff->classname = "stuff";
       gi.linkentity(stuff);
     }
 
   // explosion around
-  for (n = 0; n < 50; n++)
+  for (n = 0; n < 48; n++)
     {
+      rn = random();
       nuke_angs[0] = 0;
       nuke_angs[1] = n * 32;
       nuke_angs[2] = 0;
@@ -4712,16 +4722,23 @@ void Nuke_Explode (edict_t *ent)
       nuke->solid = SOLID_TRIGGER;
 	
       stuff->s.modelindex = gi.modelindex("models/objects/r_explode/tris_hb.md2");
-//      nuke->s.modelindex = gi.modelindex ("sprites/s_explo2.sp2");
       nuke->s.frame = random()*4;
-      nuke->s.effects |= EF_GRENADE;
-      nuke->s.effects |= EF_GREENGIB;
-      nuke->s.effects |= EF_ROCKET;
+
+    if (rn < 0.1)
+        nuke->s.effects |= EF_FLAG1;
+    else if (rn >= 0.1 || i < 0.2)
+        nuke->s.effects |= EF_FLAG2;
+    else if (rn >= 0.2 || i < 0.7)
+        nuke->s.effects |= EF_GRENADE;
+    else if (rn >= 0.7 || i < 0.8)
+        nuke->s.effects |= EF_BLASTER;
+    else //(rn >= 0.8 || i < 0.9)
+        nuke->s.effects |= EF_GREENGIB;
 
       VectorSet (nuke->mins, -3, -3, -3);
       VectorSet (nuke->maxs, 3, 3, 3);
       nuke->owner = ent->owner;
-      nuke->delay = 4.5;
+      nuke->delay = 6;
       nuke->think = Cata_Explode;
       nuke->nextthink = level.time; // - FRAMETIME;
       nuke->classname = "nuke";
@@ -4759,9 +4776,7 @@ void Nuke_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf
     }
 }
 
-
-//void fire_nuke (edict_t *self, vec3_t start, vec3_t dir, int speed)
-void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int speed, float timer)
 {
   edict_t	*nuke;
   vec3_t  dir;
@@ -4787,9 +4802,6 @@ void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spee
   //nuke->touch = Nuke_Touch;
   nuke->nextthink = level.time + timer;
   nuke->think = Nuke_Explode;
-  //nuke->think = Nuke_Think;
-  nuke->dmg = damage;
-  nuke->dmg_radius = damage_radius;
   nuke->classname = "nuke";
 
   gi.linkentity (nuke);
@@ -4800,14 +4812,8 @@ void fire_nuke (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spee
 void weapon_nuke_fire (edict_t *ent, qboolean held)
 {
   vec3_t	offset, forward, right, start;
-  int     damage = 2000;
-  float   radius;
   int     speed =600;
 
-  radius = 400;
-  if (is_quad)
-    damage *= 4;
-    
   if (nukestate != NUKE_INACTIVE)
     {
       cprintf2(ent, PRINT_HIGH, "Only one Nuke can be active at the same time...try later!");
@@ -4821,7 +4827,7 @@ void weapon_nuke_fire (edict_t *ent, qboolean held)
   VectorScale (forward, -2, ent->client->kick_origin);
   //gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/nuke.wav"), 1, ATTN_IDLE, 0);
   gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/nuke_l.wav"), 1, ATTN_IDLE, 0);
-  fire_nuke(ent, start, forward, damage, speed, 2.5, radius);
+  fire_nuke(ent, start, forward, speed, 3);
   //gi.dprintf("DEBUG after firenuke\n");
 
   gi.WriteByte (svc_muzzleflash);
