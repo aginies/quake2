@@ -1,8 +1,11 @@
+![](images/chaoslogo.jpg)
+
 # Quake2 Chaos MOD
 
-This **Chaos mod** patched to be buildable on x86_64 and compatible with recent Quake2 game.
-This is based on the latest [source code](https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available.
-The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean, you should used **yquake2** or **Q2Pro** instead. The code is in the ``chaossource`` directory.
+This **Chaos mod** is patched to be buildable on x86_64/x86 and compatible with recent Quake2 game.
+This is based on the latest [source code](https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available. The original version is in master branch and only contains fixes. Other branches are development one and include various new features, and some of this new features came from other mods (Plasma, Rampage, Lithium, Wod etc...).
+
+The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean (its seg fault while running it in dedicated server mode...) , you should used **yquake2** or **Q2Pro** instead. The code is in the ``chaossource`` directory.
 
 The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/), all credits go to the original Chaos team.
 
@@ -12,7 +15,7 @@ The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org
 
 [![Video](images/chaos1.16.1.jpg)](https://youtu.be/DuxaoykNHQA)
 
-You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory. Please delete the ``pak files`` and use the one gziped in this repo (unzip it).
+You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory. Please delete the ``pak files`` and use the one gziped in this repo (unzip it), or you won't be able to get all new models, icons, sounds etc...
 
 You can find more original source at [files.chaoticdreams.org](https://files.chaoticdreams.org/Chaos/ChaosDM/)
 
@@ -34,12 +37,13 @@ On server:
 ./q2proded +set dedicated 1 +set game chaos \
     +set hostname ginies.org  +set public 1 \
     +set allow_download 1 +exec autoexec.cfg \
-    +set sys_console 2 +set sv_status_show 2
+    +set sv_status_show 2
 ```
 
 On client:
 ```
-./q2pro +set game chaos +connect SERVERNAME +exec autoexec.cfg
+./q2pro +set game chaos +connect SERVERNAME \
+    +exec autoexec.cfg +set sys_console 2
 ```
 
 # Binairies release
@@ -50,7 +54,7 @@ Bunzip and copy to ``QUAKE2/chaos`` directory
 
 ## chaos_bin/original_V1.15/
 
-Orignal version of Chaos. ``master`` repository
+Orignal version of Chaos. ``master`` repository.
 
 ## chaos_bin/devel/
 
@@ -118,7 +122,6 @@ Copy the ``gamex86_64.so`` to ``QUAKE2DIR/chaos/`` directory.
 ## Windows
 
 * install mgw-sdk
-* backup the current Makefile
 * use the ``Makefile_mingw` file
 * check the ``.config`` in the directory (adjust path to mgw-sdk binairies)
 * build the dll:
