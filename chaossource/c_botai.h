@@ -11,7 +11,7 @@
 #define	ROCKETLAUNCHER_FREQ		0.8
 #define	HOMINGLAUNCHER_FREQ		0.8
 #define	HYPERBLASTER_FREQ		0
-#define	RAILGUN_FREQ			1.5
+#define	RAILGUN_FREQ			2.5
 #define	BUZZSAW_FREQ			1
 #define BFG_FREQ				2.8
 #define PLASMA_FREQ				0
