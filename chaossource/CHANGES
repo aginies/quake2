@@ -1,6 +1,10 @@
 These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
 
+* use RTX models for weapons, so nice! (https://www.moddb.com/mods/quake2-remodel/addons)
+
+* adjust respawn of items, disable jet as this is causing issue....
+
 * new nuke explosiion using r_explode/tris.md2 from Rampage mod (https://www.moddb.com/mods/rampage-mod)
   and new nuke effect (radiation effect)
 
