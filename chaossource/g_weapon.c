@@ -447,7 +447,7 @@ void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *s
 			gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/grenlb1b.wav"), 1, ATTN_NORM, 0);
 		}
 		return;
-	}
+	} 
 
 	ent->enemy = other;
 	Grenade_Explode (ent);
@@ -568,6 +568,15 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
         T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin,
             plane->normal, ent->dmg, 0, 0, mod);
     }
+
+    if ((surf) && !(surf->flags & (SURF_WARP|SURF_TRANS33|SURF_TRANS66|SURF_FLOWING)))
+    {
+        int         n;
+        n = rand() % 5;
+        while(n--)
+        ThrowDebris (ent, "models/objects/debris2/tris.md2", 2, ent->s.origin);
+   }
+
    // make some glowing shrapnel
     spd = 15.0 * ent->dmg / 200;
     for (i = 0; i < 3; i++)
@@ -684,6 +693,7 @@ void guidedrocket_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int
     self->think = guidedrocket_explode;
     self->nextthink = level.time + FRAMETIME;
 }
+
 void guidedrocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
     if (other == ent->owner)
@@ -703,17 +713,17 @@ void guidedrocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface
     else
     {
         // don't throw any debris in net games
-        if (!deathmatch->value && !coop->value)
-        {
+//        if (!deathmatch->value && !coop->value)
+//        {
             if ((surf) && !(surf->flags & (SURF_WARP|SURF_TRANS33|SURF_TRANS66|SURF_FLOWING)))
             {
                 int         n;
 
                 n = rand() % 5;
                 while(n--)
-                    ThrowDebris (ent, "models/objects/debris2/tris.md2", 2, ent->s.origin);
+                    ThrowDebris (ent, "models/objects/debris2/tris.md3", 2, ent->s.origin);
             }
-        }
+//        }
     }
 
     // Now make the rocket explode.

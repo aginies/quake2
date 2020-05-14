@@ -219,9 +219,9 @@ void DoRespawn (edict_t *ent)
 		else if (strcmp(ent->classname, "item_quad") == 0
 			|| strcmp(ent->classname, "item_silencer") == 0
 			|| strcmp(ent->classname, "item_adrenaline") == 0
-			|| strcmp(ent->classname, "item_invisibility") == 0
-			|| strcmp(ent->classname, "item_jet") == 0
-			|| strcmp(ent->classname, "item_grapple") == 0)
+			|| strcmp(ent->classname, "item_invisibility") == 0)
+//			|| strcmp(ent->classname, "item_jet") == 0)
+//			|| strcmp(ent->classname, "item_grapple") == 0)
 		{
 			rn = random();
 			if (rn < 0.2)
@@ -229,32 +229,35 @@ void DoRespawn (edict_t *ent)
 				item = FindItem("Quad Damage");
 				ent->classname = "item_quad";
 			}
-//			else if (rn >= 0.2 && rn < 0.45)
-//			{
-//				item = FindItem("Silencer");
-//				ent->classname = "item_silencer";
-//			}
+			else if (rn >= 0.75 && rn < 1)
+			{
+				item = FindItem("Silencer");
+				ent->classname = "item_silencer";
+			}
 			else if (rn >= 0.2 && rn < 0.45)
 			{
 				item = FindItem("Adrenaline");
 				ent->classname = "item_adrenaline";
 			}
-			else if (rn >= 0.45 && rn < 0.75)
+			else //if (rn >= 0.45 && rn < 0.75)
 			{
 				item = FindItem("Invisibility");
 				ent->classname = "item_invisibility";
 			}
-//			else if (rn >= 0.75 && rn < 1)
-			else
+            /*
+			else if (rn >= 0.75 && rn < 1)
+
 			{
+            gi.dprintf("DEBUG 4\n");
 				item = FindItem("Jetpack");
 				ent->classname = "item_jet";
 			}
-//			else
-//			{
-//				item = it_grapple;
-//				ent->classname = "item_grapple";
-//			}
+			else
+			{
+				item = it_grapple;
+				ent->classname = "item_grapple";
+			}
+			*/
 			newit = 1;
 		}
 		else if (strcmp(ent->classname, "ammo_grenades") == 0
@@ -980,11 +983,11 @@ void DoRespawn (edict_t *ent)
 				item = FindItem("Jetpack");
 				ent->classname = "item_jet";
 			}
-			else if (ban_grapple->value == 0)
-			{
-				item = it_grapple;
-				ent->classname = "item_grapple";
-			}
+//			else if (ban_grapple->value == 0)
+//			{
+//				item = it_grapple;
+//				ent->classname = "item_grapple";
+//			}
 			else if (ban_invisibility->value == 0)
 			{
 				item = FindItem("Invisibility");
@@ -995,11 +998,11 @@ void DoRespawn (edict_t *ent)
 				item = FindItem("Adrenaline");
 				ent->classname = "item_adrenaline";
 			}
-			else if (ban_silencer->value == 0)
-			{
-				item = FindItem("Silencer");
-				ent->classname = "item_silencer";
-			}		
+//			else if (ban_silencer->value == 0)
+//			{
+//				item = FindItem("Silencer");
+//				ent->classname = "item_silencer";
+//			}		
 			else
 			{
 				G_FreeEdict (ent);
@@ -1008,12 +1011,12 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "item_jet") == 0 && ban_jetpack->value > 0)
 		{
-			if (ban_grapple->value == 0)
-			{
-				item = it_grapple;
-				ent->classname = "item_grapple";
-			}
-			else if (ban_invisibility->value == 0)
+//			if (ban_grapple->value == 0)
+//			{
+//				item = it_grapple;
+//				ent->classname = "item_grapple";
+//			}
+			if (ban_invisibility->value == 0)
 			{
 				item = FindItem("Invisibility");
 				ent->classname = "item_invisibility";
@@ -1023,11 +1026,11 @@ void DoRespawn (edict_t *ent)
 				item = FindItem("Adrenaline");
 				ent->classname = "item_adrenaline";
 			}
-			else if (ban_silencer->value == 0)
-			{
-				item = FindItem("Silencer");
-				ent->classname = "item_silencer";
-			}
+//			else if (ban_silencer->value == 0)
+//			{
+//				item = FindItem("Silencer");
+//				ent->classname = "item_silencer";
+//			}
 			else if (ban_quaddamage->value == 0)
 			{
 				item = FindItem("Quad Damage");
@@ -1039,6 +1042,7 @@ void DoRespawn (edict_t *ent)
 				return;
 			}
 		}
+        /*
 		else if (strcmp(ent->classname, "item_grapple") == 0 && ban_grapple->value > 0)
 		{
 			if (ban_invisibility->value == 0)
@@ -1072,6 +1076,7 @@ void DoRespawn (edict_t *ent)
 				return;
 			}
 		}
+        */
 		else if (strcmp(ent->classname, "item_invisibility") == 0 && ban_invisibility->value > 0)
 		{
 			if (ban_adrenaline->value == 0)
@@ -1079,11 +1084,11 @@ void DoRespawn (edict_t *ent)
 				item = FindItem("Adrenaline");
 				ent->classname = "item_adrenaline";
 			}
-			else if (ban_silencer->value == 0)
-			{
-				item = FindItem("Silencer");
-				ent->classname = "item_silencer";
-			}
+//			else if (ban_silencer->value == 0)
+//			{
+//				item = FindItem("Silencer");
+//				ent->classname = "item_silencer";
+//			}
 			else if (ban_quaddamage->value == 0)
 			{
 				item = FindItem("Quad Damage");
@@ -1094,11 +1099,11 @@ void DoRespawn (edict_t *ent)
 				item = FindItem("Jetpack");
 				ent->classname = "item_jet";
 			}
-			else if (ban_invisibility->value == 0)
-			{
-				item = it_grapple;
-				ent->classname = "item_grapple";
-			}
+//			else if (ban_invisibility->value == 0)
+//			{
+//				item = it_grapple;
+//				ent->classname = "item_grapple";
+//			}
 			else
 			{
 				G_FreeEdict (ent);
@@ -1107,12 +1112,12 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "item_adrenaline") == 0 && ban_adrenaline->value > 0)
 		{
-			if (ban_silencer->value == 0)
-			{
-				item = FindItem("Silencer");
-				ent->classname = "item_silencer";
-			}
-			else if (ban_quaddamage->value == 0)
+//			if (ban_silencer->value == 0)
+//			{
+//				item = FindItem("Silencer");
+//				ent->classname = "item_silencer";
+//			}
+			if (ban_quaddamage->value == 0)
 			{
 				item = FindItem("Quad Damage");
 				ent->classname = "item_quad";
@@ -1122,11 +1127,11 @@ void DoRespawn (edict_t *ent)
 				item = FindItem("Jetpack");
 				ent->classname = "item_jet";
 			}
-			else if (ban_invisibility->value == 0)
-			{
-				item = it_grapple;
-				ent->classname = "item_grapple";
-			}
+//			else if (ban_invisibility->value == 0)
+//			{
+//				item = it_grapple;
+//				ent->classname = "item_grapple";
+//			}
 			else if (ban_adrenaline->value == 0)
 			{
 				item = FindItem("Invisibility");
@@ -1138,6 +1143,7 @@ void DoRespawn (edict_t *ent)
 				return;
 			}
 		}
+        /*
 		else if (strcmp(ent->classname, "item_silencer") == 0 && ban_silencer->value > 0)
 		{
 			if (ban_quaddamage->value == 0)
@@ -1171,6 +1177,7 @@ void DoRespawn (edict_t *ent)
 				return;
 			}
 		}
+        */
 		
 		VectorCopy(ent->spawnorigin, ent->s.origin);
 		ent->nextthink = level.time + 0.1;
@@ -1793,7 +1800,7 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 
 	if (weapon && !oldcount)
 	{
-		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
+//		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("AK42 Assault Pistol") ) )
 if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("MK23 Dual") ) )
 			other->client->newweapon = ent->item;
 	}
@@ -2565,11 +2572,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		}
 	}
 	else if (strcmp(ent->classname, "item_quad") == 0
-		|| strcmp(ent->classname, "item_silencer") == 0
+//		|| strcmp(ent->classname, "item_silencer") == 0
 		|| strcmp(ent->classname, "item_adrenaline") == 0
-		|| strcmp(ent->classname, "item_invisibility") == 0
-		|| strcmp(ent->classname, "item_jet") == 0
-		|| strcmp(ent->classname, "item_grapple") == 0)
+		|| strcmp(ent->classname, "item_invisibility") == 0)
+//		|| strcmp(ent->classname, "item_jet") == 0)
+//		|| strcmp(ent->classname, "item_grapple") == 0)
 	{
 		rn = random();
 		if (rn < 0.2)
@@ -2587,16 +2594,16 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = FindItem("Adrenaline");
 			ent->classname = "item_adrenaline";
 		}
-		else if (rn >= 0.45 && rn < 0.70)
+		else //(rn >= 0.45 && rn < 0.70)
 		{
 			item = FindItem("Invisibility");
 			ent->classname = "item_invisibility";
 		}
-		else
-		{
-			item = FindItem("Jetpack");
-			ent->classname = "item_jet";
-		}
+//		else
+//		{
+//			item = FindItem("Jetpack");
+//			ent->classname = "item_jet";
+//		}
 //		else
 //		{
 //			item = it_grapple;
@@ -3264,11 +3271,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = FindItem("Jetpack");
 			ent->classname = "item_jet";
 		}
-		else if (ban_grapple->value == 0)
-		{
-			item = it_grapple;
-			ent->classname = "item_grapple";
-		}
+//		else if (ban_grapple->value == 0)
+//		{
+//			item = it_grapple;
+//			ent->classname = "item_grapple";
+//		}
 		else if (ban_invisibility->value == 0)
 		{
 			item = FindItem("Invisibility");
@@ -3279,11 +3286,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = FindItem("Adrenaline");
 			ent->classname = "item_adrenaline";
 		}
-		else if (ban_silencer->value == 0)
-		{
-			item = FindItem("Silencer");
-			ent->classname = "item_silencer";
-		}		
+//		else if (ban_silencer->value == 0)
+//		{
+//			item = FindItem("Silencer");
+//			ent->classname = "item_silencer";
+//		}		
 		else
 		{
 			G_FreeEdict (ent);
@@ -3292,12 +3299,12 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "item_jet") == 0 && ban_jetpack->value > 0)
 	{
-		if (ban_grapple->value == 0)
-		{
-			item = it_grapple;
-			ent->classname = "item_grapple";
-		}
-		else if (ban_invisibility->value == 0)
+//		if (ban_grapple->value == 0)
+//		{
+//			item = it_grapple;
+//			ent->classname = "item_grapple";
+//		}
+		if (ban_invisibility->value == 0)
 		{
 			item = FindItem("Invisibility");
 			ent->classname = "item_invisibility";
@@ -3307,11 +3314,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = FindItem("Adrenaline");
 			ent->classname = "item_adrenaline";
 		}
-		else if (ban_silencer->value == 0)
-		{
-			item = FindItem("Silencer");
-			ent->classname = "item_silencer";
-		}
+//		else if (ban_silencer->value == 0)
+//		{
+//			item = FindItem("Silencer");
+//			ent->classname = "item_silencer";
+//		}
 		else if (ban_quaddamage->value == 0)
 		{
 			item = FindItem("Quad Damage");
@@ -3323,6 +3330,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
+    /*
 	else if (strcmp(ent->classname, "item_grapple") == 0 && ban_grapple->value > 0)
 	{
 		if (ban_invisibility->value == 0)
@@ -3356,6 +3364,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
+    */
 	else if (strcmp(ent->classname, "item_invisibility") == 0 && ban_invisibility->value > 0)
 	{
 		if (ban_adrenaline->value == 0)
@@ -3363,11 +3372,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = FindItem("Adrenaline");
 			ent->classname = "item_adrenaline";
 		}
-		else if (ban_silencer->value == 0)
-		{
-			item = FindItem("Silencer");
-			ent->classname = "item_silencer";
-		}
+//		else if (ban_silencer->value == 0)
+//		{
+//			item = FindItem("Silencer");
+//			ent->classname = "item_silencer";
+//		}
 		else if (ban_quaddamage->value == 0)
 		{
 			item = FindItem("Quad Damage");
@@ -3378,11 +3387,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			item = FindItem("Jetpack");
 			ent->classname = "item_jet";
 		}
-		else if (ban_invisibility->value == 0)
-		{
-			item = it_grapple;
-			ent->classname = "item_grapple";
-		}
+//		else if (ban_invisibility->value == 0)
+//		{
+//			item = it_grapple;
+//			ent->classname = "item_grapple";
+//		}
 		else
 		{
 			G_FreeEdict (ent);
@@ -3391,26 +3400,27 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "item_adrenaline") == 0 && ban_adrenaline->value > 0)
 	{
-		if (ban_silencer->value == 0)
-		{
-			item = FindItem("Silencer");
-			ent->classname = "item_silencer";
-		}
-		else if (ban_quaddamage->value == 0)
+//		if (ban_silencer->value == 0)
+//		{
+//			item = FindItem("Silencer");
+//			ent->classname = "item_silencer";
+//		}
+		if (ban_quaddamage->value == 0)
 		{
 			item = FindItem("Quad Damage");
 			ent->classname = "item_quad";
 		}
 		else if (ban_jetpack->value == 0)
 		{
+
 			item = FindItem("Jetpack");
 			ent->classname = "item_jet";
 		}
-		else if (ban_invisibility->value == 0)
-		{
-			item = it_grapple;
-			ent->classname = "item_grapple";
-		}
+//		else if (ban_invisibility->value == 0)
+//		{
+//			item = it_grapple;
+//			ent->classname = "item_grapple";
+//		}
 		else if (ban_adrenaline->value == 0)
 		{
 			item = FindItem("Invisibility");
@@ -3422,6 +3432,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
+    /*
 	else if (strcmp(ent->classname, "item_silencer") == 0 && ban_silencer->value > 0)
 	{
 		if (ban_quaddamage->value == 0)
@@ -3455,6 +3466,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
+    */
 
 	VectorCopy(ent->s.origin, ent->spawnorigin);
 
@@ -3705,7 +3717,7 @@ always owned, never in the world
         WEAP_SWORD,
 		NULL,
 		0,
-/* precache */
+/* precache */ "weapons/sabre/idle.wav weapons/sabre/on.wav weapons/sabre/off.wav weapons/sabre/strike1.wav weapons/sabre/strike2.wav weapons/sabre/swing1.wav weapons/sabre/swing2.wav weapons/sabre/swing3.wav weapons/sabre/swing4.wav"
 	},
 
 /*QUAKED weapon_chainsaw (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -3811,7 +3823,7 @@ always owned, never in the world
 		Weapon_Shotgun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_shotg/tris.md2", EF_ROTATE,
-		"models/weapons/v_shotg/tris.md2",
+		"models/weapons/v_shotg/tris.md3",
 /* icon */		"w_shotgun",
 /* pickup */	"Shotgun",
 		0,
@@ -3834,7 +3846,7 @@ always owned, never in the world
 		Weapon_SuperShotgun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_shotg2/tris.md2", EF_ROTATE,
-		"models/weapons/v_shotg2/tris.md2",
+		"models/weapons/v_shotg2/tris.md3",
 /* icon */		"w_sshotgun",
 /* pickup */	"Super Shotgun",
 		0,
@@ -3857,7 +3869,7 @@ always owned, never in the world
 		Weapon_ExplosiveSuperShotgun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_eshot2/tris.md2", EF_ROTATE,
-		"models/weapons/v_eshot2/tris.md2",
+		"models/weapons/v_eshot2/tris.md3",
 /* icon */		"w_esshotgun",
 /* pickup */	"Explosive Super Shotgun",
 		0,
@@ -4064,7 +4076,7 @@ always owned, never in the world
 		Weapon_GrenadeLauncher,
 		"misc/w_pkup.wav",
 		"models/weapons/g_launch/tris.md2", EF_ROTATE,
-		"models/weapons/v_launch/tris.md2",
+		"models/weapons/v_launch/tris.md3",
 /* icon */		"w_glauncher1",
 /* pickup */	"Grenade Launcher",
 		0,
@@ -4087,7 +4099,7 @@ always owned, never in the world
 		Weapon_FlashGrenadeLauncher,
 		"misc/w_pkup.wav",
 		"models/weapons/g_flalau/tris.md2", EF_ROTATE,
-		"models/weapons/v_flalau/tris.md2",
+		"models/weapons/v_flalau/tris.md3",
 /* icon */		"w_flauncher",
 /* pickup */	"Flash Grenade Launcher",
 		0,
@@ -4110,7 +4122,7 @@ always owned, never in the world
 		Weapon_PoisonGrenadeLauncher,
 		"misc/w_pkup.wav",
 		"models/weapons/g_poilau/tris.md2", EF_ROTATE,
-		"models/weapons/v_poilau/tris.md2",
+		"models/weapons/v_poilau/tris.md3",
 /* icon */		"w_plauncher",
 /* pickup */	"Poison Grenade Launcher",
 		0,
@@ -4156,7 +4168,7 @@ always owned, never in the world
 		Weapon_RocketLauncher,
 		"misc/w_pkup.wav",
 		"models/weapons/g_rocket/tris.md2", EF_ROTATE,
-		"models/weapons/v_rocket/tris.md2",
+		"models/weapons/v_rocket/tris.md3",
 /* icon */		"w_rlauncher",
 /* pickup */	"Rocket Launcher",
 		0,
@@ -4179,7 +4191,7 @@ always owned, never in the world
 		Weapon_HomingLauncher,
 		"misc/w_pkup.wav",
 		"models/weapons/g_guided/tris.md2", EF_ROTATE,
-		"models/weapons/v_guided/tris.md2",
+		"models/weapons/v_guided/tris.md3",
 /* icon */		"w_grlauncher",
 /* pickup */	"Homing Missile Launcher",
 		0,
@@ -4202,7 +4214,7 @@ always owned, never in the world
 		Weapon_HyperBlaster,
 		"misc/w_pkup.wav",
 		"models/weapons/g_hyperb/tris.md2", EF_ROTATE,
-		"models/weapons/v_hyperb/tris.md2",
+		"models/weapons/v_hyperb/tris.md3",
 /* icon */		"w_hyperblaster",
 /* pickup */	"HyperBlaster",
 		0,
@@ -4225,7 +4237,7 @@ always owned, never in the world
 		Weapon_Railgun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_rail/tris.md2", EF_ROTATE,
-		"models/weapons/v_rail/tris.md2",
+		"models/weapons/v_rail/tris.md3",
 /* icon */		"w_railgun",
 /* pickup */	"Railgun",
 		0,
@@ -4271,7 +4283,7 @@ always owned, never in the world
 		Weapon_BFG,
 		"misc/w_pkup.wav",
 		"models/weapons/g_bfg/tris.md2", EF_ROTATE,
-		"models/weapons/v_bfg/tris.md2",
+		"models/weapons/v_bfg/tris.md3",
 /* icon */		"w_bfg",
 /* pickup */	"BFG10K",
 		0,
@@ -4342,7 +4354,7 @@ always owned, never in the world
 		Weapon_Nuke,
 		"misc/am_pkup.wav",
         "models/objects/nuke/tris.md2", EF_ROTATE,
-        "models/weapons/v_nuke/tris.md2",
+        "models/weapons/v_nuke/tris.md3",
 /* icon */		"a_nuke",
 /* pickup */	"Nuke",
 /* width */		3,
@@ -4696,7 +4708,6 @@ always owned, never in the world
          NULL,
          "items/pkup.wav",
          "models/items/jet/tris.md2", EF_ROTATE, 
-
          NULL,
        /* icon */   "p_jet",
        /* pickup */ "Jetpack",
@@ -4743,7 +4754,7 @@ always owned, never in the world
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/invulner/tris.md2", EF_ROTATE,
+		"models/items/invulner/tris.md3", EF_ROTATE,
 		NULL,
 /* icon */		"p_invulnerability",
 /* pickup */	"Invulnerability",
@@ -4766,7 +4777,7 @@ always owned, never in the world
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/silencer/tris.md2", EF_ROTATE,
+		"models/items/silencer/tris.md3", EF_ROTATE,
 		NULL,
 /* icon */		"p_silencer",
 /* pickup */	"Silencer",
@@ -4835,7 +4846,7 @@ always owned, never in the world
 		Drop_General,
 		NULL,
 		"items/pkup.wav",
-		"models/items/enviro/tris.md2", EF_ROTATE,
+		"models/items/enviro/tris.md3", EF_ROTATE,
 		NULL,
 /* icon */		"p_envirosuit",
 /* pickup */	"Environment Suit",
@@ -5411,7 +5422,7 @@ void SP_item_health_mega (edict_t *self)
 		return;
 	}
 
-	self->model = "models/items/mega_h/tris.md2";
+	self->model = "models/items/mega_h/tris.md3";
 	self->count = 100;
 	SpawnItem (self, FindItem ("Health"));
 	gi.soundindex ("items/m_health.wav");

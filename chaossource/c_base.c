@@ -503,7 +503,7 @@ void PreCacheAll()
 	gi.modelindex ("models/weapons/g_sword/tris.md2");
 	gi.modelindex ("models/weapons/v_chsaw/tris.md2");
 	gi.modelindex ("models/weapons/g_chsaw/tris.md2");
-	gi.modelindex ("models/weapons/v_eshot2/tris.md2");
+	gi.modelindex ("models/weapons/v_eshot2/tris.md3");
 	gi.modelindex ("models/weapons/g_eshot2/tris.md2");
 	gi.modelindex ("models/weapons/v_bow/tris.md2");
 	gi.modelindex ("models/weapons/g_bow/tris.md2");
@@ -513,9 +513,9 @@ void PreCacheAll()
 	gi.modelindex ("models/weapons/g_ebow/tris.md2");
 	gi.modelindex ("models/weapons/v_air/tris.md2");
 	gi.modelindex ("models/weapons/g_air/tris.md2");
-	gi.modelindex ("models/weapons/v_flalau/tris.md2");
+	gi.modelindex ("models/weapons/v_flalau/tris.md3");
 	gi.modelindex ("models/weapons/g_flalau/tris.md2");
-	gi.modelindex ("models/weapons/v_poilau/tris.md2");
+	gi.modelindex ("models/weapons/v_poilau/tris.md3");
 	gi.modelindex ("models/weapons/g_poilau/tris.md2");
 	gi.modelindex ("models/weapons/v_proxyl/tris.md2");
 	gi.modelindex ("models/weapons/g_proxyl/tris.md2");

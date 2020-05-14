@@ -25,13 +25,13 @@ void make_debris (edict_t *ent)
 	org[0] = ent->s.origin[0] + crandom() * ent->size[0];
 	org[1] = ent->s.origin[1] + crandom() * ent->size[1];
 	org[2] = ent->s.origin[2] + crandom() * ent->size[2];
-	ThrowShrapnel (ent, "models/objects/debris1/tris.md2", spd, org);
+	ThrowShrapnel (ent, "models/objects/debris1/tris.md3", spd, org);
 	spd = 1.5 * (float)ent->dmg / 200.0;
 	VectorCopy (ent->absmin, org);
-	ThrowShrapnel (ent, "models/objects/debris2/tris.md2", spd, org);
+	ThrowShrapnel (ent, "models/objects/debris2/tris.md3", spd, org);
 	spd = 1.5 * (float)ent->dmg / 200.0;
 	VectorCopy (ent->absmin, org);
-	ThrowShrapnel (ent, "models/objects/debris3/tris.md2", spd, org);
+	ThrowShrapnel (ent, "models/objects/debris3/tris.md3", spd, org);
 }
 
 /*
