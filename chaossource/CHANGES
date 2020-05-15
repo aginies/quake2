@@ -1,6 +1,8 @@
 These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
 
+* add C4 cellsi bomb: "togglec4" to trigger the explosion
+
 * fix respawn bug while picking up JetPack this avoid respawing new item
 
 * remove teleporter entity if client disconnect from the server
