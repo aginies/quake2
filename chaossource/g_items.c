@@ -29,6 +29,7 @@ void Weapon_PlasmaRifle(edict_t *ent);
 // MATTHIAS
 void Weapon_FlashGrenade (edict_t *ent);
 void Weapon_LaserGrenade (edict_t *ent);
+void Weapon_C4 (edict_t *ent);
 void Weapon_PoisonGrenade (edict_t *ent);
 void Weapon_ProxyMineLauncher (edict_t *ent);
 void Weapon_FlashGrenadeLauncher (edict_t *ent);
@@ -178,18 +179,25 @@ void DoRespawn (edict_t *ent)
 		newit = 0;
 
 		if (strcmp(ent->classname, "ammo_shells") == 0
+			|| strcmp(ent->classname, "ammo_c4") == 0
 			|| strcmp(ent->classname, "ammo_explosiveshells") == 0)
 		{
-			if (random() < 0.3)
+            rn = random();
+			if (rn >= 0 && rn <= 0.3)
 			{
 				item = it_eshells;
 				ent->classname = "ammo_explosiveshells";
 			}
-			else
+			else if (rn >= 0.3 && rn <= 0.8)
 			{
 				item = it_shells;
 				ent->classname = "ammo_shells";
 			}
+            else
+            {
+				item = it_c4;
+				ent->classname = "ammo_c4";
+            }
 			newit = 1;
 		}
 		else if (strcmp(ent->classname, "ammo_arrows") == 0
@@ -1723,6 +1731,8 @@ qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 		max = ent->client->pers.max_rockets;
 	else if (item->tag == AMMO_GRENADES)
 		max = ent->client->pers.max_grenades;
+	else if (item->tag == AMMO_C4)
+		max = ent->client->pers.max_c4;
 	else if (item->tag == AMMO_CELLS)
 		max = ent->client->pers.max_cells;
 	else if (item->tag == AMMO_SLUGS)
@@ -3941,6 +3951,29 @@ always owned, never in the world
 /* precache */ "air/agfail.wav air/agfire.wav air/agwater.wav air/fly.wav"
 	},
 
+/*QUAKED c4_ammo (0 .5 .8) (-16 -16 -16) (16 16 16)
+*/
+	{
+		"ammo_c4",
+		Pickup_Ammo,
+		Use_Weapon,
+		Drop_Ammo,
+		Weapon_C4,
+		"items/pkup.wav",
+		"models/items/ammo/c4/tris.md3", EF_ROTATE,
+		"models/weapons/v_c4/tris.md2",
+		"a_c4cells",
+		"C4",
+		1,
+		1,
+		"c4",
+		IT_AMMO|IT_WEAPON,
+        0,
+		NULL,
+		AMMO_C4,
+/* precache */ ""
+	},
+
 /*QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
@@ -5469,6 +5502,7 @@ void SetItemNames (void)
 	it_lasermines = FindItem("Laser Mines");
 	it_poisongrenades = FindItem("poison grenades");
 	it_proxymines = FindItem("proximity mines");
+    it_c4 = FindItem("c4");
 
 	it_ak42	= FindItem("AK42 Assault Pistol");
     it_dual = FindItem("MK23 Dual");

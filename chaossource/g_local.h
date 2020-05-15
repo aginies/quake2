@@ -95,6 +95,7 @@ typedef enum
 	AMMO_SHELLS,
 	AMMO_ROCKETS,
 	AMMO_GRENADES,
+    AMMO_C4,
 	AMMO_CELLS,
 	AMMO_SLUGS,
 	AMMO_EXPLOSIVESHELLS,
@@ -523,6 +524,7 @@ extern	int	body_armor_index;
 #define MOD_JEDI            55
 #define MOD_ESSHOT_SPLASH  56
 #define MOD_DUAL			57
+#define MOD_C4              58
 
 #define MOD_FRIENDLY_FIRE	0x8000000
 
@@ -837,6 +839,7 @@ typedef struct
 	int			max_shells;
 	int			max_rockets;
 	int			max_grenades;
+	int			max_c4;
 	int			max_cells;
 	int			max_slugs;
 	int			max_eshells;
@@ -965,6 +968,7 @@ struct gclient_s
 	float		nextheartbeat;
 	float		nextvomit;
 	int			grenadesactive;
+	int			c4active;
 	int			scanneractive;
 	int			beltactive;
 	int			flashlightactive;
@@ -1266,6 +1270,7 @@ cvar_t	*defence_turret_ammo;
 cvar_t	*rocket_turret_ammo;
 cvar_t	*dntg;
 cvar_t	*lasermine_health;
+cvar_t	*c4_health;
 cvar_t	*ex_arrow_damage;
 cvar_t	*ex_arrow_radius;
 cvar_t	*cosg; // FWP Debugging var, core on shutdown game

@@ -2804,7 +2804,6 @@ void LaserMine_Explode (edict_t *ent)
 
 	G_FreeEdict (ent);
 
-
 }
 
 void LaserMine_Die (edict_t *ent, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
@@ -3434,6 +3433,275 @@ void Weapon_PoisonGrenade (edict_t *ent)
 			ent->client->weaponstate = WEAPON_READY;
 		}
 	}
+}
+
+//----------------------------------------------------------------------------------------------
+// C4 
+//----------------------------------------------------------------------------------------------
+
+void C4_Die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point);
+
+void C4_Explode (edict_t *ent)
+{
+    vec3_t      offset, v;
+    edict_t     *target;
+
+    VectorSet(offset, 0, 0, 10);
+    VectorAdd(ent->s.origin, offset, ent->s.origin);
+
+    if (ent->owner && ent->owner->client)
+        PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
+
+    target = NULL;
+    while ((target = findradius(target, ent->s.origin, 200)) != NULL)
+    {
+        if (!target->client)
+            continue;
+        if (!visible(ent, target))
+            continue;
+        if (target->client->camera)
+            continue;
+        if (target->client->invincible_framenum > level.framenum) // invulnerable
+            continue;
+        if (target->flags & FL_GODMODE) // god
+            continue;
+
+        VectorSubtract(ent->s.origin, target->s.origin, v);
+
+        T_Damage (target, ent, ent, target->velocity, target->s.origin, target->velocity, 95, 1, DAMAGE_ENERGY, MOD_C4);
+    }
+
+   // shake view
+    T_ShockWave(ent, 255, 1024);
+    // let blast move items
+    T_ShockItems(ent);
+    // do some debris
+    make_debris (ent);
+
+    int n;
+    for(n = 0; n < 10; n++)
+    {
+    VectorMA (ent->s.origin, 0.07, ent->velocity, ent->s.origin);
+    ent->s.origin[0] = ent->s.origin[0] + 16*crandom();
+    ent->s.origin[1] = ent->s.origin[1] + 26*crandom();
+    ent->s.origin[2] = ent->s.origin[2] + 36*crandom();
+    gi.WriteByte (svc_temp_entity);
+    //gi.WriteByte (TE_GRENADE_EXPLOSION);
+    gi.WriteByte (TE_BFG_BIGEXPLOSION);
+    gi.WritePosition (ent->s.origin);
+    gi.multicast (ent->s.origin, MULTICAST_PHS);
+    }
+    // explose all C4 one by one
+    ent->owner->client->c4active = 0;
+
+	G_FreeEdict (ent);
+}
+
+void C4_Die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
+{
+	self->takedamage = DAMAGE_NO;
+	self->think = C4_Explode;
+}
+
+void C4_Think (edict_t *ent)
+{
+
+	ent->nextthink = level.time;
+	if (ent->owner && ent->owner->client && ent->owner->client->c4active == 0) 
+    {
+    	return;
+    }
+    else if (ent->owner->deadflag == DEAD_DEAD) 
+    {
+        gi.dprintf("DEBUG your are DEAD killing all C4!\n");
+        C4_Explode(ent);
+        return;
+    }
+    else if (ent->owner && ent->owner->client && ent->owner->client->c4active == 1)
+    {
+        gi.dprintf("%s Triggered a Cells explosion!\n", ent->owner->client->pers.netname);
+        C4_Explode(ent);
+        return;
+    } else {
+        gi.dprintf("DEBUG Should not be there at all! C4_Think\n");
+    }
+}
+
+void C4_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+	if (other == ent->owner)
+		return;
+
+	if (surf && (surf->flags & SURF_SKY))
+	{
+		G_FreeEdict (ent);
+		return;
+	}
+
+    if (Q_stricmp(other->classname,"info_player_deathmatch") == 0
+        || Q_stricmp(other->classname,"info_player_start") == 0
+        || Q_stricmp(other->classname, "func_door") == 0
+        || Q_stricmp(other->classname, "func_plat") == 0)
+    {
+        T_RadiusDamage (ent, ent, 60, NULL, 60, MOD_C4);
+        gi.WriteByte (svc_temp_entity);
+        gi.WriteByte (TE_EXPLOSION1);
+        gi.WritePosition(ent->s.origin);
+        gi.multicast (ent->s.origin, MULTICAST_PVS);
+        G_FreeEdict (ent);
+        return;
+    }
+
+     ent->think = C4_Think;
+     ent->nextthink = level.time;
+     ent->touch = NULL;
+     ent->movetype = MOVETYPE_NONE;
+     ent->health = c4_health->value;
+     ent->s.sound  = gi.soundindex ("world/laser.wav");
+     ent->classname = "c4";
+     ent->solid = SOLID_BBOX;
+     ent->delay = level.time;
+     ent->s.effects |= EF_PENT;
+     
+}
+
+void fire_c4 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float damage_radius)
+{
+    edict_t *c4;
+    vec3_t  dir;
+    vec3_t  forward, right, up;
+
+    vectoangles (aimdir, dir);
+    AngleVectors (dir, forward, right, up);
+
+    c4 = G_Spawn();
+    VectorCopy (start, c4->s.origin);
+    VectorScale (aimdir, speed, c4->velocity);
+    VectorMA (c4->velocity, 200 + crandom() * 10.0, up, c4->velocity);
+    VectorMA (c4->velocity, crandom() * 10.0, right, c4->velocity);
+    VectorSet (c4->avelocity, 300, 300, 300);
+    c4->movetype = MOVETYPE_BOUNCE;
+//    c4->clipmask = MASK_SHOT;
+    c4->solid = SOLID_BBOX;
+    c4->s.effects |= EF_PENT;
+    VectorClear (c4->mins);
+    VectorClear (c4->maxs);
+    c4->s.modelindex = gi.modelindex ("models/objects/hgc4/tris.md2");
+    c4->owner = self;
+    c4->touch = C4_Touch;
+    c4->s.sound = gi.soundindex("weapons/hgrenc1b.wav");
+    c4->health = 120;
+    c4->mass = 2;
+    c4->die = C4_Die;
+    c4->think = C4_Explode;
+    c4->classname = "c4";
+    c4->takedamage = DAMAGE_YES;
+    gi.sound (self, CHAN_WEAPON, gi.soundindex ("weapons/hgrent1a.wav"), 1, ATTN_NORM, 0);
+    gi.linkentity (c4);
+}
+
+void weapon_c4_fire (edict_t *ent, qboolean held)
+{
+    vec3_t  offset;
+    vec3_t  forward, right;
+    vec3_t  start;
+    int     damage = 125;
+    float   radius;
+
+    radius = damage+40;
+    if (is_quad)
+        damage *= 4;
+
+    VectorSet(offset, 8, 8, ent->viewheight-8);
+    AngleVectors (ent->client->v_angle, forward, right, NULL);
+    P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+
+    fire_c4 (ent, start, forward, damage, 600, radius);
+
+    //vwep
+    if (ent->client->ps.pmove.pm_flags & PMF_DUCKED && ent->health > 0)
+    {
+        ent->client->anim_priority = ANIM_ATTACK;
+        ent->s.frame = FRAME_crattak1-1;
+        ent->client->anim_end = FRAME_crattak3;
+    }
+    else if(ent->s.modelindex != 255 && ent->health > 0)
+    {
+        ent->client->anim_priority = ANIM_REVERSE;
+        ent->s.frame = FRAME_wave08;
+        ent->client->anim_end = FRAME_wave01;
+    }
+
+    if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+        ent->client->pers.inventory[ent->client->ammo_index]--;
+}
+
+void Weapon_C4 (edict_t *ent)
+{
+    if ((ent->client->newweapon) && (ent->client->weaponstate == WEAPON_READY))
+    {
+        ChangeWeapon (ent);
+        return;
+    }
+
+    if (ent->client->weaponstate == WEAPON_ACTIVATING)
+    {
+        ent->client->weaponstate = WEAPON_READY;
+        ent->client->ps.gunframe = 16;
+        return;
+    }
+
+    if (ent->client->weaponstate == WEAPON_READY)
+    {
+        if ( ((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK) )
+        {
+            ent->client->latched_buttons &= ~BUTTON_ATTACK;
+            if (ent->client->pers.inventory[ent->client->ammo_index])
+            {
+                ent->client->ps.gunframe = 1;
+                ent->client->weaponstate = WEAPON_FIRING;
+            }
+            else
+            {
+                if (level.time >= ent->pain_debounce_time)
+                {
+                    gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
+                    ent->pain_debounce_time = level.time + 1;
+                }
+                NoAmmoWeaponChange (ent);
+            }
+            return;
+        }
+
+        if ((ent->client->ps.gunframe == 29) || (ent->client->ps.gunframe == 34) || (ent->client->ps.gunframe == 39) || (ent->client->ps.gunframe == 48))
+        {
+            if (rand()&15)
+                return;
+        }
+
+        if (++ent->client->ps.gunframe > 48)
+            ent->client->ps.gunframe = 16;
+        return;
+    }
+
+    if (ent->client->weaponstate == WEAPON_FIRING)
+    {
+        if (ent->client->ps.gunframe == 5)
+            gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/hgrena1b.wav"), 1, ATTN_NORM, 0);
+
+        if (ent->client->ps.gunframe == 12)
+        {
+            ent->client->weapon_sound = 0;
+            weapon_c4_fire (ent, false);
+        }
+
+        ent->client->ps.gunframe++;
+
+        if (ent->client->ps.gunframe == 16)
+        {
+            ent->client->weaponstate = WEAPON_READY;
+        }
+    }
 }
 
 //----------------------------------------------------------------------------------------------
@@ -4146,6 +4414,11 @@ int Valid_Target( edict_t *ent, edict_t *blip )
 			 || Q_stricmp(blip->classname, "bfg blast") == 0
 			 || Q_stricmp(blip->classname, "blackholestuff") == 0 )
 			  return true;
+			break;
+
+	  	case 'c':
+            if( Q_stricmp(blip->classname, "c4") == 0 )
+                    return true;
 			break;
 
 		case 'e':

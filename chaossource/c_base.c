@@ -274,6 +274,7 @@ void GetSettings()
 	defence_turret_ammo = gi.cvar("defence_turret_ammo", "1000", CVAR_SERVERINFO);
 	rocket_turret_ammo = gi.cvar("rocket_turret_ammo", "90", CVAR_SERVERINFO);
 	lasermine_health = gi.cvar("lasermine_health", "150", CVAR_LATCH);
+	c4_health = gi.cvar("c4_health", "150", CVAR_LATCH);
         // FWP Set ex arrow strngth and radius from server var 
 	ex_arrow_damage = gi.cvar("ex_arrow_damage", "80", CVAR_LATCH);
 	ex_arrow_radius = gi.cvar("ex_arrow_radius", "200", CVAR_LATCH);
@@ -368,6 +369,7 @@ void GetSettings()
 	start_powerscreen = gi.cvar("start_powerscreen", "0", CVAR_LATCH);
 	start_powershield = gi.cvar("start_powershield", "0", CVAR_LATCH);
 	start_ammo_grenades = gi.cvar("start_ammo_grenades", "0", CVAR_LATCH);
+	start_ammo_c4 = gi.cvar("start_ammo_c4", "0", CVAR_LATCH);
 	start_ammo_flashgrenades = gi.cvar("start_ammo_flashgrenades", "0", CVAR_LATCH);
 	start_ammo_lasergrenades = gi.cvar("start_ammo_lasergrenades", "0", CVAR_LATCH);
 	start_ammo_poisongrenades = gi.cvar("start_ammo_poisongrenades", "0", CVAR_LATCH);
@@ -1485,6 +1487,12 @@ void Use_Grenades (edict_t *ent)
 		else if (ent->client->pers.inventory[ITEM_INDEX(it_grenades)] > 0)
 			ent->client->newweapon = it_flashgrenades;
 	}
+	else if (ent->client->pers.weapon == it_c4)
+	{
+		if (ent->client->pers.inventory[ITEM_INDEX(it_c4)] > 0)
+			ent->client->newweapon = it_c4;
+	}
+
 	else if (ent->client->pers.weapon == it_lasermines)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(it_poisongrenades)] > 0)
@@ -1916,6 +1924,18 @@ void ClientCommand2 (edict_t *ent)
 			ent->client->grenadesactive = 1;
 		}
 	}
+	else if (Q_stricmp (cmd, "togglec4") == 0)
+	{
+		if (ent->client->c4active == 1)
+		{
+			ent->client->c4active = 0;
+		}
+		else
+		{
+			ent->client->c4active = 1;
+		}
+	}
+
 	else if (Q_stricmp (cmd, "fakedeath") == 0)
 	{
 		if (ent->health <= 0)
@@ -1945,6 +1965,7 @@ void ClientCommand2 (edict_t *ent)
 			|| Q_stricmp(blip->classname, "lasermine") == 0
 			|| Q_stricmp(blip->classname, "poisongrenade") == 0
 			|| Q_stricmp(blip->classname, "proxymine") == 0
+			|| Q_stricmp(blip->classname, "c4") == 0
 			|| Q_stricmp(blip->classname, "rocket") == 0
 			|| Q_stricmp(blip->classname, "homing") == 0
 			|| Q_stricmp(blip->classname, "buzz") == 0

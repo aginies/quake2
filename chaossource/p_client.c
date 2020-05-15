@@ -846,6 +846,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 	if(self->client->teleporter)
 		G_FreeEdict(self->client->teleporter);
 
+
 	gi.linkentity (self);
 }
 
@@ -974,6 +975,9 @@ void InitClientPersistant (gclient_t *client)
 		if (start_ammo_grenades->value > 0)
 			client->pers.inventory[ITEM_INDEX(FindItemByClassname ("ammo_grenades"))] = start_ammo_grenades->value;
 		
+		if (start_ammo_c4->value > 0)
+			client->pers.inventory[ITEM_INDEX(FindItemByClassname ("ammo_c4"))] = start_ammo_c4->value;
+
 		if (start_ammo_flashgrenades->value > 0)
 			client->pers.inventory[ITEM_INDEX(FindItemByClassname ("ammo_flashgrenades"))] = start_ammo_flashgrenades->value;
 		
@@ -1043,6 +1047,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_shells		= 100;
 	client->pers.max_rockets	= 50;
 	client->pers.max_grenades	= 50;
+	client->pers.max_c4     	= 5;
 	client->pers.max_cells		= 200;
 	client->pers.max_slugs		= 50;
 

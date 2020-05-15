@@ -248,6 +248,7 @@ void Chaos_SetStats(edict_t *self) {
     stats[29] = ent->client->pers.inventory[ITEM_INDEX(FindItem("explosive shells"))];
     stats[12] = ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))];
     stats[28] = ent->client->pers.inventory[ITEM_INDEX(FindItem("buzzes"))];
+    stats[30] = ent->client->pers.inventory[ITEM_INDEX(FindItem("c4"))];
 
     stats[31] = ent->client->pers.inventory[ITEM_INDEX(FindItem("grenades"))];
     stats[15] = ent->client->pers.inventory[ITEM_INDEX(FindItem("flash grenades"))];
@@ -296,6 +297,7 @@ char *grenadesbar =
 "if 31 yb -98 xr -24 picn a_grenades1 xr -74 num 3 31 endif "
 "if 15 yb -74 xr -24 picn a_fgrenades xr -74 num 3 15 endif "
 "if 16 yb -50 xr -24 picn a_pgrenades xr -74 num 3 16 endif "
+"if 30 yt 64 xl 0 picn a_c4cells xl 24 num 3 30 endif "
 ;
 
 char *nukevortex =
