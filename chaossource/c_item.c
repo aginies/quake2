@@ -318,19 +318,6 @@ void ShowScanner(edict_t *ent,char *layout)
 	}
 }
 
-void P_ProjectSource2 (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
-{
-	vec3_t	_distance;
-
-	VectorCopy (distance, _distance);
-	if (client->pers.hand == RIGHT_HANDED)
-		_distance[1] *= -1;
-	else if (client->pers.hand == CENTER_HANDED)
-		_distance[1] = 0;
-	G_ProjectSource (point, _distance, forward, right, result);
-}
-
-
 void Grapple_Reset (edict_t *ent)
 {
 	ent->owner->client->grapple_state = GRAPPLE_OFF;
@@ -347,7 +334,7 @@ void Grapple_DrawCable (edict_t *ent)
 
 	AngleVectors (ent->owner->client->v_angle, f, r, NULL);
 	VectorSet(offset, 16, 16, ent->owner->viewheight-8);
-	P_ProjectSource2 (ent->owner->client, ent->owner->s.origin, offset, f, r, start);
+	P_ProjectSource (ent->owner->client, ent->owner->s.origin, offset, f, r, start);
 
 	VectorSubtract(start, ent->owner->s.origin, offset);
 
@@ -398,7 +385,7 @@ void Grapple_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *s
 	// derive start point of chain
 	AngleVectors (ent->owner->client->v_angle, forward, right, NULL);
 	VectorSet(offset, 8, 8, ent->owner->viewheight-8);
-	P_ProjectSource2 (ent->owner->client, ent->owner->s.origin, offset, forward, right, start);
+	P_ProjectSource (ent->owner->client, ent->owner->s.origin, offset, forward, right, start);
 
 	// member angle is used to store the length of the chain
 	_VectorSubtract(ent->s.origin,start,chainvec);
@@ -445,7 +432,7 @@ void Grapple_Think (edict_t *ent)
 		// derive start point of chain
 		AngleVectors (ent->owner->client->v_angle, f, r, NULL);
 		VectorSet(offset, 8, 8, ent->owner->viewheight-8);
-		P_ProjectSource2 (ent->owner->client, ent->owner->s.origin, offset, f, r, start);
+		P_ProjectSource (ent->owner->client, ent->owner->s.origin, offset, f, r, start);
 
 		// get info about chain
 		VectorSubtract (ent->s.origin, start, dir);
@@ -505,7 +492,7 @@ void Grapple_Fire (edict_t *ent)
 	//get start point
 	AngleVectors (ent->client->v_angle, f, r, NULL);
 	VectorSet(offset, 8, 8, ent->viewheight-8);
-	P_ProjectSource2 (ent->client, ent->s.origin, offset, f, r, start);
+	P_ProjectSource (ent->client, ent->s.origin, offset, f, r, start);
 
 	hook = G_Spawn();
 	VectorCopy (start, hook->s.origin);

@@ -1494,7 +1494,7 @@ qboolean CTFPickup_Tech (edict_t *ent, edict_t *other)
 	while (tnames[i]) {
 		if ((tech = FindItemByClassname(tnames[i])) != NULL &&
 			other->client->pers.inventory[ITEM_INDEX(tech)]) {
-			CTFHasTech(other);
+			//CTFHasTech(other);
 			return false; // has this one
 		}
 		i++;
@@ -1814,6 +1814,7 @@ struct {
 	{	"weapon_machinegun",		4 },
 	{	"weapon_supershotgun",		4 },
 	{	"weapon_shotgun",			4 },
+	{	"item_jet",     			4 },
 	{	"item_power_screen",		5 },
 	{	"item_power_shield",		5 },
 	{	"item_armor_body",			6 },

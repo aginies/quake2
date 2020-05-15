@@ -270,7 +270,7 @@ void GetSettings()
 	blindtime = gi.cvar("blindtime", "20", CVAR_SERVERINFO);
 	poisontime = gi.cvar("poisontime", "15", CVAR_SERVERINFO);
 	lasertime = gi.cvar("lasertime", "60", CVAR_SERVERINFO);
-	proxytime = gi.cvar("lasertime", "60", CVAR_SERVERINFO);
+	proxytime = gi.cvar("proxytime", "60", CVAR_SERVERINFO);
 	defence_turret_ammo = gi.cvar("defence_turret_ammo", "1000", CVAR_SERVERINFO);
 	rocket_turret_ammo = gi.cvar("rocket_turret_ammo", "90", CVAR_SERVERINFO);
 	lasermine_health = gi.cvar("lasermine_health", "150", CVAR_LATCH);
@@ -303,13 +303,8 @@ void GetSettings()
 	ban_bfg = gi.cvar("ban_bfg", "0", CVAR_LATCH);
 	ban_plasma = gi.cvar("ban_plasma", "0", CVAR_LATCH);
 
-#ifdef	CHAOS_RETAIL
-	ban_grapple = gi.cvar("ban_grapple", "1", CVAR_LATCH);
-	ban_jetpack = gi.cvar("ban_jetpack", "1", CVAR_LATCH);
-#else
 	ban_grapple = gi.cvar("ban_grapple", "0", CVAR_LATCH);
 	ban_jetpack = gi.cvar("ban_jetpack", "0", CVAR_LATCH);
-#endif
 	
 	ban_bodyarmor = gi.cvar("ban_bodyarmor", "0", CVAR_LATCH);
 	ban_combatarmor = gi.cvar("ban_combatarmor", "0", CVAR_LATCH);

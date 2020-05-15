@@ -38,3 +38,4 @@
 #define ITEM_BUZZ_AMMO        27         // Buzzsaw Ammo
 #define ITEM_PROXY            28         // Proxy mines
 #define ITEM_BELT             29         // Anti-Grav Belt
+#define ITEM_JET              30         // JetPack

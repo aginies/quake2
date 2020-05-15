@@ -1954,6 +1954,12 @@ void ClientDisconnect (edict_t *ent)
 	        if ( ent->client->flashlight )
                 	ent->client->flashlight->think = G_FreeEdict;
         }
+
+    if( ent->client->teleporter ) 
+    {
+        G_FreeEdict(ent->client->teleporter);
+    }
+
 	// LETHAL : end
 
 	if (ent->client->resp.ctf_team == 1)

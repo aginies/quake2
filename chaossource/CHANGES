@@ -1,6 +1,10 @@
 These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
 
+* fix respawn bug while picking up JetPack this avoid respawing new item
+
+* remove teleporter entity if client disconnect from the server
+
 * use RTX models for weapons, so nice! (https://www.moddb.com/mods/quake2-remodel/addons)
 
 * adjust respawn of items, disable jet as this is causing issue....
