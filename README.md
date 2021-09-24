@@ -2,22 +2,24 @@
 
 # Quake2 Chaos MOD
 
-This **Chaos mod** is patched to be buildable on x86_64/x86 and compatible with recent Quake2 game.
+This **Chaos MOD** is patched to be buildable on x86_64/x86 and compatible with recent Quake2 game.
 This is based on the latest [source code](https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available. The original version is in master branch and only contains fixes. Other branches are development one and include various new features, and some of this new features came from other mods (Plasma, Rampage, Lithium, Wod etc...).
 
-The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean (its seg fault while running it in dedicated server mode...) , you should used **yquake2** or **Q2Pro** instead. The code is in the ``chaossource`` directory.
+The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean (its seg fault while running it in dedicated server mode...) , you should really used **yquake2** or **Q2Pro** instead. 
 
-The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/), all credits go to the original Chaos team.
+The code of **Chaos MOD** is in the ``chaossource`` directory.
+
+The original **Chaos MOD** is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/), all **CREDITS** go to the original **Chaos Team**.
 
 ![](images/chaos.jpg)
 
 [![Video](images/chaos1.16.1.jpg)](https://youtu.be/DuxaoykNHQA)
 
-You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory. Please delete the ``pak files`` and use the one gziped in this repo (unzip it), or you won't be able to get all new models, icons, sounds etc...
+You need the [Chaos pack files and maps](https://ginies.org/chaos.pak), and put it into the ``QUAKE2DIR/chaos`` directory. You must use this file or build your own one following the documentation in this page or you won't be able to get all new weapons models, icons, sounds etc...
 
 You can find more original source at [files.chaoticdreams.org](https://files.chaoticdreams.org/Chaos/ChaosDM/)
 
-Please use this mod with a recent release of quake2 projects, especially the server side, ie:
+Please use this MOD with a recent release of quake2 projects, especially the server side, ie:
 
 **Q2Pro**:
 * [q2pro](https://skuller.net/q2pro/)
@@ -33,13 +35,13 @@ Please use this mod with a recent release of quake2 projects, especially the ser
 On server:
 ```
 ./q2proded +set dedicated 1 +set game chaos \
-    +set hostname ginies.org  +set public 1 \
+    +set hostname ginies.org +set public 1 \
     +set allow_download 1 +exec autoexec.cfg \
     +set sv_status_show 2
 ```
 ```
 ./q2proded +set dedicated 1 +set game chaos \
-    +set hostname ginies.org  +set public 1 \
+    +set hostname ginies.org +set public 1 \
     +set allow_download 1 \
     +set sys_console 2 +set sv_status_show 2 \
     +set con_height 2 +set con_timestamps 1 \
@@ -62,7 +64,6 @@ On client:
 linux and Windows pre-built libs.
 Bunzip and copy to ``QUAKE2/chaos`` directory
 
-
 ## chaos_bin/original_V1.15/
 
 Orignal version of Chaos. ``master`` repository.
@@ -80,7 +81,7 @@ This version include:
 * do not respawn sword if start_sword > 0, spawn a railgun instead
 * dynamically show ammo of all weapons if you have such. hide if you don't have anymmore
 * add a menu with many help: to get the Menu just type "menu" in the console
-* add an observer mode (still buggy...)
+* add an observer mode (still buggy dont use it!...)
 * add ```playerlist``` command
 * add Jedi Force Push and Pull tractor and Darth Vader force ! bind pull and push key, ie in your configuration file:
     * bind MOUSE4 "cmd push"
@@ -122,7 +123,7 @@ This version include:
 
 ![](images/plasma.jpg)
 
-# Make your own Build and installation
+# Make your own Build of Chaos and installation
 
 ## Build Chaos for Linux
 
@@ -167,3 +168,5 @@ Writing PAK directory
 Closed PAK file
 Packed 914 files (86.52 MB), with 0 failures
 ```
+
+The file must be put in ``QUAKE2DIR/chaos/`` directory.
