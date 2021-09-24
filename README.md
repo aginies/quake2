@@ -61,7 +61,7 @@ Orignal version of Chaos. ``master`` repository.
 Default repository ``1.16``.
 This version include:
 
-* add C4 cellsi bomb: "togglec4" to trigger the explosion
+* add C4 cells bomb: "togglec4" to trigger the explosion
 * use RTX models for weapons, so nice! (https://www.moddb.com/mods/quake2-remodel/addons)
 * adjust respawn of items, disable jet as this is causing issue....
 * new nuke explosion using r_explode/tris.md2 from Rampage mod (https://www.moddb.com/mods/rampage-mod)
