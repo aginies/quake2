@@ -11,7 +11,7 @@ The code of **Chaos MOD** is in the ``chaossource`` directory.
 
 The original **Chaos MOD** is from [chaoticdreams.org](https://chaoticdreams.org/q2chaos/), all **CREDITS** go to the original **Chaos Team**.
 
-![](images/chaos.jpg)
+![](images/chaos_sword.jpg)
 
 [![Video](images/chaos1.16.1.jpg)](https://youtu.be/DuxaoykNHQA)
 
