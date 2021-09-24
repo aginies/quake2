@@ -11,8 +11,6 @@ The original **Chaos** mod is from [chaoticdreams.org](https://chaoticdreams.org
 
 ![](images/chaos.jpg)
 
-![](images/ammo_status.jpg)
-
 [![Video](images/chaos1.16.1.jpg)](https://youtu.be/DuxaoykNHQA)
 
 You need the [Chaos pack files and maps](https://files.chaoticdreams.org/Chaos/ChaosDM/q2chaos.exe) (this is a self autoextract rar file), and put them into a chaos directory, inside the quake2 directory. Please delete the ``pak files`` and use the one gziped in this repo (unzip it), or you won't be able to get all new models, icons, sounds etc...
