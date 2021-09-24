@@ -37,6 +37,19 @@ On server:
     +set allow_download 1 +exec autoexec.cfg \
     +set sv_status_show 2
 ```
+```
+./q2proded +set dedicated 1 +set game chaos \
+    +set hostname ginies.org  +set public 1 \
+    +set allow_download 1 \
+    +set sys_console 2 +set sv_status_show 2 \
+    +set con_height 2 +set con_timestamps 1 \
+    +set maxclients 16 \
+    +set start_sword 1 \
+    +set start_bodyarmor 1 \
+    +set ban_defenceturret \
+    +set ban_rocketturret \
+    +set start_ammo_shells 10
+```
 
 On client:
 ```
