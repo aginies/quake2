@@ -124,7 +124,7 @@ This version include:
 
 # Make your own Build and installation
 
-## Linux
+## Build Chaos for Linux
 
 ```
 make build_release
@@ -132,7 +132,7 @@ make build_release
 
 Copy the ``gamex86_64.so`` to ``QUAKE2DIR/chaos/`` directory. 
 
-## Windows
+## Build Chaos for Windows
 
 * install mgw-sdk
 * use the ``Makefile_mingw` file
@@ -144,3 +144,26 @@ make -f Makefile_mingw
 [LD] gamex86_64.dll
 ```
 * copy the ``gamex86_64.dll`` to ``QUAKE2DIR/chaos/`` directory.
+
+
+## Build QPakMan for Linux (and Chaos.pak file)
+```
+cd qpakman
+cmake CMakeLists.txt
+make
+```
+
+go to the ``chaossource/chaos_pak/`` directory
+```
+cd ../chaossource/chaos_pak/
+../../qpakman/qpakman -game q2 * -o ../chaos.pak
+.....
+Storing: textures/e3u3/grate2_2.wal
+Storing: textures/e3u3/grate1_6.wal
+Storing: textures/e3u3/grate2_3.wal
+--------------------------------------------------
+
+Writing PAK directory
+Closed PAK file
+Packed 914 files (86.52 MB), with 0 failures
+```

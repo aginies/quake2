@@ -15,7 +15,7 @@ PAK and WAD files used by the games Quake, Quake II and Hexen II.
 BUILD
 =====
 
-   cmake -G CMakeLists.txt
+   cmake CMakeLists.txt
    make
 
 COMMON TASKS
