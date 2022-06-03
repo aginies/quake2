@@ -203,7 +203,6 @@ The file must be put in ``QUAKE2DIR/chaos/`` directory.
 ![](images/chaos_homing.jpg)
 ![](images/chaos_hyperblaster.jpg)
 ![](images/chaos.jpg)
-![](images/chaoslogo.jpg)
 ![](images/chaos_nuclear.jpg)
 ![](images/chaos_nuke.jpg)
 ![](images/chaos_poison.jpg)
