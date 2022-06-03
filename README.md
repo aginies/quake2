@@ -5,7 +5,7 @@
 This **Chaos MOD** is patched to be buildable on x86_64/x86 and compatible with recent Quake2 game.
 This is based on the latest [source code](https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available. The original version is in master branch and only contains fixes. Other branches are development one and include various new features, and some of this new features came from other mods (Plasma, Rampage, Lithium, Wod etc...).
 
-The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean (its seg fault while running it in dedicated server mode...) , you should really used **yquake2** or **Q2Pro** instead. 
+The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean (its seg fault while running it in dedicated server mode...) , you should really used **yquake2** or **Q2Pro** (my prefered one) instead. 
 
 The code of **Chaos MOD** is in the ``chaossource`` directory.
 
@@ -60,7 +60,7 @@ On client:
 ```
 
 # Binairies release
-
+ 
 linux and Windows pre-built libs.
 Bunzip and copy to ``QUAKE2/chaos`` directory
 
@@ -70,8 +70,24 @@ Orignal version of Chaos. ``master`` repository.
 
 ## chaos_bin/devel/
 
+In version 1.16.1 whats new?
+
+* c4 cells bomb whic stick to wall
+* RTX models for weapon
+* Nuclear bomb with radiation effect and earthquake
+* Dual MK23 from counterstrike as default weapon
+* Dynamic show of Ammo status
+* Menu to add / remove bot easily, get some help
+* Jedi force when using a Sword
+* In Sword mode you block all non explosive weapon up to 70%
+* No camp mode possible
+* Plasma Gun !
+* Laser guided rocket Launcher
+* plenty of bug fixes
+
+
 Default repository ``1.16``.
-This version include:
+Details of changes:
 
 * add C4 cells bomb: "togglec4" to trigger the explosion
 * use RTX models for weapons, so nice! (https://www.moddb.com/mods/quake2-remodel/addons)
@@ -83,7 +99,7 @@ This version include:
 * add a menu with many help: to get the Menu just type "menu" in the console
 * add an observer mode (still buggy dont use it!...)
 * add ```playerlist``` command
-* add Jedi Force Push and Pull tractor and Darth Vader force ! bind pull and push key, ie in your configuration file:
+* add Jedi Force Push and Pull tractor and Darth Vader force ! bind pull and push key, ie in your configuration file, Only possible with the sword:
     * bind MOUSE4 "cmd push"
     * bind MOUSE2 "cmd pull"
     * bind MOUSE3 "cmd fkill"
@@ -121,7 +137,6 @@ This version include:
 * botchat are disable by default (set to 0)
 
 
-![](images/plasma.jpg)
 
 # Make your own Build of Chaos and installation
 
@@ -170,3 +185,30 @@ Packed 914 files (86.52 MB), with 0 failures
 ```
 
 The file must be put in ``QUAKE2DIR/chaos/`` directory.
+
+## Images of Chaos
+
+![](images/plasma.jpg)
+![](images/ammo_status.jpg)
+![](images/chaos1.16.1.jpg)
+![](images/chaos_bfg1.jpg)
+![](images/chaos_bfg.jpg)
+![](images/chaos_c4.jpg)
+![](images/chaos_doublegun.jpg)
+![](images/chaos_epee.jpg)
+![](images/chaos_explosion.jpg)
+![](images/chaos_explosivegun.jpg)
+![](images/chaos_flash.jpg)
+![](images/chaos_guided.jpg)
+![](images/chaos_homing.jpg)
+![](images/chaos_hyperblaster.jpg)
+![](images/chaos.jpg)
+![](images/chaoslogo.jpg)
+![](images/chaos_nuclear.jpg)
+![](images/chaos_nuke.jpg)
+![](images/chaos_poison.jpg)
+![](images/chaos_railgun1.jpg)
+![](images/chaos_railgun.jpg)
+![](images/chaos_rocket_l.jpg)
+![](images/chaos_sword.jpg)
+![](images/plasma.jpg)

@@ -1454,16 +1454,16 @@ void Bot_Attack(edict_t *ent, usercmd_t *cmd, vec3_t angles, vec3_t target)
 
 			angles[0] = t_angles[0];
 
+
 			if (Q_stricmp(weapon->classname, "weapon_hyperblaster") == 0)
 			{
 				angles[YAW] += crandom() * (ent->client->b_botlevel)/2;
 				angles[PITCH] += crandom() * (ent->client->b_botlevel)/2;
 			}
-            // bots are too efficient with railgun, so decreasing their ability
 			if (Q_stricmp(weapon->classname, "weapon_railgun") == 0)
 			{
-				angles[YAW] += crandom() * (ent->client->b_botlevel) * 2;
-				angles[PITCH] += crandom() * (ent->client->b_botlevel) * 2 ;
+				angles[YAW] += crandom() * (ent->client->b_botlevel) * 4;
+				angles[PITCH] += crandom() * (ent->client->b_botlevel) * 4 ;
 			}
 			if (Q_stricmp(weapon->classname, "weapon_plasma") == 0)
 			{
@@ -1479,8 +1479,8 @@ void Bot_Attack(edict_t *ent, usercmd_t *cmd, vec3_t angles, vec3_t target)
 			}
 			else
 			{
-				angles[YAW] += crandom() * (6 - ent->client->b_botlevel) * 0.2;
-				angles[PITCH] += crandom() * (6 - ent->client->b_botlevel) * 0.2;
+				angles[YAW] += crandom() * (6 - ent->client->b_botlevel) * 2;
+				angles[PITCH] += crandom() * (6 - ent->client->b_botlevel) * 2;
 			}
 
 			cmd->buttons = BUTTON_ATTACK;
