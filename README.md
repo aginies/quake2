@@ -73,7 +73,7 @@ Orignal version of Chaos. ``master`` repository.
 In version 1.16.1 whats new?
 
 * c4 cells bomb which sticks to wall
-* RTX models for weapon
+* RTX model for weapons
 * Nuclear bomb with radiation effect and earthquake
 * Dual MK23 from counterstrike as default weapon
 * Dynamic show of Ammo status
