@@ -10,12 +10,13 @@ echo ##################
 rm -rf debug release
 make clean
 make build_release -j
+cp -vf release/gamex86_64.so ~/quake2/chaos/
 cd release
 bzip2 gamex86_64.so
 cd ..
 mv -vf release/gamex86_64.so.bz2 ${LBIN}/
 
-# windows x86
+## windows x86
 echo ##################
 echo " WIN32 BUILD "
 echo ##################
