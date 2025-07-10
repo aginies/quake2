@@ -21,7 +21,7 @@ void ClientBegin (edict_t *ent);
 
 qboolean visible (edict_t *self, edict_t *other)
 {
-	vec3_t	spot1, spot2;
+	vec3_t	spot1 = { 0 }, spot2 = { 0 };
 	trace_t	trace;
 
 	VectorCopy (self->s.origin, spot1);

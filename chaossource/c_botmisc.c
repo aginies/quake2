@@ -321,6 +321,7 @@ void Bot_Spawn(edict_t *ent)
 	ent->s.frame          = 0;
 	ent->enemy			  = NULL;
 	ent->client->b_currentnode	= -1;
+	ent->yaw_speed = 20 + (ent->client->b_botlevel * 14);
 
 	VectorCopy(origin, ent->s.origin);
 	ent->s.origin[2]++;
@@ -331,15 +332,14 @@ void Bot_Spawn(edict_t *ent)
 
 	VectorCopy(ent->s.angles, ent->client->ps.viewangles);
 	VectorCopy(ent->s.angles, ent->client->v_angle);
-
-	gi.unlinkentity(ent);
 	KillBox(ent);
-	gi.linkentity(ent);
 
+	//gi.unlinkentity(ent);
+	ent->nextthink = level.time + FRAMETIME;
 	ent->client->newweapon = ent->client->pers.weapon;
 	ChangeWeapon(ent);
+	gi.linkentity(ent);
 
-	ent->nextthink = level.time + FRAMETIME;
 }
 
 void Bot_Respawn(edict_t *ent)

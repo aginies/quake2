@@ -2000,7 +2000,7 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 		{
 			// calc new armor values
 			salvage = oldinfo->normal_protection / newinfo->normal_protection;
-			salvagecount = salvage * other->client->pers.inventory[old_armor_index];
+			salvagecount = (int)(salvage * other->client->pers.inventory[old_armor_index]);
 			newcount = newinfo->base_count + salvagecount;
 			if (newcount > newinfo->max_count)
 				newcount = newinfo->max_count;
@@ -2015,7 +2015,7 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 		{
 			// calc new armor values
 			salvage = newinfo->normal_protection / oldinfo->normal_protection;
-			salvagecount = salvage * newinfo->base_count;
+			salvagecount = (int)(salvage * newinfo->base_count);
 			newcount = other->client->pers.inventory[old_armor_index] + salvagecount;
 			if (newcount > oldinfo->max_count)
 				newcount = oldinfo->max_count;

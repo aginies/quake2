@@ -295,7 +295,7 @@ void CTFAssignSkin(edict_t *ent, char *s)
 	
 	Com_sprintf(t, sizeof(t), "%s", s);
 
-	if ((p = strrchr(t, '/')) != NULL)
+	if ((p = strchr(t, '/')) != NULL)
 		p[1] = 0;
 	else
 		strcpy(t, "male/");
@@ -541,6 +541,8 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 
 	if (!flag)
 		return; // can't find attacker's flag
+	
+	carrier = NULL;
 
 	// find attacker's team's flag carrier
 	for (i = 1; i <= maxclients->value; i++) {
@@ -1243,7 +1245,7 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 {
 	char	entry[1024];
 	char	string[1400];
-	int		len;
+	size_t		len;
 	int		i, j, k, n;
 	int		sorted[2][MAX_CLIENTS];
 	int		sortedscores[2][MAX_CLIENTS];

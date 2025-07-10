@@ -232,9 +232,9 @@ static int CheckArmor (edict_t *ent, vec3_t point, vec3_t normal, int damage, in
 	armor = GetItemByIndex (index);
 
 	if (dflags & DAMAGE_ENERGY)
-		save = ceil(((gitem_armor_t *)armor->info)->energy_protection*damage);
+		save = (int)(ceil(((gitem_armor_t *)armor->info)->energy_protection*damage));
 	else
-		save = ceil(((gitem_armor_t *)armor->info)->normal_protection*damage);
+		save = (int)(ceil(((gitem_armor_t *)armor->info)->normal_protection*damage));
 	if (save >= client->pers.inventory[index])
 		save = client->pers.inventory[index];
 
@@ -311,7 +311,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		if ((knockback) && (targ->movetype != MOVETYPE_NONE) && (targ->movetype != MOVETYPE_BOUNCE) && (targ->movetype != MOVETYPE_PUSH) && (targ->movetype != MOVETYPE_STOP))
 		{
 			vec3_t	kvel;
-			float	mass;
+			int 	mass;
 
 			if (targ->mass < 50)
 				mass = 50;
