@@ -15,7 +15,7 @@ CC=gcc
 # Base Flags
 # If you want to add a CFLAG to be included in both the 
 # debug and the release build, add it here
-BASE_CFLAGS=-Wall -pipe -std=gnu99 -fno-strict-aliasing -fwrapv -DNEED_STRLCAT -DNEED_STRLCPY
+BASE_CFLAGS=-Wall -pipe -std=gnu99 -fno-strict-aliasing -fwrapv -DNEED_STRLCAT -DNEED_STRLCPY -fcommon
 
 # Release Flags
 # Flags added here are ONLY used for building the release

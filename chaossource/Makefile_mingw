@@ -32,7 +32,7 @@ RM ?= rm -f
 RMDIR ?= rm -rf
 MKDIR ?= mkdir -p
 
-CFLAGS ?= -std=gnu99 -O2 -Wall -g -MMD $(INCLUDES) -DNEED_STRLCAT -DNEED_STRLCPY
+CFLAGS ?= -std=gnu99 -O2 -Wall -g -MMD $(INCLUDES) -DNEED_STRLCAT -DNEED_STRLCPY -fcommon
 RCFLAGS ?=
 LDFLAGS ?=
 LIBS ?=
