@@ -38,6 +38,7 @@ On server:
     +set allow_download 1 +exec autoexec.cfg \
     +set sv_status_show 2
 ```
+Or:
 ```
 ./q2proded +set dedicated 1 +set game chaos \
     +set hostname ginies.org +set public 1 \
@@ -61,7 +62,7 @@ On client:
 # Binairies release
  
 linux and Windows pre-built libs.
-Bunzip and copy to ``QUAKE2/chaos`` directory
+Bunzip and copy to ``QUAKE2/chaos`` directory.
 
 ## chaos_bin/original_V1.15/
 
@@ -69,9 +70,9 @@ Orignal version of Chaos. ``master`` repository.
 
 ## chaos_bin/devel/
 
-In version 1.16.1 whats new?
+In version 1.16.2 whats new?
 
-* c4 cells bomb which sticks to wall
+* 44 cells bomb which sticks to wall
 * RTX model for weapons
 * Nuclear bomb with radiation effect and earthquake
 * Dual MK23 from counterstrike as default weapon
@@ -83,6 +84,7 @@ In version 1.16.1 whats new?
 * Plasma Gun !
 * Laser guided rocket Launcher
 * plenty of bug fixes
+* gcc build cleanup 
 
 
 Default repository ``1.16``.
