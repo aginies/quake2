@@ -134,7 +134,7 @@ void Bot_Create(int level, int team, char *name, char *skin)
 
     // useful to find bot in the list of players :)
     char *botname = "bot";
-    strncat(name, botname, strlen(botname));
+    snprintf(name + strlen(name), sizeof(name) - strlen(name), "%s", botname);
 
 	for (i = maxclients->value; i > 0; i--)
 	{
