@@ -245,10 +245,8 @@ void BecomeExplosion1 (edict_t *self)
 // FWP fix for weapon killer bug - respawn weapon after showing cute explosion
 
         if (self->item && (self->item->flags & (IT_WEAPON | IT_POWERUP | IT_AMMO | IT_ARMOR))) {
-	   if (self->spawnorigin) {
 	      DoRespawn(self); // this frees self!
              return;
-	   }
 	}
 
 	G_FreeEdict (self);
