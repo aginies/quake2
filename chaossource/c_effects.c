@@ -46,7 +46,7 @@ void T_ShockWave (edict_t *inflictor, float damage, float radius)
 	float		points;
 	edict_t	*ent = NULL;
 	vec3_t	v;
-	vec3_t	dir = {0,0,0};
+	vec3_t	dir;
 
 	float 	SHOCK_TIME = 0.1;
 
