@@ -16,7 +16,9 @@ size_t strlcat_s(char *dest, char *src, size_t n, int count) {
 	size_t ret;
 	size_t copy;
 	size_t srclen;
+#ifdef STRL_DEBUG
 	char overflow;
+#endif
 
 	srclen = strlen(src);
 	ret = strlen(dest) + srclen;
@@ -25,10 +27,14 @@ size_t strlcat_s(char *dest, char *src, size_t n, int count) {
 
 	if (count < 0) {
 		copy = fr;
+#ifdef STRL_DEBUG
 		overflow = (ret >= n);
+#endif
 	} else {
 		copy = MIN(count,(int)fr);
+#ifdef STRL_DEBUG
 		overflow = (count > (int)fr);
+#endif
 	}
 		
 	if (fr > 0)
@@ -79,18 +85,23 @@ size_t strlcat_s(char *dest, char *src, size_t n, int count) {
 size_t strlcpy_s(char *dest, char *src, size_t n, int count) {
 	size_t ret;
 	size_t copy;
+#ifdef STRL_DEBUG
 	char overflow;
-
+#endif
 	ret = strlen(src);
 	if (n == 0)
 		return ret;
 
 	if (count < 0) {
 		copy = n-1;
+#ifdef STRL_DEBUG
 		overflow = (ret >= n);
+#endif
 	} else {
 		copy = MIN(count, (int)n-1);
+#ifdef STRL_DEBUG
 		overflow = (count >= (int)n);
+#endif
 	}
 
 	strncpy(dest, src, copy);
