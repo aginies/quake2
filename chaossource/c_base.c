@@ -189,7 +189,6 @@ void LoadMaplist(char	*filename)
 	cvar_t	*game_dir;
 	int		i = 0;
 	char	file[256];
-	char	line[MAX_MAPNAME_LEN + 3];
 
 	game_dir = gi.cvar ("game", "", 0);
 
@@ -221,10 +220,12 @@ void LoadMaplist(char	*filename)
 
 		while ((!feof(fp)) && (i < MAX_MAPS)) 
 		{ 
-			int		len;
-
-			fgets (line, 256, fp);
-			len=strlen(line);
+			char *line = malloc(256);
+			size_t len = strlen(line);
+                        if (line != NULL) {
+				fgets (line, 256, fp);
+				len=strlen(line);
+			}
 
 			if (len < 5) //invalid
 				continue;
@@ -652,7 +653,6 @@ void LoadMOTD()
 {
 	FILE *fp;
 	char file[512];
-	char line[80];
 	cvar_t	*game_dir;
 	int i;
 
@@ -680,11 +680,12 @@ void LoadMOTD()
 
 		while ((!feof(fp)) && (i < 560)) 
 		{ 
-			int		len;
-
-			fgets (line, 559, fp);
-			len=strlen(line);
-
+			char *line = malloc(559);
+                        size_t len = strlen(line);
+			if (line != NULL) {
+			    fgets (line, 559, fp);
+			    len=strlen(line);
+                        }
 			while(line[len] == '\n'||line[len] == '\r')
 			  len--;
 
