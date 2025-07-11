@@ -6,10 +6,10 @@ vec3_t vec3_origin = {0,0,0};
 
 //============================================================================
 
-/*#ifdef _WIN32
+#ifdef _WIN32
 #pragma optimize( "", off )
 #endif
-*/
+
 void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees )
 {
 	float	m[3][3];
@@ -65,10 +65,10 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 	}
 }
 
-/*#ifdef _WIN32
+#ifdef _WIN32
 #pragma optimize( "", on )
 #endif
-*/
+
 
 
 void AngleVectors (vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
@@ -406,7 +406,7 @@ dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
 	return sides;
 }
 #else
-//#pragma warning( disable: 4035 )
+#pragma warning( disable: 4035 )
 
 /*
 __declspec( naked ) int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
@@ -639,7 +639,7 @@ Lerror:
 	}
 }
 */
-//#pragma warning( default: 4035 )
+#pragma warning( default: 4035 )
 #endif
 void ClearBounds (vec3_t mins, vec3_t maxs)
 {
