@@ -424,7 +424,7 @@ pmenu_t ccreditsmenu[] = {
         { "*Programming",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Flash (flash@telefragged.com)",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "*Current devel > 1.16.1",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Current devel > 1.16.0",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Guibo (guibo@guibo.com)",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { "*Level Design",PMENU_ALIGN_CENTER, NULL, NULL },
@@ -438,7 +438,7 @@ pmenu_t ccreditsmenu[] = {
         { "SPA (spa@telefragged.com)",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Nat (nnp@greennet.net)",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Retourner Menu Principal",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+        { "Back to Main Menu",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
 };
 
 void ChaosCredits(edict_t *ent, pmenu_t *p)
@@ -453,30 +453,30 @@ pmenu_t interfacemenu[] = {
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "L'interface montre",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "*  Dynamiquement",PMENU_ALIGN_CENTER, NULL, NULL },
-        { "les Munitions des",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "armes disponibles.",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Interface show",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "*  Dynamically",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "ammo available",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "for weapons.",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Si il n'y a plus de ",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "munitions son status",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "disparait.",PMENU_ALIGN_LEFT, NULL, NULL },
-        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "If there is no more",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "ammo this is hidden.",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Retourner Menu Principal",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
+        { "Back to Main Menu",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
 };
 
 pmenu_t helpmenu[] = {
-        { "*Commande de Console",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Console Command",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "*pull",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Force pour Pousser ",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Force to push ",PMENU_ALIGN_LEFT, NULL, NULL },
         { "*push",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Force pour Attirer",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Force to pull ",PMENU_ALIGN_LEFT, NULL, NULL },
         { "*fkill",PMENU_ALIGN_LEFT, NULL, NULL },
         { "DarK Vador Force!",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
@@ -484,79 +484,79 @@ pmenu_t helpmenu[] = {
 //        { "Camera libre",PMENU_ALIGN_LEFT, NULL, NULL },
 //        { "F7 F8 quitter camera",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*Dans votre Configuration",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "*In your Configuration",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "bind MOUSE2 ''push''",PMENU_ALIGN_LEFT, NULL, NULL },
         { "bind MOUSE3 ''pull''",PMENU_ALIGN_LEFT, NULL, NULL },
         { "bind MOUSE4 ''fkill''",PMENU_ALIGN_LEFT, NULL, NULL },
         { "bind F12 ''menu''",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Retourner Menu Principal",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+        { "Back to Main Menu",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
 };
 
 pmenu_t helpservermenu[] = {
-        { "*Parametres serveur",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Serveur Parameters",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "*fast_respawn [SECONDE]",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "permet de respawn les armes",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "dans le délaie de X secondes",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Respawn weapons",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "in X secondes delay",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*Dans votre ligne de commande:",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "*In you command ligne:",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "+set fast_respawn 4",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Retourner Menu Principal",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+        { "Back to Main Menu",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
 };
 
 
 
 pmenu_t mainmenu[] = {
         { "*Chaos Deathmatch",PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Devel Version 1.16.1",PMENU_ALIGN_RIGHT, NULL, NULL },
+        { "Devel Version 1.16.2",PMENU_ALIGN_RIGHT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
 //        { "* ! VERSION XP !",PMENU_ALIGN_CENTER, NULL, NULL },
-        { " ! Reportez moi les Bugs !",PMENU_ALIGN_CENTER, NULL, NULL },
+        { " ! Please Report Bugs!",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "Afficher ce menu: menu",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "Display this menu: menu",PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { "+Bots",PMENU_ALIGN_LEFT, NULL,MenuBots },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "+Interface",PMENU_ALIGN_LEFT, NULL, MenuInterface },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "+Aide",PMENU_ALIGN_LEFT, NULL, MenuHelp },
+        { "+Help",PMENU_ALIGN_LEFT, NULL, MenuHelp },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "+Aide Serveur",PMENU_ALIGN_LEFT, NULL, MenuServerHelp },
+        { "+Server Help",PMENU_ALIGN_LEFT, NULL, MenuServerHelp },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { "+Credits",PMENU_ALIGN_LEFT, NULL, ChaosCredits },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "[^] et [$] pour le curseur", PMENU_ALIGN_LEFT, NULL, NULL },
-        { "[ENTER] Selection",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "[ESC] Sortir",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "[^] and [$] for the cursor", PMENU_ALIGN_LEFT, NULL, NULL },
+        { "[ENTER] Select",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "[ESC] Exit",PMENU_ALIGN_LEFT, NULL, NULL },
 };
 
 pmenu_t botsmenu[] = {
         { "*Bots Administration",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "*Sur serveur distant",PMENU_ALIGN_LEFT, NULL, NULL },
-        { "*Password Obligatoire!",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "*On remote Server",PMENU_ALIGN_LEFT, NULL, NULL },
+        { "*Mandatory Password!",PMENU_ALIGN_LEFT, NULL, NULL },
         { "Exemple:",PMENU_ALIGN_LEFT, NULL, NULL },
         { "seta rconpassword ''PASS''",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "+Ajouter un Bot (niveau 1)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd },
-        { "+Ajouter un Bot (niveau 2)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd2 },
-        { "+Ajouter un Bot (niveau 3)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd3 },
+        { "+Add Bot (level 1)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd },
+        { "+Add Bot (level 2)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd2 },
+        { "+Add Bot (level 3)",PMENU_ALIGN_LEFT, NULL, AddBotsCmd3 },
         { NULL,PMENU_ALIGN_CENTER, NULL, NULL },
-        { "+Retirer Tous les bots",PMENU_ALIGN_LEFT, NULL, KillBotsCmd },
+        { "+Remove all Bots",PMENU_ALIGN_LEFT, NULL, KillBotsCmd },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "Retourner Menu Principal",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
+        { "Back to Main Menu",PMENU_ALIGN_LEFT, NULL, ChaosReturnToMain }
 };
 
 
