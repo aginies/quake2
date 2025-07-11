@@ -1037,7 +1037,6 @@ void InitClientPersistant (gclient_t *client)
 
 		if (start_environmentsuit->value > 0)
 			client->pers.inventory[ITEM_INDEX(FindItemByClassname ("item_enviro"))] = start_environmentsuit->value;
-
 	}
 
 	client->pers.health			= 100;
