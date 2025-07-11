@@ -5,7 +5,7 @@
 This **Chaos MOD** is patched to be buildable on x86_64/x86 and compatible with recent Quake2 game.
 This is based on the latest [source code](https://files.chaoticdreams.org/Chaos/ChaosDM/chaosdm_114b4src.zip) available. The original version is in master branch and only contains fixes. Other branches are development one and include various new features, and some of this new features came from other mods (Plasma, Rampage, Lithium, Wod etc...).
 
-The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean (its seg fault while running it in dedicated server mode...) , you should really used **yquake2** or **Q2Pro** (my prefered one) instead. 
+The current version of Quake2 (>= 3.20) is usable as client only, as this code is still buggy and not really clean (its seg fault while running it in dedicated server mode...) , you should really used **yquake2** or **Q2Pro**.
 
 The code of **Chaos MOD** is in the ``chaossource`` directory.
 
@@ -22,7 +22,6 @@ You can find more original source at [files.chaoticdreams.org](https://files.cha
 Please use this MOD with a recent release of quake2 projects, especially the server side, ie:
 
 **Q2Pro**:
-* [q2pro](https://skuller.net/q2pro/)
 * [q2pro source code](https://github.com/skullernet/q2pro)
 
 **yquake2**:
@@ -150,7 +149,7 @@ Copy the ``gamex86_64.so`` to ``QUAKE2DIR/chaos/`` directory.
 
 ## Build Chaos for Windows
 
-* install mgw-sdk
+* install mgw-sdk (mingw32-cross-gcc, mingw64-cross-gcc)
 * use the ``Makefile_mingw` file
 * check the ``.config`` in the directory (adjust path to mgw-sdk binairies)
 * build the dll:
