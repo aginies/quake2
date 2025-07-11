@@ -4,8 +4,9 @@ WBIN=../chaos_bin/devel/windows
 LBIN=../chaos_bin/devel/linux
 
 # Linux
+linux() {
 echo ##################
-echo " LINUX BUILD "
+echo " linux build "
 echo ##################
 rm -rf debug release
 make clean
@@ -14,9 +15,21 @@ cp -vf release/gamex86_64.so ~/quake2/chaos/
 cd release
 bzip2 gamex86_64.so
 cd ..
-mv -vf release/gamex86_64.so.bz2 ${LBIN}/
+mv -vf release/gamex86_64.so.bz2 ${lbin}/
+}
+
+linuxd() {
+echo ##################
+echo " linux debug build "
+echo ##################
+rm -rf debug release
+make clean
+make build_debug -j
+cp -vf debug/gamex86_64.so ~/quake2/chaos/
+}
 
 ## windows x86
+windows32() {
 echo ##################
 echo " WIN32 BUILD "
 echo ##################
@@ -25,7 +38,9 @@ make -f Makefile_mingw clean
 make -f Makefile_mingw -j
 bzip2 gamex86.dll
 mv -vf gamex86.dll.bz2 ${WBIN}/
+}
 
+window64() {
 # windows x86_64
 echo ##################
 echo " WIN64 BUILD "
@@ -35,3 +50,6 @@ make -f Makefile_mingw clean
 make -f Makefile_mingw -j
 bzip2 gamex86_64.dll
 mv -vf gamex86_64.dll.bz2 ${WBIN}/
+}
+
+linuxd
