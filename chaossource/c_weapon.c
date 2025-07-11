@@ -3443,7 +3443,8 @@ void C4_Die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, v
 
 void C4_Explode (edict_t *ent)
 {
-    vec3_t      offset, v;
+    vec3_t      offset;
+    vec3_t      v;
     edict_t     *target;
 
     VectorSet(offset, 0, 0, 10);
@@ -3466,6 +3467,8 @@ void C4_Explode (edict_t *ent)
         if (target->flags & FL_GODMODE) // god
             continue;
 
+	VectorAdd (target->mins, target->maxs, v);
+	VectorMA (target->s.origin, 0.5, v, v);
         VectorSubtract(ent->s.origin, target->s.origin, v);
 
         T_Damage (target, ent, ent, target->velocity, target->s.origin, target->velocity, 95, 1, DAMAGE_ENERGY, MOD_C4);
@@ -3590,7 +3593,7 @@ void fire_c4 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed,
     c4->owner = self;
     c4->touch = C4_Touch;
     c4->s.sound = gi.soundindex("weapons/hgrenc1b.wav");
-    c4->health = 120;
+    c4->health = 20;
     c4->mass = 2;
     c4->die = C4_Die;
     c4->think = C4_Explode;
@@ -4865,7 +4868,7 @@ void Cata_Explode (edict_t *ent)
       if (target->flags & FL_GODMODE) // god
 	continue;
 
-      BlindTimeAdd = 10;
+      BlindTimeAdd = 5;
       target->client->BlindTime = BlindTimeAdd * 1.5 ;
       target->client->BlindBase = blindtime->value;
       target->client->v_dmg_pitch = 100 * crandom();
@@ -4882,25 +4885,23 @@ void Cata_Explode (edict_t *ent)
 
 
     // NO way to avoid an effect from a nuke blast
-      if ( Distance < 400 )
+      if ( Distance < 300 )
       {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 3000, 1, 3000, MOD_NUKE);
+          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 30, 1, 30, MOD_NUKE);
           T_RadiusDamage (ent, ent->owner, 200, NULL, 200, MOD_NUKE);
-          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast you were pulverised after taken 3000 of Damage ! Run Faster !\n");
-      } else if (Distance >= 400 && Distance <=700)
+          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast you were pulverised! Run Faster !\n");
+      } else if (Distance >= 300 && Distance <=500)
       {
          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 5, 1, 5, MOD_NUKE);
           T_RadiusDamage (ent, ent->owner, 5, NULL, 5, MOD_NUKE);
           cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! Radiation around ! Run Faster !\n");
-
-      } else if (Distance >= 700 && Distance <= 3000)
+      } else if (Distance >= 500 && Distance <= 3000)
       {
           T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 1, 1, 1, MOD_NUKE);
           T_RadiusDamage (ent, ent->owner, 1, NULL, 1, MOD_NUKE);
           cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! Radiation around ! Run Faster !\n");
       }
     }
-
 
   ent->nextthink = level.time + FRAMETIME;
   ent->delay = ent->delay - FRAMETIME;

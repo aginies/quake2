@@ -46,8 +46,7 @@ void T_ShockWave (edict_t *inflictor, float damage, float radius)
 	float		points;
 	edict_t	*ent = NULL;
 	vec3_t	v;
-	vec3_t	dir;
-
+	vec3_t	dir = { 0, 0, 0 };
 	float 	SHOCK_TIME = 0.1;
 
 	while ((ent = findradius(ent, inflictor->s.origin, radius)) != NULL)
@@ -56,8 +55,8 @@ void T_ShockWave (edict_t *inflictor, float damage, float radius)
 			continue;
 		if (!ent->client)
 			continue;
-		VectorAdd (ent->mins, ent->maxs, v);
-		VectorMA (ent->s.origin, 0.5, v, v);
+		VectorAdd(ent->mins, ent->maxs, v);
+		VectorMA(ent->s.origin, 0.5, v, v);
 		VectorSubtract (inflictor->s.origin, v, v);
 		points = .5*(damage - 0.5 * VectorLength (v));
 		if (points < .5)
@@ -66,7 +65,9 @@ void T_ShockWave (edict_t *inflictor, float damage, float radius)
 			points = 10;
 		if (points > 0)
 		{
-			VectorSubtract (ent->s.origin, inflictor->s.origin, dir);
+		        VectorAdd(ent->mins, ent->maxs, v);
+			VectorMA(ent->s.origin, 0.5, v, dir);
+			VectorSubtract(ent->s.origin, inflictor->s.origin, dir);
 				ent->client->v_dmg_pitch = -points;
 				ent->client->v_dmg_roll = 0;
 				ent->client->v_dmg_time = level.time + SHOCK_TIME;
