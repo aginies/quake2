@@ -954,7 +954,7 @@ void Bot_Think(edict_t *ent)
 				{
 					ent->client->b_waittime	= level.time + 2;
 				}
-				else if (&tr.plane)
+				else if (tr.contents)
 				{
 					vectoangles (tr.plane.normal, wallangles);
 					if (ent->client->b_rundir == 0)
