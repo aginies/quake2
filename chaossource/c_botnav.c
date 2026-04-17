@@ -427,17 +427,9 @@ qboolean Bot_SaveNodes(void)
 	game_dir = gi.cvar ("game", "", 0);
 
 #ifdef	_WIN32
-	l =  sprintf(file, ".\\");
-	l += sprintf(file + l, game_dir->string);
-	l += sprintf(file + l, "\\nodes\\");
-	l += sprintf(file + l, level.mapname);
-	l += sprintf(file + l, ".ntb");
+	snprintf(file, sizeof(file), ".\\%s\\nodes\\%s.ntb", game_dir->string, level.mapname);
 #else
-	strcpy(file, "./");
-	strcat(file, game_dir->string);
-	strcat(file, "/nodes/");
-	strcat(file, level.mapname);
-	strcat(file, ".ntb");
+	snprintf(file, sizeof(file), "./%s/nodes/%s.ntb", game_dir->string, level.mapname);
 #endif
 
 	output = fopen (file, "wb");
@@ -494,17 +486,9 @@ qboolean Bot_LoadNodes(void)
 	game_dir = gi.cvar ("game", "", 0);
 
 #ifdef	_WIN32
-	l =  sprintf(file, ".\\");
-	l += sprintf(file + l, game_dir->string);
-	l += sprintf(file + l, "\\nodes\\");
-	l += sprintf(file + l, level.mapname);
-	l += sprintf(file + l, ".ntb");
+	snprintf(file, sizeof(file), ".\\%s\\nodes\\%s.ntb", game_dir->string, level.mapname);
 #else
-	strcpy(file, "./");
-	strcat(file, game_dir->string);
-	strcat(file, "/nodes/");
-	strcat(file, level.mapname);
-	strcat(file, ".ntb");
+	snprintf(file, sizeof(file), "./%s/nodes/%s.ntb", game_dir->string, level.mapname);
 #endif
 
 	input = fopen (file, "rb");

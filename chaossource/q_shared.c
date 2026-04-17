@@ -6,7 +6,7 @@ vec3_t vec3_origin = {0,0,0};
 
 //============================================================================
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma optimize( "", off )
 #endif
 
@@ -65,7 +65,7 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 	}
 }
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma optimize( "", on )
 #endif
 
@@ -406,7 +406,9 @@ dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
 	return sides;
 }
 #else
+#ifdef _MSC_VER
 #pragma warning( disable: 4035 )
+#endif
 
 /*
 __declspec( naked ) int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
@@ -639,7 +641,9 @@ Lerror:
 	}
 }
 */
+#ifdef _MSC_VER
 #pragma warning( default: 4035 )
+#endif
 #endif
 void ClearBounds (vec3_t mins, vec3_t maxs)
 {
@@ -1217,16 +1221,11 @@ int Q_strcasecmp (char *s1, char *s2)
 
 void Com_sprintf (char *dest, int size, char *fmt, ...)
 {
-	int		len;
 	va_list		argptr;
-	char	bigbuffer[0x10000];
 
 	va_start (argptr,fmt);
-	len = vsprintf (bigbuffer,fmt,argptr);
+	vsnprintf (dest, size, fmt, argptr);
 	va_end (argptr);
-	if (len >= size)
-		Com_Printf ("Com_sprintf: overflow of %i in %i\n", len, size);
-	strncpy (dest, bigbuffer, size-1);
 }
 
 /*

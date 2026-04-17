@@ -5502,7 +5502,7 @@ void SetItemNames (void)
 	it_lasermines = FindItem("Laser Mines");
 	it_poisongrenades = FindItem("poison grenades");
 	it_proxymines = FindItem("proximity mines");
-    it_c4 = FindItem("c4");
+    it_c4 = FindItem("C4");
 
 	it_ak42	= FindItem("AK42 Assault Pistol");
     it_dual = FindItem("MK23 Dual");

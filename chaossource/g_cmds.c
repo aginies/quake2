@@ -1095,7 +1095,7 @@ void Cmd_PlayerList_f(edict_t *ent)
 {
     int i;
     char st[80];
-    char text[1400];
+    char text[4096];
     edict_t *e2;
     // connect time, ping, score, name
     *text = 0;
@@ -1110,11 +1110,11 @@ void Cmd_PlayerList_f(edict_t *ent)
             e2->client->resp.score,
             e2->client->pers.netname);
         if (strlen(text) + strlen(st) > sizeof(text) - 50) {
-            sprintf(text+strlen(text), "And more...\n");
+            strlcat(text, "And more...\n", sizeof(text));
             gi.cprintf(ent, PRINT_HIGH, "%s", text);
             return;
         }
-        strcat(text, st);
+        strlcat(text, st, sizeof(text));
     }
     gi.cprintf(ent, PRINT_HIGH, "%s", text);
 }
@@ -1145,9 +1145,9 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 
 	if (arg0)
 	{
-		strcat (text, gi.argv(0));
-		strcat (text, " ");
-		strcat (text, gi.args());
+		strlcat (text, gi.argv(0), sizeof(text));
+		strlcat (text, " ", sizeof(text));
+		strlcat (text, gi.args(), sizeof(text));
 	}
 	else
 	{
@@ -1158,14 +1158,14 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 			p++;
 			p[strlen(p)-1] = 0;
 		}
-		strcat(text, p);
+		strlcat(text, p, sizeof(text));
 	}
 
 	// don't let text be too long for malicious reasons
 	if (strlen(text) > 150)
 		text[150] = 0;
 
-	strcat(text, "\n");
+	strlcat(text, "\n", sizeof(text));
 
 	if (dedicated->value)
 		gi.cprintf(NULL, PRINT_CHAT, "%s", text);

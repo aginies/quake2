@@ -412,11 +412,6 @@ void Think_Weapon (edict_t *ent)
 	// call active weapon think routine
 	if (ent->client->pers.weapon && ent->client->pers.weapon->weaponthink)
 	{
-		is_quad = (ent->client->quad_framenum > level.framenum);
-		if (ent->client->silencer_shots)
-			is_silenced = MZ_SILENCED;
-		else
-			is_silenced = 0;
 		ent->client->pers.weapon->weaponthink (ent);
 	}
 }
@@ -744,7 +739,7 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -898,7 +893,7 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -912,7 +907,7 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_GRENADE | is_silenced);
+	gi.WriteByte (MZ_GRENADE | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -950,7 +945,7 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 	damage = 100 + (int)(random() * 20.0);
 	radius_damage = 120;
 	damage_radius = 120;
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 	{
 		damage *= 4;
 		radius_damage *= 4;
@@ -968,7 +963,7 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_ROCKET | is_silenced);
+	gi.WriteByte (MZ_ROCKET | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -990,7 +985,7 @@ void Weapon_GuidedRocket_Fire (edict_t *ent)
     damage = 100 + (int)(random() * 20.0);
     radius_damage = 120;
     damage_radius = 120;
-    if (is_quad)
+    if ((ent->client->quad_framenum > level.framenum))
     {
         damage *= 4;
         radius_damage *= 4;
@@ -1008,7 +1003,7 @@ void Weapon_GuidedRocket_Fire (edict_t *ent)
     // send muzzle flash
     gi.WriteByte (svc_muzzleflash);
     gi.WriteShort (ent-g_edicts);
-    gi.WriteByte (MZ_ROCKET | is_silenced);
+    gi.WriteByte (MZ_ROCKET | (ent->client->silencer_shots ? MZ_SILENCED : 0));
     gi.multicast (ent->s.origin, MULTICAST_PVS);
 
     ent->client->ps.gunframe++;
@@ -1045,7 +1040,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	vec3_t	start;
 	vec3_t	offset;
 
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 		damage *= 4;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 	VectorSet(offset, 12, 6, ent->viewheight-8);
@@ -1066,7 +1061,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	{
 		gi.WriteByte (svc_muzzleflash);
 		gi.WriteShort (ent-g_edicts);
-		gi.WriteByte (MZ_HYPERBLASTER | is_silenced);
+		gi.WriteByte (MZ_HYPERBLASTER | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 		gi.multicast (ent->s.origin, MULTICAST_PVS);
 	}
 	else
@@ -1147,14 +1142,8 @@ void Old_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t
 
 void Cmd_Reload_f (edict_t *ent)
 {
-
-//      int rds_left;           //+BD - Variable to handle rounds left
-        //+BD - If the player is dead, don't bother
-        gi.dprintf("DEBUG RELOAD \n");
-
         if(ent->deadflag == DEAD_DEAD)
         {
-                //gi.centerprintf(ent, "I know you're a hard ass,\nBUT YOU'RE FUCKING DEAD!!\n");
                 return;
         }
 
@@ -1162,22 +1151,14 @@ void Cmd_Reload_f (edict_t *ent)
             || ent->client->weaponstate == WEAPON_DROPPING
             || ent->client->weaponstate == WEAPON_FIRING )
         {
-        gi.dprintf("DEBUG RELOAD return \n");
                 return;
         }
 
-        gi.dprintf("DEBUG %s \n", ent->client->weaponstate);
         if (!ent->client->fast_reload)
             ent->client->reload_attempts--;
         if ( ent->client->reload_attempts < 0 )
             ent->client->reload_attempts = 0;
 
-        //First, grab the current magazine max count...
-//        ent->client->curr_weap == DUAL_NUM;
-        
-        // don't let them start fast reloading until far enough into the firing sequence
-        // this gives them a chance to break off from reloading to fire the weapon - zuc
-        gi.dprintf("DEBUG before ent->client->ps.gunframe >=  48 \n");
         if ( ent->client->ps.gunframe >=  48 )
         {
             ent->client->fast_reload = 1;
@@ -1186,21 +1167,11 @@ void Cmd_Reload_f (edict_t *ent)
         {
             ent->client->reload_attempts++;
         }
-        gi.dprintf("DEBUG after  ent->client->ps.gunframe >=  48 \n");
-//        if (!(ent->client->pers.inventory[ent->client->ammo_index] >= 2))
-//            return;
-        //FIREBLADE 7/11/1999 - stop reloading when weapon already full
-//        if (ent->client->dual_rds == ent->client->dual_max)
-//            return;
 
         ent->client->weaponstate = WEAPON_RELOADING;
 
-//        sv_shelloff->value = 12;
         ent->client->dual_rds = 12;
-        gi.dprintf("DEBUG after ent->client->dual_rds = 12 \n");
         ent->client->weaponstate = WEAPON_READY;
-//        ent->client->dual_rds ent->client->dual_max
-
 }
 
 void Dual_Fire(edict_t *ent)
@@ -1216,7 +1187,7 @@ void Dual_Fire(edict_t *ent)
         int             height;
 
         height = 8;
-        if (is_quad)
+        if ((ent->client->quad_framenum > level.framenum))
             damage *= 4;
 
         spread = AdjustSpread( ent, spread );
@@ -1399,7 +1370,7 @@ void Dual_Fire(edict_t *ent)
         gi.WriteByte (svc_muzzleflash);
         gi.WriteShort (ent-g_edicts);
         //If not silenced, play a shot sound for everyone else
-        gi.WriteByte (MZ_MACHINEGUN | is_silenced);
+        gi.WriteByte (MZ_MACHINEGUN | (ent->client->silencer_shots ? MZ_SILENCED : 0));
         gi.multicast (ent->s.origin, MULTICAST_PVS);
         PlayerNoise(ent, start, PNOISE_WEAPON);
 
@@ -1539,7 +1510,7 @@ void Machinegun_Fire (edict_t *ent)
 		return;
 	}
 
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 	{
 		damage *= 4;
 		kick *= 4;
@@ -1570,7 +1541,7 @@ void Machinegun_Fire (edict_t *ent)
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_MACHINEGUN | is_silenced);
+	gi.WriteByte (MZ_MACHINEGUN | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
@@ -1658,7 +1629,7 @@ void Chaingun_Fire (edict_t *ent)
 		return;
 	}
 
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 	{
 		damage *= 4;
 		kick *= 4;
@@ -1685,7 +1656,7 @@ void Chaingun_Fire (edict_t *ent)
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte ((MZ_CHAINGUN1 + shots - 1) | is_silenced);
+	gi.WriteByte ((MZ_CHAINGUN1 + shots - 1) | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
@@ -1734,7 +1705,7 @@ void weapon_shotgun_fire (edict_t *ent)
 	VectorSet(offset, 0, 8,  ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 	{
 		damage *= 4;
 		kick *= 4;
@@ -1748,7 +1719,7 @@ void weapon_shotgun_fire (edict_t *ent)
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_SHOTGUN | is_silenced);
+	gi.WriteByte (MZ_SHOTGUN | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -1784,7 +1755,7 @@ void weapon_supershotgun_fire (edict_t *ent)
 	VectorSet(offset, 0, 8,  ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 	{
 		damage *= 4;
 		kick *= 4;
@@ -1802,7 +1773,7 @@ void weapon_supershotgun_fire (edict_t *ent)
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_SSHOTGUN | is_silenced);
+	gi.WriteByte (MZ_SSHOTGUN | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -1849,7 +1820,7 @@ void weapon_railgun_fire (edict_t *ent)
 		kick = 250;
 	}
 
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 	{
 		damage *= 4;
 		kick *= 4;
@@ -1867,7 +1838,7 @@ void weapon_railgun_fire (edict_t *ent)
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_RAILGUN | is_silenced);
+	gi.WriteByte (MZ_RAILGUN | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -1912,7 +1883,7 @@ void weapon_bfg_fire (edict_t *ent)
 		// send muzzle flash
 		gi.WriteByte (svc_muzzleflash);
 		gi.WriteShort (ent-g_edicts);
-		gi.WriteByte (MZ_BFG | is_silenced);
+		gi.WriteByte (MZ_BFG | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 		gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 		ent->client->ps.gunframe++;
@@ -1929,7 +1900,7 @@ void weapon_bfg_fire (edict_t *ent)
 		return;
 	}
 
-	if (is_quad)
+	if ((ent->client->quad_framenum > level.framenum))
 		damage *= 4;
 
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
@@ -1974,7 +1945,7 @@ void Plasma_Fire(edict_t *ent, vec3_t g_offset, int damage)
    int consume = 1;
    int sr;
 
-   if (is_quad)
+   if ((ent->client->quad_framenum > level.framenum))
        damage *= 4;
 
    AngleVectors(ent->client->v_angle, forward, right, NULL);
@@ -2003,7 +1974,7 @@ void Plasma_Fire(edict_t *ent, vec3_t g_offset, int damage)
    // send muzzle flash
    gi.WriteByte(svc_muzzleflash);
    gi.WriteShort(ent - g_edicts);
-   gi.WriteByte(MZ_BLUEHYPERBLASTER | is_silenced);
+   gi.WriteByte(MZ_BLUEHYPERBLASTER | (ent->client->silencer_shots ? MZ_SILENCED : 0));
    gi.multicast(ent->s.origin, MULTICAST_PVS);
 
    PlayerNoise(ent, start, PNOISE_WEAPON);

@@ -573,9 +573,6 @@ extern	cvar_t	*maxclients;
 
 extern  cvar_t  *sv_shelloff;
 
-qboolean	is_quad;     //MATTHIAS
-byte		is_silenced;
-
 #define world	(&g_edicts[0])
 
 // item spawnflags

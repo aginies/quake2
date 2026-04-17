@@ -45,12 +45,10 @@ void NoCamp_ClientThink(edict_t *ent, usercmd_t *ucmd) {
 	if(ent->deadflag != DEAD_NO)
 		return;
 
-    if(ent->flags != FL_OBSERVER) { return; }
+    if(ent->flags & FL_OBSERVER) { return; }
 
 	if(level.time < client->decamp_time) {
 		if(client->decamp_count) {
-			if(client->decamp_count < 4 && client->decamp_fire && (ucmd->forwardmove || ucmd->sidemove))
-                gi.dprintf("");
 			if(ucmd->buttons & BUTTON_ATTACK)
 				client->decamp_fire++;
 		}
@@ -87,13 +85,9 @@ void NoCamp_ClientThink(edict_t *ent, usercmd_t *ucmd) {
 
 	sec = camp_warn->value - client->decamp_count / 2 + 2;
 	if(sec >= 0 && sec <= camp_warn->value && client->decamp_count > 3)
-        gi.dprintf("!!!! %s is doing Camping !!!!\n", ent->client->pers.netname);
         cprintf2(ent, PRINT_HIGH, " Move your ass %s! (you still have %d seconds to comply)!\n", ent->client->pers.netname, sec);
 
 	if(client->decamp_count > camp_warn->value * 2 + 5) {
-		//centerprintf(ent, "Killed for camping.");
-        gi.dprintf(" %s Killed for camping!\n", ent->client->pers.netname);
-
 		ent->health = 0;
 		player_die(ent, ent, ent, 100000, vec3_origin);
 		ent->deadflag = DEAD_DEAD;

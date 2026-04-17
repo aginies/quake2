@@ -2064,39 +2064,39 @@ void CTFSay_Team(edict_t *who, char *msg)
 				case 'l' :
 				case 'L' :
 					CTFSay_Team_Location(who, buf);
-					strcpy(p, buf);
-					p += strlen(buf);
+					strlcpy(p, buf, sizeof(outmsg) - (p - outmsg));
+					p += strlen(p);
 					break;
 				case 'a' :
 				case 'A' :
 					CTFSay_Team_Armor(who, buf);
-					strcpy(p, buf);
-					p += strlen(buf);
+					strlcpy(p, buf, sizeof(outmsg) - (p - outmsg));
+					p += strlen(p);
 					break;
 				case 'h' :
 				case 'H' :
 					CTFSay_Team_Health(who, buf);
-					strcpy(p, buf);
-					p += strlen(buf);
+					strlcpy(p, buf, sizeof(outmsg) - (p - outmsg));
+					p += strlen(p);
 					break;
 				case 't' :
 				case 'T' :
 					CTFSay_Team_Tech(who, buf);
-					strcpy(p, buf);
-					p += strlen(buf);
+					strlcpy(p, buf, sizeof(outmsg) - (p - outmsg));
+					p += strlen(p);
 					break;
 				case 'w' :
 				case 'W' :
 					CTFSay_Team_Weapon(who, buf);
-					strcpy(p, buf);
-					p += strlen(buf);
+					strlcpy(p, buf, sizeof(outmsg) - (p - outmsg));
+					p += strlen(p);
 					break;
 
 				case 'n' :
 				case 'N' :
 					CTFSay_Team_Sight(who, buf);
-					strcpy(p, buf);
-					p += strlen(buf);
+					strlcpy(p, buf, sizeof(outmsg) - (p - outmsg));
+					p += strlen(p);
 					break;
 
 				default :

@@ -30,8 +30,6 @@ void EjectShell (edict_t *self, vec3_t start, int toggle )
     if (sv_shelloff->value)
         return;
 
-    gi.dprintf("DEBUG EjectShell !\n");
-
     shell = G_Spawn();
     ++shells;
 
@@ -45,107 +43,55 @@ void EjectShell (edict_t *self, vec3_t start, int toggle )
     VectorMA (start, 6, forward, start);
     VectorMA (start, -9, up, start);
 
+    {
+        typedef struct {
+            float min_f2, max_f2, fwd_scale, up_scale;
+        } shell_offset_t;
 
-    if ( (forward[2] >= -1) && (forward[2] < -0.99) ) {
-        VectorMA (start, 5, forward, start);
-        VectorMA (start, -0.5, up, start); }
+        static const shell_offset_t shell_offsets[] = {
+            {-1.00f, -0.99f,  5.0f, -0.5f},
+            {-0.99f, -0.98f,  5.0f, -0.1f},
+            {-0.98f, -0.97f,  5.1f,  0.3f},
+            {-0.97f, -0.96f,  5.2f,  0.7f},
+            {-0.96f, -0.95f,  5.2f,  1.1f},
+            {-0.95f, -0.94f,  5.3f,  1.5f},
+            {-0.94f, -0.93f,  5.4f,  1.9f},
+            {-0.93f, -0.92f,  5.5f,  2.3f},
+            {-0.92f, -0.91f,  5.6f,  2.7f},
+            {-0.91f, -0.90f,  5.7f,  3.1f},
+            {-0.90f, -0.85f,  5.8f,  3.5f},
+            {-0.85f, -0.80f,  6.0f,  4.0f},
+            {-0.80f, -0.60f,  6.5f,  4.5f},
+            {-0.60f, -0.40f,  8.0f,  5.5f},
+            {-0.40f, -0.20f,  9.5f,  6.0f},
+            {-0.20f,  0.00f, 11.0f,  6.5f},
+            { 0.00f,  0.20f, 12.0f,  7.0f},
+            { 0.20f,  0.40f, 14.0f,  6.5f},
+            { 0.40f,  0.60f, 16.0f,  6.0f},
+            { 0.60f,  0.80f, 18.0f,  5.0f},
+            { 0.80f,  0.85f, 18.0f,  4.0f},
+            { 0.85f,  0.90f, 18.0f,  2.5f},
+            { 0.90f,  0.91f, 18.2f,  2.2f},
+            { 0.91f,  0.92f, 18.4f,  1.9f},
+            { 0.92f,  0.93f, 18.6f,  1.6f},
+            { 0.93f,  0.94f, 18.8f,  1.3f},
+            { 0.94f,  0.95f, 19.0f,  1.0f},
+            { 0.95f,  0.96f, 19.2f,  0.7f},
+            { 0.96f,  0.97f, 19.4f,  0.4f},
+            { 0.97f,  0.98f, 19.6f, -0.2f},
+            { 0.98f,  0.99f, 19.8f, -0.6f},
+            { 0.99f,  1.01f, 20.0f, -1.0f}
+        };
 
-    else if ( (forward[2] >= -0.99) && (forward[2] < -0.98) ) {
-        VectorMA (start, 5, forward, start);
-        VectorMA (start, -.1, up, start); }
-    else if ( (forward[2] >= -0.98) && (forward[2] < -0.97) ) {
-        VectorMA (start, 5.1, forward, start);
-        VectorMA (start, 0.3, up, start); }
-    else if ( (forward[2] >= -0.97) && (forward[2] < -0.96) ) {
-        VectorMA (start, 5.2, forward, start);
-        VectorMA (start, 0.7, up, start); }
-    else if ( (forward[2] >= -0.96) && (forward[2] < -0.95) ) {
-        VectorMA (start, 5.2, forward, start);
-        VectorMA (start, 1.1, up, start); }
-   else if ( (forward[2] >= -0.95) && (forward[2] < -0.94) ) {
-        VectorMA (start, 5.3, forward, start);
-        VectorMA (start, 1.5, up, start); }
-    else if ( (forward[2] >= -0.94) && (forward[2] < -0.93) ) {
-        VectorMA (start, 5.4, forward, start);
-        VectorMA (start, 1.9, up, start); }
-    else if ( (forward[2] >= -0.93) && (forward[2] < -0.92) ) {
-        VectorMA (start, 5.5, forward, start);
-        VectorMA (start, 2.3, up, start); }
-    else if ( (forward[2] >= -0.92) && (forward[2] < -0.91) ) {
-        VectorMA (start, 5.6, forward, start);
-        VectorMA (start, 2.7, up, start); }
-    else if ( (forward[2] >= -0.91) && (forward[2] < -0.9) ) {
-        VectorMA (start, 5.7, forward, start);
-        VectorMA (start, 3.1, up, start); }
-
-    else if ( (forward[2] >= -0.9) && (forward[2] < -0.85) ) {
-        VectorMA (start, 5.8, forward, start);
-        VectorMA (start, 3.5, up, start); }
-    else if ( (forward[2] >= -0.85) && (forward[2] < -0.8) ) {
-        VectorMA (start, 6, forward, start);
-        VectorMA (start, 4, up, start); }
-    else if ( (forward[2] >= -0.8) && (forward[2] < -0.6) ) {
-        VectorMA (start, 6.5, forward, start);
-        VectorMA (start, 4.5, up , start); }
-    else if ( (forward[2] >= -0.6) && (forward[2] < -0.4) ) {
-        VectorMA (start, 8, forward, start);
-        VectorMA (start, 5.5, up , start); }
-    else if ( (forward[2] >= -0.4) && (forward[2] < -0.2) ) {
-        VectorMA (start, 9.5, forward, start);
-        VectorMA (start, 6, up , start); }
-    else if ( (forward[2] >= -0.2) && (forward[2] < 0) ) {
-        VectorMA (start, 11, forward, start);
-       VectorMA (start, 6.5, up , start); }
-    else if ( (forward[2] >= 0) && (forward[2] < 0.2) ) {
-        VectorMA (start, 12, forward, start);
-        VectorMA (start, 7, up, start); }
-    else if ( (forward[2] >= 0.2) && (forward[2] < 0.4) ) {
-        VectorMA (start, 14, forward, start);
-        VectorMA (start, 6.5, up, start); }
-    else if ( (forward[2] >= 0.4) && (forward[2] < 0.6) ) {
-        VectorMA (start, 16, forward, start);
-        VectorMA (start, 6, up, start); }
-    else if ( (forward[2] >= 0.6) && (forward[2] < 0.8) ) {
-        VectorMA (start, 18, forward, start);
-        VectorMA (start, 5, up, start); }
-    else if ( (forward[2] >= 0.8) && (forward[2] < 0.85) ) {
-        VectorMA (start, 18, forward, start);
-        VectorMA (start, 4, up, start); }
-    else if ( (forward[2] >= 0.85) && (forward[2] < 0.9) ) {
-        VectorMA (start, 18, forward, start);
-        VectorMA (start, 2.5, up, start); }
-
-    else if ( (forward[2] >= 0.9) && (forward[2] < 0.91) ) {
-        VectorMA (start, 18.2, forward, start);
-        VectorMA (start, 2.2, up, start); }
-    else if ( (forward[2] >= 0.91) && (forward[2] < 0.92) ) {
-        VectorMA (start, 18.4, forward, start);
-        VectorMA (start, 1.9, up, start); }
-    else if ( (forward[2] >= 0.92) && (forward[2] < 0.93) ) {
-        VectorMA (start, 18.6, forward, start);
-        VectorMA (start, 1.6, up, start); }
-    else if ( (forward[2] >= 0.93) && (forward[2] < 0.94) ) {
-        VectorMA (start, 18.8, forward, start);
-        VectorMA (start, 1.3, up, start); }
-    else if ( (forward[2] >= 0.94) && (forward[2] < 0.95) ) {
-        VectorMA (start, 19, forward, start);
-        VectorMA (start, 1, up, start); }
-   else if ( (forward[2] >= 0.95) && (forward[2] < 0.96) ) {
-        VectorMA (start, 19.2, forward, start);
-        VectorMA (start, 0.7, up, start); }
-    else if ( (forward[2] >= 0.96) && (forward[2] < 0.97) ) {
-        VectorMA (start, 19.4, forward, start);
-        VectorMA (start, 0.4, up, start); }
-    else if ( (forward[2] >= 0.97) && (forward[2] < 0.98) ) {
-        VectorMA (start, 19.6, forward, start);
-        VectorMA (start, -0.2, up, start); }
-    else if ( (forward[2] >= 0.98) && (forward[2] < 0.99) ) {
-        VectorMA (start, 19.8, forward, start);
-        VectorMA (start, -0.6, up, start); }
-
-    else if ( (forward[2] >= 0.99) && (forward[2] <= 1) ) {
-        VectorMA (start, 20, forward, start);
-        VectorMA (start, -1, up , start); }
+        int i;
+        for (i = 0; i < (sizeof(shell_offsets)/sizeof(shell_offsets[0])); i++) {
+            if (forward[2] >= shell_offsets[i].min_f2 && forward[2] < shell_offsets[i].max_f2) {
+                VectorMA (start, shell_offsets[i].fwd_scale, forward, start);
+                VectorMA (start, shell_offsets[i].up_scale, up, start);
+                break;
+            }
+        }
+    }
 
     VectorCopy (start , shell->s.origin);
 
@@ -207,7 +153,6 @@ qboolean Observer(edict_t *ent, qboolean check)
     ent->movetype = MOVETYPE_NOCLIP;
     ent->client->ps.gunindex = 0;
     ent->solid = SOLID_NOT;
-    ent->client->ps.gunindex = 0;
     ent->client->ps.blend[3] = 0;
     ent->client->ps.rdflags &= ~RDF_UNDERWATER;
     ent->client->showscores = true;
@@ -346,9 +291,9 @@ char *chaos_statusbar =
 ;
 
 int StatusBar_Update(edict_t *ent) {
-    char statusbar[1400];
+    char statusbar[1400] = "";
 
-    if((ent->chaos_flags |= CHAOS_MAINMENU)) {
+    if((ent->chaos_flags & CHAOS_MAINMENU)) {
 //        gi.dprintf("DEBUG dans le menu %i !\n", ent->chaos_flags);   
         return 0;
     }

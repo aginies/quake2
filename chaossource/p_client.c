@@ -1952,17 +1952,29 @@ void ClientDisconnect (edict_t *ent)
 	
 	// LETHAL : start
 	if ( ent->client->flashlightactive )
-        {
-        	ent->client->flashlightactive = false;
-        
-	        if ( ent->client->flashlight )
-                	ent->client->flashlight->think = G_FreeEdict;
-        }
+	{
+		ent->client->flashlightactive = false;
+		
+		if ( ent->client->flashlight )
+			G_FreeEdict(ent->client->flashlight);
+	}
 
-    if( ent->client->teleporter ) 
-    {
-        G_FreeEdict(ent->client->teleporter);
-    }
+	// Clean up player-owned turrets
+	for (i = 0; i < 4; i++)
+	{
+		if (turrets[i] && turrets[i]->inuse && turrets[i]->owner == ent)
+		{
+			// Force turret to explode or just free it
+			// Turret_Explode handles array management internally
+			extern void Turret_Explode (edict_t *ent);
+			Turret_Explode(turrets[i]);
+		}
+	}
+
+	if( ent->client->teleporter ) 
+	{
+		G_FreeEdict(ent->client->teleporter);
+	}
 
 	// LETHAL : end
 

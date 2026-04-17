@@ -24,7 +24,7 @@ void weapon_chainsaw_fire (edict_t *ent)
 
 	damage = 30 + (int)(random() * 3.0);
 
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 	
 	AngleVectors(ent->client->v_angle, forward, NULL, NULL);	
@@ -68,9 +68,9 @@ void Weapon_Chainsaw (edict_t *ent)
 {
 	// 0 -11 :  putup:  Einschaltsequenz
 	// 12-19  cuton:  Hochfahren bzw vorstrecken zum Angriff
-	// 20-27   cut   :  vorgestreckter Angriff als beständiger Loop...aber beim stoppen immer noch bis fram 19 laufen lassen!
-	// 28-35    cutoff :  Säge zurück in Trageposition
-	// 36-55   idle  : rumdragen halt  pött-pött-pött  :)
+	// 20-27   cut   :  vorgestreckter Angriff als bestï¿½ndiger Loop...aber beim stoppen immer noch bis fram 19 laufen lassen!
+	// 28-35    cutoff :  Sï¿½ge zurï¿½ck in Trageposition
+	// 36-55   idle  : rumdragen halt  pï¿½tt-pï¿½tt-pï¿½tt  :)
 	// 56-60   putdown  : runternehmen
 
 
@@ -1183,18 +1183,24 @@ void weapon_sword_fire (edict_t *ent)
 {
 	int			damage;
 	edict_t		*blip = NULL;
-	vec3_t		forward, start, end, mins = {-3, -3, -3},maxs = {3, 3, 3};
+	vec3_t		forward, start, end, mins = {-3, -3, -3},maxs = {3, 3, 3}, v_origin;
 	trace_t		tr;
 
 	damage = 80 + (int)(random() * 60);
 
-	if (is_quad)
+	damage = CTFApplyStrength(ent, damage);
+
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 
+	// Center sphere at view origin for more accurate melee reach
+	VectorCopy(ent->s.origin, v_origin);
+	v_origin[2] += ent->viewheight;
+
 	// DAMAGE
-	while ((blip = findradius(blip, ent->s.origin, 100)) != NULL)
+	while ((blip = findradius(blip, v_origin, 100)) != NULL)
 	{
-		if (blip->takedamage)
+		if (blip->takedamage && blip->inuse)
 		{
 			if (blip == ent)
 				continue;
@@ -1203,27 +1209,38 @@ void weapon_sword_fire (edict_t *ent)
 			if (!infront(ent, blip))
 				continue;
 
-			if (blip->client && blip->client->pers.weapon == it_sword && infront (blip, ent))
+			// Check for sword blocking
+			if (blip->client && blip->health > 0 && blip->client->pers.weapon == it_sword && infront (blip, ent))
 			{
-				if (blip->client->weaponstate != WEAPON_FIRING)
+				// Don't block teammates (unless friendly fire is on, in which case T_Damage handles it)
+				if (TeamMembers(ent, blip) && !((int)(dmflags->value) & DF_NO_FRIENDLY_FIRE))
 				{
-					// 90% blocked
-					if (random() < 0.9)
-						gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/sword/blocked.wav"), 1, ATTN_NORM, 0);
-					else
-						T_Damage (blip, ent, ent, blip->velocity, blip->s.origin, blip->velocity, damage, 1, DAMAGE_ENERGY, MOD_SWORD);
+					// Continue to T_Damage which will handle FF rules
 				}
-				else
+				else if (!TeamMembers(ent, blip))
 				{
-					// 50% blocked
-					if (random() < 0.5)
-						gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/sword/blocked.wav"), 1, ATTN_NORM, 0);
+					if (blip->client->weaponstate != WEAPON_FIRING)
+					{
+						// 90% blocked
+						if (random() < 0.9)
+						{
+							gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/sword/blocked.wav"), 1, ATTN_NORM, 0);
+							continue;
+						}
+					}
 					else
-						T_Damage (blip, ent, ent, blip->velocity, blip->s.origin, blip->velocity, damage, 1, DAMAGE_ENERGY, MOD_SWORD);
+					{
+						// 50% blocked
+						if (random() < 0.5)
+						{
+							gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/sword/blocked.wav"), 1, ATTN_NORM, 0);
+							continue;
+						}
+					}
 				}
 			}
-			else
-				T_Damage (blip, ent, ent, blip->velocity, blip->s.origin, blip->velocity, damage, 1, DAMAGE_ENERGY, MOD_SWORD);
+			
+			T_Damage (blip, ent, ent, blip->velocity, blip->s.origin, blip->velocity, damage, 1, DAMAGE_ENERGY, MOD_SWORD);
 		}
 	}
 
@@ -1232,11 +1249,9 @@ void weapon_sword_fire (edict_t *ent)
 	AngleVectors (ent->client->v_angle, forward, NULL, NULL);
 	VectorNormalize(forward);
 
-	VectorCopy(ent->s.origin, start);
-	start[2] +=15;
-
+	// Start trace from view origin
+	VectorCopy(v_origin, start);
 	VectorMA(start, 100, forward, end);
-	end[2] += 24;
 
 	tr = gi.trace(start, mins, maxs, end, ent, MASK_SOLID);
 
@@ -1445,7 +1460,6 @@ void fire_air (edict_t *self, vec3_t start, vec3_t dir)
 			if (dist < 400 && blip->takedamage)
 				T_Damage (blip, self, self, blip->velocity, blip->s.origin, blip->velocity, 15, 1, DAMAGE_ENERGY, MOD_AIRFIST);
 
-			blip->s.origin[2] += 5;
 			VectorAdd(blip->velocity, addvect, blip->velocity);
 
 			if (blip->client && blip->client->camera)
@@ -1711,7 +1725,7 @@ void weapon_esupershotgun_fire (edict_t *ent)
 	VectorSet(offset, 0, 8,  ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 	{
 		damage *= 4;
 		kick *= 4;
@@ -1732,7 +1746,7 @@ void weapon_esupershotgun_fire (edict_t *ent)
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_SSHOTGUN | is_silenced);
+	gi.WriteByte (MZ_SSHOTGUN | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -1772,34 +1786,30 @@ void arrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 	{
 		self->s.sound = 0;
 
-		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
+		if (other->client && other->health > 0 && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 70% blocked
-			if (random() < 0.7)
+			// Teammates don't block unless FF is on
+			if (!TeamMembers(self->owner, other) || !((int)(dmflags->value) & DF_NO_FRIENDLY_FIRE))
 			{
-				self->s.sound = 0;
-				self->movetype = MOVETYPE_BOUNCE;
-				gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/crossbow/hit3.wav"), 1, ATTN_NORM, 0);
-				self->movetype = MOVETYPE_BOUNCE;
-				self->velocity[0] += crandom() * 300;
-				self->velocity[1] += crandom() * 300;
-				self->velocity[2] += crandom() * 500;
-				vectoangles (self->velocity, self->s.angles);
-			}
-			else
-			{
-				T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_ARROW);
-				gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/crossbow/catch.wav"), 1, ATTN_NORM, 0);
-				G_FreeEdict (self);
+				// 70% blocked
+				if (random() < 0.7)
+				{
+					self->s.sound = 0;
+					self->movetype = MOVETYPE_BOUNCE;
+					gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/crossbow/hit3.wav"), 1, ATTN_NORM, 0);
+					self->movetype = MOVETYPE_BOUNCE;
+					self->velocity[0] += crandom() * 300;
+					self->velocity[1] += crandom() * 300;
+					self->velocity[2] += crandom() * 500;
+					vectoangles (self->velocity, self->s.angles);
+					return;
+				}
 			}
 		}
-		else
-		{
-			T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_ARROW);
-			gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/crossbow/catch.wav"), 1, ATTN_NORM, 0);
 
-			G_FreeEdict (self);
-		}
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_ARROW);
+		gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/crossbow/catch.wav"), 1, ATTN_NORM, 0);
+		G_FreeEdict (self);
 	}
 	else if ((Q_stricmp(other->classname, "func_door") == 0) || (Q_stricmp(other->classname, "func_plat") == 0)) //door or plat
 	{
@@ -1864,7 +1874,7 @@ void Weapon_Crossbow_Fire (edict_t *ent)
 
 	damage = 50 + (int)(random() * 20.0);
 
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 	{
 		damage *= 4;
 	}
@@ -1878,7 +1888,7 @@ void Weapon_Crossbow_Fire (edict_t *ent)
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_arrow (ent, start, forward, damage, 1600);
 
-	if (!is_silenced)
+	if (!ent->client->silencer_shots)
 		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/crossbow/release1.wav"), 1, ATTN_NORM, 0);
 
 	ent->client->ps.gunframe++;
@@ -1919,34 +1929,30 @@ void parrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *s
 	{
 		self->s.sound = 0;
 
-		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
+		if (other->client && other->health > 0 && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 70% blocked
-			if (random() < 0.7)
+			// Teammates don't block unless FF is on
+			if (!TeamMembers(self->owner, other) || !((int)(dmflags->value) & DF_NO_FRIENDLY_FIRE))
 			{
-				self->s.sound = 0;
-				self->movetype = MOVETYPE_BOUNCE;
-				gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/crossbow/hit3.wav"), 1, ATTN_NORM, 0);
-				self->movetype = MOVETYPE_BOUNCE;
-				self->velocity[0] += crandom() * 300;
-				self->velocity[1] += crandom() * 300;
-				self->velocity[2] += crandom() * 500;
-				vectoangles (self->velocity, self->s.angles);
-			}
-			else
-			{
-				T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_PARROW);
-				gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/crossbow/catch.wav"), 1, ATTN_NORM, 0);
-				G_FreeEdict (self);
+				// 70% blocked
+				if (random() < 0.7)
+				{
+					self->s.sound = 0;
+					self->movetype = MOVETYPE_BOUNCE;
+					gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/crossbow/hit3.wav"), 1, ATTN_NORM, 0);
+					self->movetype = MOVETYPE_BOUNCE;
+					self->velocity[0] += crandom() * 300;
+					self->velocity[1] += crandom() * 300;
+					self->velocity[2] += crandom() * 500;
+					vectoangles (self->velocity, self->s.angles);
+					return;
+				}
 			}
 		}
-		else
-		{
-			T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_PARROW);
-			gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/crossbow/catch.wav"), 1, ATTN_NORM, 0);
 
-			G_FreeEdict (self);
-		}
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_PARROW);
+		gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/crossbow/catch.wav"), 1, ATTN_NORM, 0);
+		G_FreeEdict (self);
 
 
 		if (other->client)
@@ -2020,7 +2026,7 @@ void Weapon_PoisonCrossbow_Fire (edict_t *ent)
 
 	damage = 30 + (int)(random() * 20.0);
 
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 	{
 		damage *= 4;
 	}
@@ -2034,7 +2040,7 @@ void Weapon_PoisonCrossbow_Fire (edict_t *ent)
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_poisonarrow (ent, start, forward, damage, 1600);
 
-	if (!is_silenced)
+	if (!ent->client->silencer_shots)
 		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/crossbow/release1.wav"), 1, ATTN_NORM, 0);
 
 	ent->client->ps.gunframe++;
@@ -2110,7 +2116,7 @@ void Weapon_ExplosiveCrossbow_Fire (edict_t *ent)
 
 	damage = ex_arrow_damage->value;
 
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 	{
 		damage *= 4;
 	}
@@ -2124,7 +2130,7 @@ void Weapon_ExplosiveCrossbow_Fire (edict_t *ent)
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_explosivearrow (ent, start, forward, damage, 1000);
 
-	if (!is_silenced)
+	if (!ent->client->silencer_shots)
 		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/crossbow/release1.wav"), 1, ATTN_NORM, 0);
 
 	ent->client->ps.gunframe++;
@@ -2266,7 +2272,7 @@ void Weapon_HomingLauncher_Fire (edict_t *ent)
 	damage = 50 + (int)(random() * 20.0);
 	radius_damage = 50;
 	damage_radius = 100;
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 	{
 		damage *= 4;
 		radius_damage *= 4;
@@ -2284,7 +2290,7 @@ void Weapon_HomingLauncher_Fire (edict_t *ent)
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_ROCKET | is_silenced);
+	gi.WriteByte (MZ_ROCKET | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -2329,33 +2335,30 @@ void buzz_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *sur
 
 	if (other->takedamage && self->movetype != MOVETYPE_BOUNCE)
 	{
-		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
+		if (other->client && other->health > 0 && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 70% blocked
-			if (random() < 0.7)
+			// Teammates don't block unless FF is on
+			if (!TeamMembers(self->owner, other) || !((int)(dmflags->value) & DF_NO_FRIENDLY_FIRE))
 			{
-				self->movetype = MOVETYPE_BOUNCE;
-				self->nextthink = level.time + 5;
-				self->think = G_FreeEdict;
-				self->velocity[0] += crandom() * 300;
-				self->velocity[1] += crandom() * 300;
-				self->velocity[2] += crandom() * 500;
-				vectoangles (self->velocity, self->s.angles);
-				gi.sound(other, CHAN_VOICE, gi.soundindex("weapons/sword/zblock.wav"), 1, ATTN_NORM, 0);
-			}
-			else
-			{
-				T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_BUZZ);
-				gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/buzz/buzzflsh.wav"), 1, ATTN_NORM, 0);
-				G_FreeEdict (self);
+				// 70% blocked
+				if (random() < 0.7)
+				{
+					self->movetype = MOVETYPE_BOUNCE;
+					self->nextthink = level.time + 5;
+					self->think = G_FreeEdict;
+					self->velocity[0] += crandom() * 300;
+					self->velocity[1] += crandom() * 300;
+					self->velocity[2] += crandom() * 500;
+					vectoangles (self->velocity, self->s.angles);
+					gi.sound(other, CHAN_VOICE, gi.soundindex("weapons/sword/zblock.wav"), 1, ATTN_NORM, 0);
+					return;
+				}
 			}
 		}
-		else
-		{
-			T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_BUZZ);
-			gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/buzz/buzzflsh.wav"), 1, ATTN_NORM, 0);
-			G_FreeEdict (self);
-		}
+
+		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, self->dmg, 1, DAMAGE_BULLET, MOD_BUZZ);
+		gi.sound(other, CHAN_WEAPON, gi.soundindex("weapons/buzz/buzzflsh.wav"), 1, ATTN_NORM, 0);
+		G_FreeEdict (self);
 	}
 	else
 	{
@@ -2414,7 +2417,7 @@ void Weapon_Buzzsaw_Fire (edict_t *ent)
 
 	damage = 90 + (int)(random() * 20.0);
 
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 	{
 		damage *= 4;
 	}
@@ -2428,7 +2431,7 @@ void Weapon_Buzzsaw_Fire (edict_t *ent)
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_buzz (ent, start, forward, damage, 1800);
 
-	if (!is_silenced)
+	if (!ent->client->silencer_shots)
 		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/buzz/buzzfire.wav"), 1, ATTN_NORM, 0);
 
 	ent->client->ps.gunframe++;
@@ -2643,7 +2646,7 @@ void weapon_flashgrenade_fire (edict_t *ent, qboolean held)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -2963,7 +2966,7 @@ void weapon_lasergrenade_fire (edict_t *ent, qboolean held)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -3298,7 +3301,7 @@ void weapon_poisongrenade_fire (edict_t *ent, qboolean held)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -3508,26 +3511,25 @@ void C4_Die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, v
 
 void C4_Think (edict_t *ent)
 {
+	ent->nextthink = level.time + FRAMETIME;
 
-	ent->nextthink = level.time;
-	if (ent->owner && ent->owner->client && ent->owner->client->c4active == 0) 
-    {
-    	return;
-    }
-    else if (ent->owner->deadflag == DEAD_DEAD) 
-    {
-        gi.dprintf("DEBUG your are DEAD killing all C4!\n");
-        C4_Explode(ent);
-        return;
-    }
-    else if (ent->owner && ent->owner->client && ent->owner->client->c4active == 1)
-    {
-        gi.dprintf("%s Triggered a Cells explosion!\n", ent->owner->client->pers.netname);
-        C4_Explode(ent);
-        return;
-    } else {
-        gi.dprintf("DEBUG Should not be there at all! C4_Think\n");
-    }
+	if (!ent->owner || !ent->owner->inuse)
+	{
+		C4_Explode(ent);
+		return;
+	}
+
+	if (ent->owner->deadflag == DEAD_DEAD)
+	{
+		C4_Explode(ent);
+		return;
+	}
+
+	if (ent->owner->client && ent->owner->client->c4active == 1)
+	{
+		C4_Explode(ent);
+		return;
+	}
 }
 
 void C4_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
@@ -3612,7 +3614,7 @@ void weapon_c4_fire (edict_t *ent, qboolean held)
     float   radius;
 
     radius = damage+40;
-    if (is_quad)
+    if (ent->client->quad_framenum > level.framenum)
         damage *= 4;
 
     VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -4096,7 +4098,7 @@ void weapon_flashgrenadelauncher_fire (edict_t *ent)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -4110,7 +4112,7 @@ void weapon_flashgrenadelauncher_fire (edict_t *ent)
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_GRENADE | is_silenced);
+	gi.WriteByte (MZ_GRENADE | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -4142,7 +4144,7 @@ void weapon_poisongrenadelauncher_fire (edict_t *ent)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -4156,7 +4158,7 @@ void weapon_poisongrenadelauncher_fire (edict_t *ent)
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_GRENADE | is_silenced);
+	gi.WriteByte (MZ_GRENADE | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -4188,7 +4190,7 @@ void weapon_proxyminelauncher_fire (edict_t *ent)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
+	if (ent->client->quad_framenum > level.framenum)
 		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
@@ -4202,7 +4204,7 @@ void weapon_proxyminelauncher_fire (edict_t *ent)
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_GRENADE | is_silenced);
+	gi.WriteByte (MZ_GRENADE | (ent->client->silencer_shots ? MZ_SILENCED : 0));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	ent->client->ps.gunframe++;
@@ -4452,7 +4454,13 @@ int Valid_Target( edict_t *ent, edict_t *blip )
  			 || Q_stricmp(blip->classname, "item_tech2") == 0
  			 || Q_stricmp(blip->classname, "item_tech3") == 0
  			 || Q_stricmp(blip->classname, "item_tech4") == 0)
-  			return false;
+  				return false;
+			
+			// Generic items should be sucked in
+			if (blip->item)
+				return true;
+			
+			break;
 
 		case 'l':
 			if( Q_stricmp(blip->classname, "lasermine") == 0 
@@ -4472,7 +4480,8 @@ int Valid_Target( edict_t *ent, edict_t *blip )
 			  return true;
 			break;
 		case 't': 
-			if( Q_stricmp(blip->classname, "turret_rocket") == 0 )
+			if( Q_stricmp(blip->classname, "turret_rocket") == 0 
+			 || Q_stricmp(blip->classname, "turret_base") == 0 )
 			  return true;
 			break;
 		default:
@@ -4605,6 +4614,9 @@ void Vortex_Think (edict_t *ent)
 		{
 		  	if( !Valid_Target(ent, blip) )
 			  continue;
+
+			if(!visible(ent, blip))
+				continue;
 
 			VectorSubtract(blip->s.origin, ent->s.origin, blipdir);
 			dist = VectorLength(blipdir);
@@ -4834,85 +4846,93 @@ void Weapon_Vortex (edict_t *ent)
 
 void Nuke_Free (edict_t *ent)
 {
-  nuke_pointer = NULL;
-  nukestate = NUKE_INACTIVE;
-  G_FreeEdict(ent);
+    if (ent == nuke_pointer)
+    {
+        nuke_pointer = NULL;
+        nukestate = NUKE_INACTIVE;
+    }
+    G_FreeEdict(ent);
+}
+
+void Nuke_Radiation_Think (edict_t *self)
+{
+    edict_t     *target = NULL;
+    float       Distance, BlindTimeAdd;
+    vec3_t      v;
+    int         damage;
+
+    self->nextthink = level.time + FRAMETIME;
+
+    // Apply radiation damage to all clients in range
+    while ((target = findradius(target, self->s.origin, 3000)) != NULL)
+    {
+        if (!target->client || target->health <= 0)
+            continue;
+        if (!CanDamage (target, self))
+            continue;
+        if (target->client->invincible_framenum > level.framenum)
+            continue;
+        if (target->flags & FL_GODMODE)
+            continue;
+
+        VectorSubtract(self->s.origin, target->s.origin, v);
+        Distance = VectorLength(v);
+
+        // Visual effects for the victim
+        target->client->v_dmg_pitch = 50 * crandom();
+        target->client->v_dmg_roll = 50 * crandom();
+        target->client->damage_blend[0] = 0.5; // Greenish/Yellowish tint? (1,1,1 is white)
+        target->client->damage_blend[1] = 0.5;
+        target->client->damage_blend[2] = 0.0;
+        target->client->damage_alpha = 0.4;
+        target->client->v_dmg_time = level.time + 2;
+
+        if (Distance < 500)
+        {
+            BlindTimeAdd = 2;
+            target->client->BlindTime = BlindTimeAdd * 1.5;
+            target->client->BlindBase = blindtime->value;
+            damage = 10;
+        }
+        else if (Distance < 1500)
+        {
+            damage = 5;
+        }
+        else
+        {
+            damage = 2;
+        }
+
+        T_Damage (target, self, self->owner, target->velocity, target->s.origin, target->velocity, damage, 0, DAMAGE_ENERGY, MOD_NUKE);
+    }
+
+    self->delay -= FRAMETIME;
+    if (self->delay <= 0)
+    {
+        Nuke_Free(self);
+    }
 }
 
 void Cata_Explode (edict_t *ent)
 {
-
-  edict_t     *target = NULL;
-  float       Distance, BlindTimeAdd;
-  vec3_t      v;
-
-  // get some redundancy in the effect 
-  if (ent->s.skinnum < 7)
+    // Visual-only fallout particle
+    if (ent->s.skinnum < 7)
         ent->s.skinnum++;
-  else if (ent->s.skinnum == 7)
+    else if (ent->s.skinnum == 7)
         ent->s.skinnum = 1;
 
-  ent->s.frame++;
+    ent->s.frame++;
 
-  T_ShockWave(ent, 300, 500);
-  while ((target = findradius(target, ent->s.origin, 2000)) != NULL)
-    {
-      if (!target->client)
-	continue;
-      if (!CanDamage (target, ent))
-	continue;
-      if (target->client->camera)
-	continue;
-      if (target->client->invincible_framenum > level.framenum) // invulnerable
-	continue;
-      if (target->flags & FL_GODMODE) // god
-	continue;
-
-      BlindTimeAdd = 5;
-      target->client->BlindTime = BlindTimeAdd * 1.5 ;
-      target->client->BlindBase = blindtime->value;
-      target->client->v_dmg_pitch = 100 * crandom();
-      target->client->v_dmg_roll = 100 * crandom();
-      target->client->damage_blend[0] = 1;
-      target->client->damage_blend[1] = 1;
-      target->client->damage_blend[2] = 1;
-      target->client->damage_alpha = 0.8;
-      target->client->v_dmg_time = level.time + 5;
-
-    // Calculate the distance from the Nuke to the victim.
-      VectorSubtract(ent->s.origin, target->s.origin, v);
-      Distance = VectorLength(v);
-
-
-    // NO way to avoid an effect from a nuke blast
-      if ( Distance < 300 )
-      {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 30, 1, 30, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 200, NULL, 200, MOD_NUKE);
-          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast you were pulverised! Run Faster !\n");
-      } else if (Distance >= 300 && Distance <=500)
-      {
-         T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 5, 1, 5, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 5, NULL, 5, MOD_NUKE);
-          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! Radiation around ! Run Faster !\n");
-      } else if (Distance >= 500 && Distance <= 3000)
-      {
-          T_Damage (target, ent, ent->owner, target->velocity, target->s.origin, target->velocity, 1, 1, 1, MOD_NUKE);
-          T_RadiusDamage (ent, ent->owner, 1, NULL, 1, MOD_NUKE);
-          cprintf2 (ent->owner, PRINT_HIGH, "Nuke blast! Radiation around ! Run Faster !\n");
-      }
-    }
-
-  ent->nextthink = level.time + FRAMETIME;
-  ent->delay = ent->delay - FRAMETIME;
-  if(ent->delay <= 0)
-    G_FreeEdict (ent);
+    ent->nextthink = level.time + FRAMETIME;
+    ent->delay -= FRAMETIME;
+    if(ent->delay <= 0)
+        G_FreeEdict (ent);
 }
 
 void Nuke_Explode (edict_t *ent)
 {
   vec3_t      origin;
-  edict_t     *nuke, *stuff;
+  edict_t     *nuke, *stuff, *radiation;
   vec3_t      nuke_angs;
   vec3_t      forward, right, up;
   int         n, i;
@@ -4939,7 +4959,18 @@ void Nuke_Explode (edict_t *ent)
     VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
     origin[2] = origin[2] + 64;
 
-  // send explosion in all angles
+  // Spawn Radiation Core (handles damage and global nuke state)
+  radiation = G_Spawn();
+  VectorCopy(ent->s.origin, radiation->s.origin);
+  radiation->owner = ent->owner;
+  radiation->classname = "nuke_radiation";
+  radiation->think = Nuke_Radiation_Think;
+  radiation->nextthink = level.time + FRAMETIME;
+  radiation->delay = 6.0; // Fallout duration
+  nuke_pointer = radiation; // Transfer pointer to radiation core
+  gi.linkentity(radiation);
+
+  // send visual fallout particles in all angles
   for (i = 0; i < 56; i++)
     {
       rn = random();
@@ -4972,14 +5003,14 @@ void Nuke_Explode (edict_t *ent)
     else //(rn >= 0.8 || i < 0.9)
         stuff->s.effects |= EF_GREENGIB;
 
-      stuff->nextthink = level.time; //- 1;
+      stuff->nextthink = level.time + FRAMETIME;
       stuff->think = Cata_Explode;
-      stuff->delay = 6;
+      stuff->delay = 6.0;
       stuff->classname = "stuff";
       gi.linkentity(stuff);
     }
 
-  // explosion around
+  // visual explosion ring
   for (n = 0; n < 48; n++)
     {
       rn = random();
@@ -4995,7 +5026,7 @@ void Nuke_Explode (edict_t *ent)
       nuke->clipmask = MASK_SHOT;
       nuke->solid = SOLID_TRIGGER;
 	
-      stuff->s.modelindex = gi.modelindex("models/objects/r_explode/tris_hb.md2");
+      nuke->s.modelindex = gi.modelindex("models/objects/r_explode/tris_hb.md2");
       nuke->s.frame = random()*4;
 
     if (rn < 0.1)
@@ -5012,14 +5043,14 @@ void Nuke_Explode (edict_t *ent)
       VectorSet (nuke->mins, -3, -3, -3);
       VectorSet (nuke->maxs, 3, 3, 3);
       nuke->owner = ent->owner;
-      nuke->delay = 6;
+      nuke->delay = 6.0;
       nuke->think = Cata_Explode;
-      nuke->nextthink = level.time; // - FRAMETIME;
-      nuke->classname = "nuke";
+      nuke->nextthink = level.time + FRAMETIME;
+      nuke->classname = "nuke_visual";
       gi.linkentity(nuke);
     }
 
-  Nuke_Free(ent);
+  G_FreeEdict(ent); // Free main nuke missile
   return ;
 }
 
@@ -5106,7 +5137,7 @@ void weapon_nuke_fire (edict_t *ent, qboolean held)
 
   gi.WriteByte (svc_muzzleflash);
   gi.WriteShort (ent-g_edicts);
-  gi.WriteByte (MZ_GRENADE | is_silenced);
+  gi.WriteByte (MZ_GRENADE | (ent->client->silencer_shots ? MZ_SILENCED : 0));
   gi.multicast (ent->s.origin, MULTICAST_PVS);
 
   ent->client->ps.gunframe++;

@@ -12,11 +12,13 @@ echo " linux build "
 echo ##################
 rm -rf release
 make clean
-make build_release -j
+make build_release -j$(nproc)
+mkdir -p ~/quake2/chaos/
 cp -vf release/gamex86_64.so ~/quake2/chaos/
 cd release
-bzip2 gamex86_64.so
+bzip2 -f gamex86_64.so
 cd ..
+mkdir -p ${LBIN}/
 mv -vf release/gamex86_64.so.bz2 ${LBIN}/
 }
 
@@ -26,7 +28,8 @@ echo " linux debug build "
 echo ##################
 rm -rf debug
 make clean
-make build_debug -j
+make build_debug -j$(nproc)
+mkdir -p ~/quake2/chaos/
 cp -vf debug/gamex86_64.so ~/quake2/chaos/
 }
 
@@ -37,8 +40,9 @@ echo " WIN32 BUILD "
 echo ##################
 cp -vf .config32 .config
 make -f Makefile_mingw clean
-make -f Makefile_mingw -j
-bzip2 gamex86.dll
+make -f Makefile_mingw -j$(nproc)
+bzip2 -f gamex86.dll
+mkdir -p ${WBIN}/
 cp -vf gamex86.dll.bz2 ${WBIN}/
 }
 
@@ -49,8 +53,9 @@ echo " WIN64 BUILD "
 echo ##################
 cp -vf .config64 .config
 make -f Makefile_mingw clean
-make -f Makefile_mingw -j
-bzip2 gamex86_64.dll
+make -f Makefile_mingw -j$(nproc)
+bzip2 -f gamex86_64.dll
+mkdir -p ${WBIN}/
 cp -vf gamex86_64.dll.bz2 ${WBIN}/
 }
 

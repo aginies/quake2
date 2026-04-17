@@ -1,6 +1,36 @@
 These are bugs and new feature fixed/implemented in Chaotic Dreams 
 -----------------------------------------------------------------------------
 
+* Resolved several physics and clipping bugs: Airfist no longer pushes players through ceilings/floors, and the Gravity Vortex no longer pulls entities through solid walls.
+
+* Fixed critical logic error in NoCamp: anti-camping checks now correctly monitor active players instead of observers.
+
+* Hardened Turret management: player-owned turrets are now automatically destroyed when the owner disconnects, preventing "ghost" turrets from team-killing.
+
+* Rebalanced default Turret ammo counts to more reasonable levels (200 for Laser, 30 for Rocket) to improve multiplayer flow.
+
+* Improved Gravity Vortex targeting consistency: it now correctly identifies and consumes turret bases and generic items (health, ammo, weapons).
+
+
+* Fix severe server lag during Nuke explosions by refactoring radiation damage to a single core entity; balanced fallout damage into distance-based tiers.
+
+* Eliminate global race conditions in multiplayer by replacing obsolete global `is_quad` and `is_silenced` variables with reliable per-client state checks.
+
+* Hardened security and stability: patched multiple format string vulnerabilities, fixed buffer overflows in chat commands (`say`), and secured team chat logic.
+
+* Improved C4 reliability: charges now correctly explode when the owner dies or disconnects, regardless of detonation mode.
+
+* Enhanced Bastard Sword: melee reach is now consistent using view origin, and blocking logic is correctly restricted to live enemies and respects friendly fire rules.
+
+* Integrated CTF Strength tech support for the Bastard Sword.
+
+* Optimized memory and performance: eliminated memory leaks in maplist/MOTD parsers and refactored `EjectShell` into an efficient data-driven implementation.
+
+* Build system robustness: fixed MSVC pragma warnings in GCC, updated `build_bin` for multi-core builds, and fixed Makefile syntax errors.
+
+* Fixed bitwise logic errors in HUD updates and removed various crashing or noisy debug prints.
+
+
 * add C4 cellsi bomb: "togglec4" to trigger the explosion
 
 * fix respawn bug while picking up JetPack this avoid respawing new item

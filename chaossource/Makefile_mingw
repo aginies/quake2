@@ -110,7 +110,6 @@ RCFLAGS_g += -DREVISION=$(REV) -DVERSION='\"$(VER)\"'
 
 
 ### Object Files ###
- \
 
 OBJS_g := \
 	c_base.o \

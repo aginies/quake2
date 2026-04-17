@@ -193,17 +193,9 @@ void LoadMaplist(char	*filename)
 	game_dir = gi.cvar ("game", "", 0);
 
 #ifdef	_WIN32
-	i =  sprintf(file, ".\\");
-	i += sprintf(file + i, game_dir->string);
-	i += sprintf(file + i, "\\maplists\\");
-	i += sprintf(file + i, filename);
-	i += sprintf(file + i, ".txt");
+	snprintf(file, sizeof(file), ".\\%s\\maplists\\%s.txt", game_dir->string, filename);
 #else
-      strcpy(file, "./");
-      strcat(file, game_dir->string);
-      strcat(file, "/maplists/");
-	  strcat(file, filename);
-	  strcat(file, ".txt");
+	snprintf(file, sizeof(file), "./%s/maplists/%s.txt", game_dir->string, filename);
 #endif
 
 	//open the maplist file
@@ -220,12 +212,13 @@ void LoadMaplist(char	*filename)
 
 		while ((!feof(fp)) && (i < MAX_MAPS)) 
 		{ 
-			char *line = malloc(256);
-			size_t len = strlen(line);
-                        if (line != NULL) {
-				fgets (line, 256, fp);
-				len=strlen(line);
-			}
+			char line[256];
+			size_t len;
+
+			if (fgets (line, 256, fp) == NULL)
+				break;
+
+			len = strlen(line);
 
 			if (len < 5) //invalid
 				continue;
@@ -272,8 +265,8 @@ void GetSettings()
 	poisontime = gi.cvar("poisontime", "15", CVAR_SERVERINFO);
 	lasertime = gi.cvar("lasertime", "60", CVAR_SERVERINFO);
 	proxytime = gi.cvar("proxytime", "60", CVAR_SERVERINFO);
-	defence_turret_ammo = gi.cvar("defence_turret_ammo", "1000", CVAR_SERVERINFO);
-	rocket_turret_ammo = gi.cvar("rocket_turret_ammo", "90", CVAR_SERVERINFO);
+	defence_turret_ammo = gi.cvar("defence_turret_ammo", "200", CVAR_SERVERINFO);
+	rocket_turret_ammo = gi.cvar("rocket_turret_ammo", "30", CVAR_SERVERINFO);
 	lasermine_health = gi.cvar("lasermine_health", "150", CVAR_LATCH);
 	c4_health = gi.cvar("c4_health", "150", CVAR_LATCH);
         // FWP Set ex arrow strngth and radius from server var 
@@ -659,13 +652,9 @@ void LoadMOTD()
 	game_dir = gi.cvar ("game", "", 0);
 
 #ifdef	_WIN32
-	i =  sprintf(file, ".\\");
-	i += sprintf(file + i, game_dir->string);
-	i += sprintf(file + i, "\\motd.txt");
+	snprintf(file, sizeof(file), ".\\%s\\motd.txt", game_dir->string);
 #else
-    strcpy(file, "./");
-    strcat(file, game_dir->string);
-    strcat(file, "/motd.txt");
+	snprintf(file, sizeof(file), "./%s/motd.txt", game_dir->string);
 #endif
 
 	if ((fp = fopen(file, "r")) == NULL)
@@ -680,12 +669,13 @@ void LoadMOTD()
 
 		while ((!feof(fp)) && (i < 560)) 
 		{ 
-			char *line = malloc(559);
-                        size_t len = strlen(line);
-			if (line != NULL) {
-			    fgets (line, 559, fp);
-			    len=strlen(line);
-                        }
+			char line[560];
+			size_t len;
+
+			if (fgets (line, 559, fp) == NULL)
+				break;
+
+			len = strlen(line);
 			while(line[len] == '\n'||line[len] == '\r')
 			  len--;
 
@@ -1673,9 +1663,9 @@ void ClientCommand2 (edict_t *ent)
 			{
 				char name[MAX_INFO_KEY], skin[MAX_INFO_KEY], hand[MAX_INFO_KEY];
 
-				sprintf(name,Info_ValueForKey (ent->client->pers.userinfo, "name"));
-				sprintf(skin,Info_ValueForKey (ent->client->pers.userinfo, "skin"));
-				sprintf(hand,Info_ValueForKey (ent->client->pers.userinfo, "hand"));
+				sprintf(name, "%s", Info_ValueForKey (ent->client->pers.userinfo, "name"));
+				sprintf(skin, "%s", Info_ValueForKey (ent->client->pers.userinfo, "skin"));
+				sprintf(hand, "%s", Info_ValueForKey (ent->client->pers.userinfo, "hand"));
 				
 				ClientDisconnect (ent);
 				ClientConnect (ent, ent->client->pers.userinfo);

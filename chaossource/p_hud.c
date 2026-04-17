@@ -87,9 +87,9 @@ void BeginIntermission (edict_t *targ)
 		{
 			char name[MAX_INFO_KEY], skin[MAX_INFO_KEY], hand[MAX_INFO_KEY];
 
-			sprintf(name,Info_ValueForKey (client->client->pers.userinfo, "name"));
-			sprintf(skin,Info_ValueForKey (client->client->pers.userinfo, "skin"));
-			sprintf(hand,Info_ValueForKey (client->client->pers.userinfo, "hand"));
+			sprintf(name, "%s", Info_ValueForKey (client->client->pers.userinfo, "name"));
+			sprintf(skin, "%s", Info_ValueForKey (client->client->pers.userinfo, "skin"));
+			sprintf(hand, "%s", Info_ValueForKey (client->client->pers.userinfo, "hand"));
 			
 			ClientDisconnect (client);
 			ClientConnect (client, client->client->pers.userinfo);

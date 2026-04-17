@@ -203,7 +203,12 @@ void sl_WriteStdLogDeath( game_import_t     *gi,
                     {
 		    case MOD_PGRENADE: {
                             pTargetName = self->client->pers.netname;
-                            pKillerName = attacker->owner->client->pers.netname;
+                            if (attacker->owner && attacker->owner->client)
+                                pKillerName = attacker->owner->client->pers.netname;
+                            else if (attacker->client)
+                                pKillerName = attacker->client->pers.netname;
+                            else
+                                pKillerName = "Unknown";
                             pScoreType  = "Kill";
                             iScore      = 1;
                             pWeaponName = "Poison_Grenade";

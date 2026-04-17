@@ -39,10 +39,10 @@ void Svcmd_addbots_f()	// adds "num" bots.
 		// set the model
 		if (Q_stricmp(gi.argv(6), "") == 0)
 		{
-			sprintf(model, Get_RandomBotSkin());
+			sprintf(model, "%s", Get_RandomBotSkin());
 		}
 		else
-			sprintf(model, gi.argv(6));
+			sprintf(model, "%s", gi.argv(6));
 
 		// set the name
 		if(Q_stricmp(name,"") == 0
@@ -66,10 +66,10 @@ void Svcmd_addbots_f()	// adds "num" bots.
 			// set the model
 			if (Q_stricmp(gi.argv(6), "") == 0)
 			{
-				sprintf(model, Get_RandomBotSkin());
+				sprintf(model, "%s", Get_RandomBotSkin());
 			}
 			else
-				sprintf(model, gi.argv(6));
+				sprintf(model, "%s", gi.argv(6));
 
 			// set the name
 			strcpy(name,(strchr(model, '/')+1));
@@ -1637,13 +1637,9 @@ void Load_BotChat(void)
 	game_dir = gi.cvar ("game", "", 0);
 
 #ifdef	_WIN32
-	i =  sprintf(filename, ".\\");
-	i += sprintf(filename + i, game_dir->string);
-	i += sprintf(filename + i, "\\botchat.txt");
+	snprintf(filename, sizeof(filename), ".\\%s\\botchat.txt", game_dir->string);
 #else
-      strcpy(filename, "./");
-      strcat(filename, game_dir->string);
-      strcat(filename, "/botchat.txt");
+	snprintf(filename, sizeof(filename), "./%s/botchat.txt", game_dir->string);
 #endif
 
 	fp = fopen (filename, "r");
