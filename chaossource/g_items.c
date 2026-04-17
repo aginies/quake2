@@ -1202,13 +1202,11 @@ int FasterRespawn(float delay)
 {
     int faster;
 
-    if (fast_respawn->value == 0) {
-        faster = delay;
+    if (fast_respawn->value <= 0) {
+        return (int)delay;
     }
-    else
-    {
-        faster = fast_respawn->value;
-    }
+    
+    faster = (int)fast_respawn->value;
 
     if(delay >= 60)
         faster *= 4;
