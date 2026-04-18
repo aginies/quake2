@@ -369,7 +369,7 @@ pmenu_t ccreditsmenu[] = {
         { "*Programming",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Flash (flash@telefragged.com)",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
-        { "*Current devel > 1.16.0",PMENU_ALIGN_CENTER, NULL, NULL },
+        { "*Current devel > 1.16.2",PMENU_ALIGN_CENTER, NULL, NULL },
         { "Guibo (guibo@guibo.com)",PMENU_ALIGN_CENTER, NULL, NULL },
         { NULL,PMENU_ALIGN_LEFT, NULL, NULL },
         { "*Level Design",PMENU_ALIGN_CENTER, NULL, NULL },
